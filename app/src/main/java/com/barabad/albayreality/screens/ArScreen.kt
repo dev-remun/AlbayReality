@@ -5,6 +5,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
@@ -12,22 +15,26 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.barabad.albayreality.components.Footer
-import com.barabad.albayreality.components.Header
 import com.journeyapps.barcodescanner.CompoundBarcodeView
-
-
 
 @Composable
 fun ArScreen(navController: NavController) {
+    // # Yo etong ui ng screen ang minodify ko and nagdagdag ako ng ui para macatch ung exception
     var qrCodeValue by remember { mutableStateOf<String?>(null) }
+    val scrollState = rememberScrollState()
+
     Scaffold(
-        topBar = { Header() },
+        containerColor = Color.Transparent,
         bottomBar = {
             Footer(
                 isHomeScreen = false,
@@ -39,27 +46,75 @@ fun ArScreen(navController: NavController) {
             )
         }
     ) { padding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(Color(0xFFFFF9C4)),
-            contentAlignment = Alignment.Center
+                .background(Color(0xFFEFEFEF))
+                .verticalScroll(scrollState)
+                .padding(horizontal = 22.dp)
         ) {
-            if(qrCodeValue == null) {
-                QrCodeScanner {
-                    qrCodeValue = null
+
+            Spacer(modifier = Modifier.height(60.dp))
+
+            Text(
+                text = "AR Scanner",
+                color = Color.Black,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "Scan a valid AlbayReality QR code.",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.DarkGray
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Camera area
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(480.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Black.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
+            ) {
+                if (qrCodeValue == null) {
+                    QrCodeScanner { scannedValue ->
+                        qrCodeValue = scannedValue
+                    }
+                } else {
+                    Text(
+                        text = "QR Code scanned!",
+                        color = Color.Black
+                    )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            if (qrCodeValue == null) {
+                /* pass? hahaha */
+            } else if (qrCodeValue!!.contains("albayreality")) {
                 Text(
-                    text = "Error, Please try again",
+                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model in another screen.",
                     color = Color.Black
                 )
-            } else if (qrCodeValue!!.contains("albayreality")){
+            } else {
                 Text(
-                    text = "Scanned QR Code: $qrCodeValue, please insert the corresponding model nalang, maybe sa other screen ulit",
-                    color = Color.Black
+                    text = "Invalid QR code detected.\nPlease try again.\nThe Scanned QR Code is: $qrCodeValue",
+                    color = Color.Red
                 )
             }
+
+            Spacer(modifier = Modifier.height(100.dp)) // to give room before footer
         }
     }
 }
@@ -75,31 +130,41 @@ fun QrCodeScanner(onQrCodeScanned: (String) -> Unit) {
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { granted ->
-            hasCameraPermission = granted
-        }
+        onResult = { granted -> hasCameraPermission = granted }
     )
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
             launcher.launch(android.Manifest.permission.CAMERA)
         }
     }
 
     if (hasCameraPermission) {
+        var barcodeView: CompoundBarcodeView? = null
+
         AndroidView(
-            factory = {
-                CompoundBarcodeView(it).apply {
-                    this.setStatusText("")
-                    this.decodeContinuous { result ->
-                        result.text?.let { barCodeOrQr->
-                            onQrCodeScanned(barCodeOrQr)
-                        }
+            factory = { ctx ->
+                CompoundBarcodeView(ctx).apply {
+                    setStatusText("")
+                    decodeContinuous { result ->
+                        result.text?.let(onQrCodeScanned)
                     }
+                    barcodeView = this
+                    resume() // # start ng camera
                 }
             },
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(12.dp))
         )
+
+        DisposableEffect(Unit) {
+            onDispose {
+                barcodeView?.pause() // # stop camera kapag umalis ung user sa screen
+            }
+        }
     }
 }

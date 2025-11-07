@@ -135,7 +135,7 @@ fun AboutUsScreen(navController: NavController) {
             CardTypeB(
                 iconRes = R.drawable.ui_dev_ic,
                 title = "Balingbing, Raymond C.",
-                subtitle = "UI/UX Designer & Developer"
+                subtitle = "Frontend Developer"
             )
 
             Spacer(modifier = Modifier.height(10.dp))

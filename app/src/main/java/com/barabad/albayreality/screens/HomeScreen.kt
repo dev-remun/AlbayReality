@@ -61,7 +61,7 @@ fun HomeScreen(navController: NavController) {
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = Color.DarkGray
                 )
             }
 

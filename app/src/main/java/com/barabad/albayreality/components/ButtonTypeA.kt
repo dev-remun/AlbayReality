@@ -19,10 +19,10 @@ import androidx.compose.material3.Text
 
 @Composable
 fun ButtonTypeA(
-    imageRes: Int,              // Resource ID of the background image
-    title: String,              // Main text (e.g., "Interactive Map")
-    subtitle: String,           // Sub text (e.g., "Discover locations in Albay")
-    onClick: () -> Unit         // What happens when clicked
+    imageRes: Int,              // # bg img resource id
+    title: String,              // # main tex
+    subtitle: String,           // # subtext
+    onClick: () -> Unit         // # the function that will be execute when this button is clicked
 ) {
     BoxWithConstraints(
         modifier = Modifier
