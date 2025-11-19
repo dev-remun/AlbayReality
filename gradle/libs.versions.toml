@@ -11,6 +11,8 @@ composeBom = "2024.09.00"
 navigationCompose = "2.9.5"
 zxingAndroidEmbedded = "4.3.0"
 core = "3.5.3"
+scenecore = "1.0.0-alpha08"
+coreVersion = "1.17.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +32,8 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
 core = { group = "com.google.zxing", name = "core", version.ref = "core" }
+androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
+sceneform-core = { group = "com.google.ar.sceneform", name = "core", version.ref = "coreVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
