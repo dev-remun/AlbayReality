@@ -8,9 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+
 import com.barabad.albayreality.R
+import com.barabad.albayreality.ui.theme.TitanOne
+
 
 @Composable
 fun Header(
@@ -31,7 +33,7 @@ fun Header(
             Icon(
                 painter = painterResource(id = R.drawable.arlogo),
                 contentDescription = null,
-                modifier = Modifier.size(60.dp),
+                modifier = Modifier.size(54.dp),
                 tint = Color.Unspecified,
             )
 
@@ -39,9 +41,8 @@ fun Header(
 
             Text(
                 text = "ALBAY REALITY",
-                fontWeight = FontWeight.Bold,
+                fontFamily = TitanOne,
                 fontSize = 28.sp,
-                style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
 
             )

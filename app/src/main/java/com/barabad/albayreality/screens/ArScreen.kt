@@ -25,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.barabad.albayreality.components.Footer
+import com.barabad.albayreality.ui.theme.Inter
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 
 @Composable
@@ -59,10 +60,10 @@ fun ArScreen(navController: NavController) {
 
             Text(
                 text = "AR Scanner",
-                color = Color.Black,
                 fontSize = 24.sp,
+                fontFamily = Inter,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
+                color = Color.Black
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -70,9 +71,9 @@ fun ArScreen(navController: NavController) {
             Text(
                 text = "Scan a valid AlbayReality QR code.",
                 fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.DarkGray
+                fontFamily = Inter,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0x99000000)
             )
 
             Spacer(modifier = Modifier.height(16.dp))

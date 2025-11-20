@@ -2,6 +2,9 @@ package com.barabad.albayreality.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val white = Color(0xFFFFFFFF)
+val white100 = Color(0xE6FFFFFF)    // # 90% opaque
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
