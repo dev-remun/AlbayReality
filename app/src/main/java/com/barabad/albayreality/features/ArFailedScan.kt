@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,6 +20,9 @@ import com.barabad.albayreality.ui.theme.Inter
 
 @Composable
 fun ArFailedScan(navController: NavController) {
+    //global variable into qr Content (displayed for proof of concept)
+    val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
+    val qrContent = globeVal?.content
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +72,7 @@ fun ArFailedScan(navController: NavController) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Scan Failed.\nPlease Scan a Valid QR Code.",
+                    text = "Scan Failed.\nPlease Scan a Valid QR Code. $qrContent",
                     fontFamily = Inter,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,

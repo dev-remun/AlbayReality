@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,6 +20,9 @@ import com.barabad.albayreality.ui.theme.Inter
 
 @Composable
 fun ArSuccessScan(navController: NavController) {
+    //global variable into qr Content (displayed for proof of concept)
+    val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
+    val qrContent = globeVal?.content
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -67,14 +71,16 @@ fun ArSuccessScan(navController: NavController) {
                     .background(Color.Green.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center
             ) {
+
                 Text(
-                    text = "Scan Successful!\n<Insert 3D model>",
+                    text = "Scan Successful!\n<Insert 3D model> $qrContent ",
                     fontFamily = Inter,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = Color(0xFF388E3C), // Dark green
                     lineHeight = 20.sp
                 )
+                //do cases of 3d model here
             }
 
             Spacer(modifier = Modifier.height(24.dp))

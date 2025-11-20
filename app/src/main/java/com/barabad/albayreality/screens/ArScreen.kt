@@ -25,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.barabad.albayreality.components.Footer
+import com.barabad.albayreality.features.GlobalVar
 import com.barabad.albayreality.ui.theme.Inter
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 
@@ -33,6 +34,9 @@ fun ArScreen(navController: NavController) {
     // # Yo etong ui ng screen ang minodify ko and nagdagdag ako ng ui para macatch ung exception
     var qrCodeValue by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
+    val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
+
+
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -103,6 +107,7 @@ fun ArScreen(navController: NavController) {
 
             qrCodeValue?.let { qr ->
                 if (qr.contains("albayreality")) {
+                    globeVal?.content = qrCodeValue
                     // # Valid QR Code -> navigate to ArSuccessScan
                     LaunchedEffect(qr) {
                         navController.navigate("ar_success_scan")
