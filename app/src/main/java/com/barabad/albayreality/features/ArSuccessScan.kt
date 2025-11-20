@@ -75,6 +75,7 @@ fun ArSuccessScan(navController: NavController) {
                     color = Color(0xFF388E3C), // Dark green
                     lineHeight = 20.sp
                 )
+                //do cases of 3d model here
             }
 
             Spacer(modifier = Modifier.height(24.dp))
