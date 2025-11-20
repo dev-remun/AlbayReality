@@ -102,11 +102,18 @@ fun ArScreen(navController: NavController) {
 
             if (qrCodeValue == null) {
                 /* pass? hahaha */
-            } else if (qrCodeValue!!.contains("albayreality")) {
+            } else if (qrCodeValue!!.contains("albayreality") && qrCodeValue!!.contains("cagsawa")) {
                 Text(
-                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model in another screen.",
+                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model of cagsawa in another screen or something.",
                     color = Color.Black
                 )
+                ModelDisplay("cagchu")
+            } else if (qrCodeValue!!.contains("albayreality") && qrCodeValue!!.contains("munisipyo")) {
+                Text(
+                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model of munisipyo in another screen or something.",
+                    color = Color.Black
+                )
+                ModelDisplay("Munisipyo")
             } else {
                 Text(
                     text = "Invalid QR code detected.\nPlease try again.\nThe Scanned QR Code is: $qrCodeValue",
@@ -117,6 +124,11 @@ fun ArScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(100.dp)) // to give room before footer
         }
     }
+}
+
+@Composable
+fun ModelDisplay(modelname: String) {
+    TODO("Not yet implemented")
 }
 
 @Composable
