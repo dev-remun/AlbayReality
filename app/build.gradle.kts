@@ -57,7 +57,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat-resources:1.7.1")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
-    implementation("io.github.sceneview:sceneview:2.3.1")
     implementation(libs.sceneform.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
