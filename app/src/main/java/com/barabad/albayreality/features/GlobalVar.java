@@ -2,7 +2,7 @@ package com.barabad.albayreality.features;
 
 import android.app.Application;
 
-public class QrContent extends Application{
+public class GlobalVar extends Application{
     private String content;
 
     public String getContent() {
