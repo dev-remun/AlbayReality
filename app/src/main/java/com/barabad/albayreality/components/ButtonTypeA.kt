@@ -16,6 +16,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.font.FontWeight
+import com.barabad.albayreality.ui.theme.Inter
+import com.barabad.albayreality.ui.theme.white
+import com.barabad.albayreality.ui.theme.white100
 
 @Composable
 fun ButtonTypeA(
@@ -57,14 +61,16 @@ fun ButtonTypeA(
                     Text(
                         text = title,
                         fontSize = 18.sp,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Bold,
+                        color = white
                     )
                     Text(
                         text = subtitle,
                         fontSize = 12.sp,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Medium,
+                        color = white100
                     )
                 }
             }

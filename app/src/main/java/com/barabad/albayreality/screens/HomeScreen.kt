@@ -21,6 +21,7 @@ import com.barabad.albayreality.components.Header
 import com.barabad.albayreality.components.Footer
 import com.barabad.albayreality.R
 import com.barabad.albayreality.components.ButtonTypeA
+import com.barabad.albayreality.ui.theme.Inter
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -49,8 +50,8 @@ fun HomeScreen(navController: NavController) {
                 Text(
                     text = "Explore",
                     fontSize = 24.sp,
+                    fontFamily = Inter,
                     fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge,
                     color = Color.Black
                 )
 
@@ -59,9 +60,9 @@ fun HomeScreen(navController: NavController) {
                 Text(
                     text = "Choose your experience",
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.DarkGray
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0x99000000)
                 )
             }
 
