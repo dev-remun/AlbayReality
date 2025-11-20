@@ -101,25 +101,18 @@ fun ArScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (qrCodeValue == null) {
-                /* pass? hahaha */
-            } else if (qrCodeValue!!.contains("albayreality") && qrCodeValue!!.contains("cagsawa")) {
-                Text(
-                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model of cagsawa in another screen or something.",
-                    color = Color.Black
-                )
-                //ModelDisplay("cagchu")
-            } else if (qrCodeValue!!.contains("albayreality") && qrCodeValue!!.contains("munisipyo")) {
-                Text(
-                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model of munisipyo in another screen or something.",
-                    color = Color.Black
-                )
-                //ModelDisplay("Munisipyo")
-            } else {
-                Text(
-                    text = "Invalid QR code detected.\nPlease try again.\nThe Scanned QR Code is: $qrCodeValue",
-                    color = Color.Red
-                )
+            qrCodeValue?.let { qr ->
+                if (qr.contains("albayreality")) {
+                    // # Valid QR Code -> navigate to ArSuccessScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_success_scan")
+                    }
+                } else {
+                    // # Invalid QR Code -> naviaigate to ArFailedScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_failed_scan")
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(100.dp)) // to give room before footer
@@ -127,10 +120,6 @@ fun ArScreen(navController: NavController) {
     }
 }
 
-@Composable
-fun ModelDisplay(modelname: String) {
-    TODO("Not yet implemented")
-}
 
 @Composable
 fun QrCodeScanner(onQrCodeScanned: (String) -> Unit) {

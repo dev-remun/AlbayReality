@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.*
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
+import com.barabad.albayreality.features.ArFailedScan
+import com.barabad.albayreality.features.ArSuccessScan
 import com.barabad.albayreality.screens.*
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +24,8 @@ class MainActivity : ComponentActivity() {
                     composable("ar") { ArScreen(navController) }
                     composable("map") { MapScreen(navController) }
                     composable("aboutus") { AboutUsScreen(navController) }
+                    composable("ar_failed_scan") { ArFailedScan(navController) }
+                    composable("ar_success_scan") { ArSuccessScan(navController) }
                 }
             }
         }
