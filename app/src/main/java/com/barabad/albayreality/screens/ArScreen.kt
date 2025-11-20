@@ -108,13 +108,13 @@ fun ArScreen(navController: NavController) {
                     text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model of cagsawa in another screen or something.",
                     color = Color.Black
                 )
-                ModelDisplay("cagchu")
+                //ModelDisplay("cagchu")
             } else if (qrCodeValue!!.contains("albayreality") && qrCodeValue!!.contains("munisipyo")) {
                 Text(
                     text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model of munisipyo in another screen or something.",
                     color = Color.Black
                 )
-                ModelDisplay("Munisipyo")
+                //ModelDisplay("Munisipyo")
             } else {
                 Text(
                     text = "Invalid QR code detected.\nPlease try again.\nThe Scanned QR Code is: $qrCodeValue",
