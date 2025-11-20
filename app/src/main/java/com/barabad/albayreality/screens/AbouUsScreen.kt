@@ -2,7 +2,6 @@ package com.barabad.albayreality.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -10,19 +9,16 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
 import com.barabad.albayreality.components.CardTypeA
 import com.barabad.albayreality.components.CardTypeB
 import com.barabad.albayreality.components.Footer
 import com.barabad.albayreality.components.Header
+import com.barabad.albayreality.components.SubHeaderTypeA
 
 @Composable
 fun AboutUsScreen(navController: NavController) {
@@ -50,55 +46,20 @@ fun AboutUsScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 22.dp, vertical = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(54.dp))
 
-            Header() // # Header
+            // # Header - Please refer to the components/Header.kt
+            Header()
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // # About Us Content
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.mask_icon),
-                        modifier = Modifier.size(16.dp),
-                        contentDescription = null,
-                        tint = Color.Unspecified
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Albay Cultural Heritage",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.DarkGray
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(31.dp))
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Augmented Reality",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.DarkGray
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.ar_icon),
-                        modifier = Modifier.size(16.dp),
-                        contentDescription = null,
-                        tint = Color.Unspecified
-                    )
-                }
-            }
+            // # SubHeaderTypeA - Please refer to the components/SubHeaderTypeA.kt
+            SubHeaderTypeA()
 
             Spacer(modifier = Modifier.height(48.dp))
 
             // # Albay Reality About
+            // # CardTypeA - Please refer to the components/CardTypeA.kt
             CardTypeA(
                 bardWidth = 92,
                 header = "Albay Reality",
@@ -108,6 +69,7 @@ fun AboutUsScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // # Developers About
+            // # CardTypeA - Please refer to the components/CardTypeA.kt
             CardTypeA(
                 bardWidth = 81,
                 header = "Developers",
@@ -116,6 +78,8 @@ fun AboutUsScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // # Names of the Devs and their Roles
+            // # CardTypeB - Please refer to the components/CardTypeB.kt
             CardTypeB(
                 iconRes = R.drawable.dev_ic,
                 title = "Abion, Gerik Jed L.",

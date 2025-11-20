@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.barabad.albayreality.ui.theme.Inter
 
 @Composable
 fun CardTypeB(
@@ -54,15 +55,18 @@ fun CardTypeB(
             ) {
                 Text(
                     text = title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    fontFamily = Inter
                 )
 
                 Text(
                     text = subtitle,
                     fontSize = 13.sp,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.Normal
                 )
             }
         }

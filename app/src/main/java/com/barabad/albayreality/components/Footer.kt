@@ -1,6 +1,5 @@
 package com.barabad.albayreality.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,7 +12,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import com.barabad.albayreality.R
+import com.barabad.albayreality.ui.theme.Inter
 
 @Composable
 fun Footer(
@@ -60,7 +61,9 @@ fun Footer(
                 Text(
                     text = leftText,
                     color = leftTint,
-                    fontSize = 16.sp
+                    fontSize = 14.sp,
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
@@ -84,7 +87,9 @@ fun Footer(
                 Text(
                     text = "Albay Reality",
                     color = rightTint,
-                    fontSize = 16.sp
+                    fontSize = 14.sp,
+                    fontFamily = Inter,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
