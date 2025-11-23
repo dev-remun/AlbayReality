@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -71,14 +72,21 @@ fun ArFailedScan(navController: NavController) {
                     .background(Color(0xFFFFCCCC)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Scan Failed.\nPlease Scan a Valid QR Code. $qrContent",
-                    fontFamily = Inter,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = Color.Red,
-                    lineHeight = 20.sp
-                )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Scan Failed.\nPlease Scan a valid QR Code.",
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = Color.Red,
+                        lineHeight = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -86,12 +94,11 @@ fun ArFailedScan(navController: NavController) {
             ButtonTypeB(
                 text = "Scan Again",
                 onClick = { navController.navigate("ar") {
-                                popUpTo("ar_failed_scan") { inclusive = true }
-                                launchSingleTop = true
-                            }
+                    popUpTo("ar_failed_scan") { inclusive = true }
+                    launchSingleTop = true
+                }
                 }
             )
-
         }
     }
 }

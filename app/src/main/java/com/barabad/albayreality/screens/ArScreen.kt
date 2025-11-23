@@ -36,8 +36,6 @@ fun ArScreen(navController: NavController) {
     val scrollState = rememberScrollState()
     val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
 
-
-
     Scaffold(
         containerColor = Color.Transparent,
         bottomBar = {
@@ -106,13 +104,29 @@ fun ArScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             qrCodeValue?.let { qr ->
-                if (qr.contains("albayreality")) {
+                if (qr.contains("albayrealitycagsawa")) {
                     globeVal?.content = qrCodeValue
                     // # Valid QR Code -> navigate to ArSuccessScan
                     LaunchedEffect(qr) {
                         navController.navigate("ar_success_scan")
                     }
-                } else {
+                }
+                else if (qr.contains("albayrealitymunisipyo")) {
+                    globeVal?.content = qrCodeValue
+                    // # Valid QR Code -> navigate to ArSuccessScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_success_scan")
+                    }
+                }
+                else if (qr.contains("albayrealitystjohnchurch")) {
+                    globeVal?.content = qrCodeValue
+                    // # Valid QR Code -> navigate to ArSuccessScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_success_scan")
+                    }
+                }
+                else {
+                    globeVal?.content = qrCodeValue
                     // # Invalid QR Code -> naviaigate to ArFailedScan
                     LaunchedEffect(qr) {
                         navController.navigate("ar_failed_scan")
