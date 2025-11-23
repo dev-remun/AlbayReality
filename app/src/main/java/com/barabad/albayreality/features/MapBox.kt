@@ -56,7 +56,7 @@ fun MapBox(
                         map = this,
                         lat = 13.16613,
                         lon = 123.70116,
-                        title = "Cagsawa Ruins",
+                        title = "Cagsawa Church",
                         id = "cagsawa",
                         onPinSelected = onPinSelected
                     )
