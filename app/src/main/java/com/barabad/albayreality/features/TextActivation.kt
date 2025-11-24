@@ -76,7 +76,7 @@ fun TextActivation(selectedPin: String?) {
             Paragraph("Bicol National Museum - Located just next to the Cagsawa Church Ruins "+
             "and it holds dear the history of the Bicol Region, who have been, for centuries, withstanding "+
             "the eruptions of the Mayon.")
-            // IMAGES
+
             ImageCarousel(
                 images = listOf(
                     R.drawable.cagsawa1,
