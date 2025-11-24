@@ -13,6 +13,7 @@ zxingAndroidEmbedded = "4.3.0"
 core = "3.5.3"
 scenecore = "1.0.0-alpha08"
 coreVersion = "1.17.1"
+sceneformUx = "1.17.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,7 @@ zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embe
 core = { group = "com.google.zxing", name = "core", version.ref = "core" }
 androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
 sceneform-core = { group = "com.google.ar.sceneform", name = "core", version.ref = "coreVersion" }
+sceneform-ux = { group = "com.google.ar.sceneform.ux", name = "sceneform-ux", version.ref = "sceneformUx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

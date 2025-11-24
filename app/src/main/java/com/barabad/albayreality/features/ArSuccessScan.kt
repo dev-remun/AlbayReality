@@ -84,13 +84,21 @@ fun ArSuccessScan(navController: NavController) {
                         .background(Color.Green.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    //do cases of 3d model here
+
+                    if (location_sites != null && qrContent?.contains("cagsawa") == true) {
+                        ModelDisplay("albayrealitycagsawa")
+                    }
+                    else if (location_sites != null && qrContent?.contains("munisipyo") == true) {
+                        ModelDisplay("albayrealitymunisipyo")
+                    }
+                    else if (location_sites != null && qrContent?.contains("stjohnchurch") == true) {
+                        ModelDisplay("albayrealitystjohnchurch")
+                    }else {
+                        Text("No 3D model found for this QR code. $qrContent")
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-
-                // # Get the details for the location sites
-                val location_sites = DatabaseProvider.database.getModelByQRCode(qrContent ?: "")
 
                 if(location_sites != null) {
                     Column(

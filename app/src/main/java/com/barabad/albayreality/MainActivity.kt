@@ -1,16 +1,21 @@
 package com.barabad.albayreality
 
+import android.app.Activity
+import android.app.ActivityManager
+import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.*
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
 import com.barabad.albayreality.data.DatabaseProvider
+import com.barabad.albayreality.data.ThreeDModel
 import com.barabad.albayreality.features.ArFailedScan
 import com.barabad.albayreality.features.ArSuccessScan
 import com.barabad.albayreality.screens.*
-import com.barabad.albayreality.data.ThreeDModel
+import java.util.Objects
 
 class MainActivity : ComponentActivity() {
 
@@ -18,7 +23,8 @@ class MainActivity : ComponentActivity() {
         qr_code = "albayrealitycagsawa",
         name = "Cagsawa Church",
         location = "Daraga, Albay",
-        description = "The first stone church of Cagsawa was built in 1675 by Fray Acacio de la Concepcion, OFM under the patronage of St. James the Great, and in 1724 it was demolished and rebuilt into a larger church with a masonry convent, belfry, courthouse (casa tribunal) that also served as a primary school, and four masonry storerooms by Fray Francisco Blanco, OFM.\n\nOn February 1, 1814, the eve of the feast of Nuestra Señora de Candelaria, Mayon Volcano—about 10 kilometers from Cagsawa—erupted violently, producing pyroclastic flows, volcanic lightning, ashfall, and lahar that devastated nearby towns in Albay. The eruption buried Cagsawa and killed thousands in Camalig, Cagsawa, Budiao, and Guinobatan, including more than 1,200 people who sought refuge in the church, leaving only the bell tower standing.")
+        description = "The first stone church of Cagsawa was built in 1675 by Fray Acacio de la Concepcion, OFM under the patronage of St. James the Great, and in 1724 it was demolished and rebuilt into a larger church with a masonry convent, belfry, courthouse (casa tribunal) that also served as a primary school, and four masonry storerooms by Fray Francisco Blanco, OFM.\n\nOn February 1, 1814, the eve of the feast of Nuestra Señora de Candelaria, Mayon Volcano—about 10 kilometers from Cagsawa—erupted violently, producing pyroclastic flows, volcanic lightning, ashfall, and lahar that devastated nearby towns in Albay. The eruption buried Cagsawa and killed thousands in Camalig, Cagsawa, Budiao, and Guinobatan, including more than 1,200 people who sought refuge in the church, leaving only the bell tower standing."
+    )
     val old_albay_munisipyo = ThreeDModel(
         qr_code = "albayrealitymunisipyo",
         name = "Old Albay Munisipyo",
@@ -33,6 +39,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AlbayReality)
         super.onCreate(savedInstanceState)
+        checkSystemSupport(this)
 
         DatabaseProvider.database.addModel(cagsawa_church)
         DatabaseProvider.database.addModel(old_albay_munisipyo)
@@ -52,5 +59,24 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+fun checkSystemSupport(activity: Activity): Boolean {
+    // checking whether the API version of the running Android >= 24
+    // that means Android Nougat 7.0
+
+    val openGlVersion =
+        (Objects.requireNonNull<Any?>(activity.getSystemService(Context.ACTIVITY_SERVICE)) as ActivityManager).deviceConfigurationInfo
+            .getGlEsVersion()
+
+    // checking whether the OpenGL version >= 3.0
+    if (openGlVersion.toDouble() >= 3.0) {
+        return true
+    } else {
+        Toast.makeText(activity, "App needs OpenGl Version 3.0 or later", Toast.LENGTH_SHORT)
+            .show()
+        activity.finish()
+        return false
     }
 }
