@@ -104,7 +104,7 @@ private fun addInteractivePin(
 
         map.controller.animateTo(
             m.position,
-            18.0,      // 🔥 zoom in CLOSER (was 16)
+            18.0,
             1000L
         )
 
