@@ -104,21 +104,7 @@ fun ArScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             qrCodeValue?.let { qr ->
-                if (qr.contains("albayrealitycagsawa")) {
-                    globeVal?.content = qrCodeValue
-                    // # Valid QR Code -> navigate to ArSuccessScan
-                    LaunchedEffect(qr) {
-                        navController.navigate("ar_success_scan")
-                    }
-                }
-                else if (qr.contains("albayrealitymunisipyo")) {
-                    globeVal?.content = qrCodeValue
-                    // # Valid QR Code -> navigate to ArSuccessScan
-                    LaunchedEffect(qr) {
-                        navController.navigate("ar_success_scan")
-                    }
-                }
-                else if (qr.contains("albayrealitystjohnchurch")) {
+                if (qr.contains("albayreality")) {
                     globeVal?.content = qrCodeValue
                     // # Valid QR Code -> navigate to ArSuccessScan
                     LaunchedEffect(qr) {
@@ -127,7 +113,7 @@ fun ArScreen(navController: NavController) {
                 }
                 else {
                     globeVal?.content = qrCodeValue
-                    // # Invalid QR Code -> naviaigate to ArFailedScan
+                    // # Invalid QR Code -> navigate to ArFailedScan
                     LaunchedEffect(qr) {
                         navController.navigate("ar_failed_scan")
                     }
