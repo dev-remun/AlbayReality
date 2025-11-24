@@ -70,7 +70,7 @@ fun TextActivation(selectedPin: String?) {
                 )
             )
 
-            Paragraph("🚖 By Tricycle (direct ride, negotiate the fare with the drivers situated across the city)")
+            Paragraph("\uD83D\uDEFA By Tricycle (direct ride, negotiate the fare with the drivers situated across the city)")
 
             Subheading("You can also visit:")
             Paragraph("Bicol National Museum - Located just next to the Cagsawa Church Ruins "+
@@ -90,7 +90,62 @@ fun TextActivation(selectedPin: String?) {
             Heading("Old Albay Munisipyo")
             Subheading("Legazpi City, Albay")
 
-            Paragraph("Description")
+            Paragraph("Legazpi is the capital city of Albay and it serves as Bicol’s hub for transportation, education, health services, commerce, and tourism. "+
+            "Old Albay District is the historic core of Legazpi City in Abay. This district is rich in colonial-era architecture, plazas and buildings that "+
+            "shows its importance in the city’s history, both political and religious.")
+
+            Subheading("What to See")
+            BulletList(
+                listOf(
+                    "St. Gregory the Great Cathedral (Albay Cathedral) - it is an important spiritual institution and a prominent landmark in Old Albay.",
+                    "Penaranda Park (Old Albay’s town plaza) as of November 22, 2025 temporarily closed - where the city primarily hosts events, fiestas, and celebrations and is the heart of festive activities in Old Albay.",
+                    "Museo de Legazpi - stands as the cultural heart of the city, showcasing the region’s history and cultural heritage.",
+                    "Legazpi City Hall - serves as the city’s administrative center and provides essential services for the public."
+                )
+            )
+
+            Subheading("What to Do")
+            BulletList(
+                listOf(
+                    "Visit Museo de Legazpi and explore Albay's history and culture through their artifacts and artworks.",
+                    "Take a walk and relax at Peñaranda park (temporarily closed).",
+                    "Explore the heritage streets around the district to admire the colonial-era buildings.",
+                    "Admire the beautiful view of the Mayon Volcano and take a picture during sunset."
+                )
+            )
+
+            Subheading("Tips for Visitors")
+            BulletList(
+                listOf(
+                    "Best time to go: Visit between March to April for Holy Week, May to August for the summer, and "+
+                    "November to January for the holidays. August is also the month of the Ibalong festival.",
+                    "Time your visit: Early morning or late afternoon for cooler weather and better lighting for photos.",
+                    "Bring sun protection like a hat, umbrella and sunscreen to combat harsh hot weather, and stay hydrated.",
+                    "Keep in mind Peñaranda Park is currently closed until further notice."
+                )
+            )
+
+            Subheading("How to Commute")
+            Paragraph("🚌 By Jeepney (₱10–₱20, 10-15 mins)")
+            BulletList(
+                listOf(
+                    "From Legazpi Grand Terminal, take a jeepney bound Legazpi, can be Diretso or Alternate routes (depending on route). " +
+                            "Ask to be dropped off at the Legazpi City Hall, or Old Albay.",
+                    "Frequency of rides to destination: Very frequent"
+                )
+            )
+            Paragraph("\uD83D\uDEFA By Tricycle (₱20–₱60)")
+            BulletList(
+                listOf(
+                    "Tricycles are available throughout Legazpi City.",
+                    "Good option if you prefer a private ride to Old Albay.",
+                    "Duration (Within Legazpi City proper): 5-10 minutes",
+                    "Duration (From nearby barangays): 10-15 minutes"
+                )
+            )
+
+            Subheading("You can also visit:")
+            Paragraph("Albay Astrodome - open area stadium for sports, leisure and events.")
 
             ImageCarousel(
                 images = listOf(
@@ -158,7 +213,7 @@ fun TextActivation(selectedPin: String?) {
             Paragraph("🚌 By Jeepney (₱50–₱70, 1–1.5 hrs)")
             Paragraph("🚌 By Bus (1-1.5 hrs, comfortable with larger luggage space)")
 
-            Subheading("Nearby Attractions")
+            Subheading("You can also visit:")
             NumberList(
                 listOf(
                     "Hoyop-Hoyopan Cave – The word \"hoyop\" means blow and Hoyop-Hoyopan cave is a natural cave system with wind tunnels (thus the name \"Hoyop-Hoyopan\") that create cool airflow inside.",
