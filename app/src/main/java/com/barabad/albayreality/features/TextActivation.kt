@@ -144,7 +144,7 @@ fun TextActivation(selectedPin: String?) {
                 )
             )
 
-            Subheading("You can also visit:")
+            Subheading("You can also visit")
             Paragraph("Albay Astrodome - open area stadium for sports, leisure and events")
 
             ImageCarousel(
