@@ -25,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.barabad.albayreality.components.Footer
+import com.barabad.albayreality.features.GlobalVar
 import com.barabad.albayreality.ui.theme.Inter
 import com.journeyapps.barcodescanner.CompoundBarcodeView
 
@@ -33,6 +34,7 @@ fun ArScreen(navController: NavController) {
     // # Yo etong ui ng screen ang minodify ko and nagdagdag ako ng ui para macatch ung exception
     var qrCodeValue by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
+    val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -101,24 +103,42 @@ fun ArScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (qrCodeValue == null) {
-                /* pass? hahaha */
-            } else if (qrCodeValue!!.contains("albayreality")) {
-                Text(
-                    text = "Scanned QR Code: $qrCodeValue\n\nInsert corresponding model in another screen.",
-                    color = Color.Black
-                )
-            } else {
-                Text(
-                    text = "Invalid QR code detected.\nPlease try again.\nThe Scanned QR Code is: $qrCodeValue",
-                    color = Color.Red
-                )
+            qrCodeValue?.let { qr ->
+                if (qr.contains("albayrealitycagsawa")) {
+                    globeVal?.content = qrCodeValue
+                    // # Valid QR Code -> navigate to ArSuccessScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_success_scan")
+                    }
+                }
+                else if (qr.contains("albayrealitymunisipyo")) {
+                    globeVal?.content = qrCodeValue
+                    // # Valid QR Code -> navigate to ArSuccessScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_success_scan")
+                    }
+                }
+                else if (qr.contains("albayrealitystjohnchurch")) {
+                    globeVal?.content = qrCodeValue
+                    // # Valid QR Code -> navigate to ArSuccessScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_success_scan")
+                    }
+                }
+                else {
+                    globeVal?.content = qrCodeValue
+                    // # Invalid QR Code -> naviaigate to ArFailedScan
+                    LaunchedEffect(qr) {
+                        navController.navigate("ar_failed_scan")
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(100.dp)) // to give room before footer
         }
     }
 }
+
 
 @Composable
 fun QrCodeScanner(onQrCodeScanned: (String) -> Unit) {
