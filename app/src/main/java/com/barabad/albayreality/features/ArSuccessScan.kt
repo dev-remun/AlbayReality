@@ -29,6 +29,8 @@ import com.google.ar.core.Config
 import com.google.ar.core.Frame
 import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARScene
+import io.github.sceneview.ar.arcore.createAnchor
+import io.github.sceneview.ar.arcore.hitTest
 import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.ar.rememberARCameraNode
@@ -46,10 +48,11 @@ import io.github.sceneview.rememberView
 
 @Composable
 fun ArSuccessScan(navController: NavController) {
-    //global variable into qr Content (displayed for proof of concept)
     val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
     val qrContent = globeVal?.content
-    val location_sites = DatabaseProvider.database.getModelByQRCode(qrContent ?: "")
+    val location_sites = remember(qrContent) {
+        qrContent?.let { DatabaseProvider.database.getModelByQRCode(it) }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -109,16 +112,10 @@ fun ArSuccessScan(navController: NavController) {
                     contentAlignment = Alignment.Center
                 ) {
 
-                    if (qrContent != null && qrContent.contains("cagsawa")) {
-                        ModelDisplay("albayrealitycagsawa")
-                    }
-                    else if (qrContent != null && qrContent.contains("munisipyo")) {
-                        ModelDisplay("albayrealitymunisipyo")
-                    }
-                    else if (qrContent != null && qrContent.contains("stjohnchurch")) {
-                        ModelDisplay("albayrealitystjohnchurch")
-                    }else {
-                        Text("No 3D model found for this QR code. $qrContent")
+                    if (qrContent?.contains("albayreality") == true ) {
+                        ModelDisplay(modelName = qrContent)
+                    } else {
+                        Text("No 3D model found for this QR code. Scanned: $qrContent")
                     }
                 }
 
@@ -197,7 +194,13 @@ fun ModelDisplay(modelName: String?) {
 
     var modelInstance by remember { mutableStateOf<ModelInstance?>(null) }
     LaunchedEffect(modelName) {
-        modelInstance = modelLoader.createModelInstance("models/${modelName}.glb")
+        if (modelName != null) {
+            try {
+                modelInstance = modelLoader.createModelInstance("models/${modelName}.glb")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     ARScene(
@@ -225,11 +228,15 @@ fun ModelDisplay(modelName: String?) {
         onTrackingFailureChanged = {
             trackingFailureReason.value = it
         },
+        onSessionPaused = ({
+            childNodes.clear()
+            planeRenderer.value = true
+        }),
         onGestureListener = rememberOnGestureListener(
             onSingleTapConfirmed = { motionEvent, node ->
                 if (node == null) {
                     modelInstance?.let { instance ->
-                        frame.value?.hitTest(motionEvent)?.firstOrNull { it.isValid() }?.let { hitResult ->
+                        frame.value?.hitTest(motionEvent.x, motionEvent.y)?.firstOrNull { it.isValid() }?.let { hitResult ->
                             planeRenderer.value = false
                             childNodes.add(
                                 AnchorNode(
@@ -239,6 +246,7 @@ fun ModelDisplay(modelName: String?) {
                                     addChildNode(
                                         ModelNode(
                                             modelInstance = instance,
+                                            //engine = engine,
                                             scaleToUnits = 0.5f,
                                             centerOrigin = Position(y = -0.5f)
                                         )
