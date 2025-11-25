@@ -181,7 +181,7 @@ fun ArSuccessScan(navController: NavController) {
 }
 
 @Composable
-fun ModelDisplay(modelName: String) {
+fun ModelDisplay(modelName: String?) {
 
     val engine = rememberEngine()
     val modelLoader = rememberModelLoader(engine = engine)
