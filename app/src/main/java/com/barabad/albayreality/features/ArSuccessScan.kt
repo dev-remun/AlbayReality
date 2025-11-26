@@ -196,7 +196,7 @@ fun ModelDisplay(modelName: String?) {
     val trackingFailureReason = remember { mutableStateOf<TrackingFailureReason?>(null) }
     val frame = remember { mutableStateOf<Frame?>(null) }
 
-    val modelInstance = remember { mutableStateOf<ModelInstance?>(null) }
+    val modelInstance = remember { mutableListOf<ModelInstance>() }
 
     ARScene(
         modifier = Modifier.fillMaxSize(),
@@ -239,7 +239,7 @@ fun ModelDisplay(modelName: String?) {
                             engine = engine,
                             modelLoader = modelLoader,
                             materialLoader = materialLoader,
-                            modelInstance = modelInstance as MutableList<ModelInstance>,
+                            modelInstance = modelInstance,
                             anchor = it,
                             model = modelName!!
                         )
