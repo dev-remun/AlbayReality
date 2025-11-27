@@ -10,8 +10,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,21 +27,17 @@ import androidx.navigation.NavController
 import com.barabad.albayreality.components.ButtonTypeB
 import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.ui.theme.Inter
-import com.google.android.filament.Engine
-import com.google.ar.core.Anchor
 import com.google.ar.core.Config
 import com.google.ar.core.Frame
 import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARScene
-import io.github.sceneview.ar.arcore.createAnchorOrNull
+import io.github.sceneview.ar.arcore.createAnchor
+import io.github.sceneview.ar.arcore.hitTest
 import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.ar.rememberARCameraNode
 import io.github.sceneview.ar.rememberARCameraStream
-import io.github.sceneview.loaders.MaterialLoader
-import io.github.sceneview.loaders.ModelLoader
-import io.github.sceneview.model.ModelInstance
-import io.github.sceneview.node.CubeNode
+import io.github.sceneview.model.Model
 import io.github.sceneview.node.ModelNode
 import io.github.sceneview.rememberCollisionSystem
 import io.github.sceneview.rememberEngine
@@ -196,7 +195,17 @@ fun ModelDisplay(modelName: String?) {
     val trackingFailureReason = remember { mutableStateOf<TrackingFailureReason?>(null) }
     val frame = remember { mutableStateOf<Frame?>(null) }
 
-    val modelInstance = remember { mutableListOf<ModelInstance>() }
+    var model by remember { mutableStateOf<Model?>(null) }
+
+    LaunchedEffect(modelName) {
+        if (modelName != null) {
+            try {
+                model = modelLoader.createModel("models/${modelName}.glb")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     ARScene(
         modifier = Modifier.fillMaxSize(),
@@ -228,65 +237,27 @@ fun ModelDisplay(modelName: String?) {
             childNodes.clear()
             planeRenderer.value = true
         }),
+        onSessionCreated = {session -> session.resume()},
         onGestureListener = rememberOnGestureListener(
             onSingleTapConfirmed = { motionEvent, node ->
                 if (node == null) {
-                    val hitTestResult = frame.value?.hitTest(motionEvent.x, motionEvent.y)
-                    hitTestResult?.firstOrNull {
-                        it.isValid(depthPoint = false, point = false)
-                    }?.createAnchorOrNull()?.let {
-                        val nodeModel = createAnchorNode(
-                            engine = engine,
-                            modelLoader = modelLoader,
-                            materialLoader = materialLoader,
-                            modelInstance = modelInstance,
-                            anchor = it,
-                            model = modelName!!
-                        )
-                        childNodes += nodeModel
+                    model?.let { loadedModel ->
+                        frame.value?.hitTest(motionEvent.x, motionEvent.y)?.firstOrNull {
+                            it.isValid(depthPoint = false)
+                        }?.createAnchor()?.let { anchor ->
+                            planeRenderer.value = false
+                            val anchorNode = AnchorNode(engine = engine, anchor = anchor)
+                            val modelNode = ModelNode(
+                                modelInstance = modelLoader.createInstance(loadedModel)!!,
+                                scaleToUnits = 0.2f
+                            ).apply { isEditable = true }
+                            anchorNode.addChildNode(modelNode)
+                            childNodes.add(anchorNode)
+                        }
                     }
                 }
             }
         )
     )
 }
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun createAnchorNode(
-        engine: Engine,
-        modelLoader: ModelLoader,
-        materialLoader: MaterialLoader,
-        modelInstance: MutableList<ModelInstance>,
-        anchor: Anchor,
-        model: String
-    ): AnchorNode {
-        val anchorNode = AnchorNode(engine = engine, anchor = anchor)
-        val modelNode = ModelNode(
-            modelInstance = modelInstance.apply {
-                if (isEmpty()) {
-                    this += modelLoader.createInstancedModel("model/{$model}.glb", 10)
-                }
-            }.removeLast(),
-            scaleToUnits = 0.2f
-        ).apply {
-            isEditable = true
-        }
-        val boundingBox = CubeNode(
-            engine = engine,
-            size = modelNode.extents,
-            center = modelNode.center,
-            materialInstance = materialLoader.createColorInstance(Color.White)
-        ).apply {
-            isVisible = false
-        }
-        modelNode.addChildNode(boundingBox)
-        anchorNode.addChildNode(modelNode)
-        listOf(modelNode, anchorNode).forEach {
-            it.onEditingChanged = { editingTransforms ->
-                boundingBox.isVisible = editingTransforms.isNotEmpty()
-            }
-        }
-        return anchorNode
-
-    }
-
 
