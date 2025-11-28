@@ -1,5 +1,7 @@
 package com.barabad.albayreality.features
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,12 +31,13 @@ import com.google.ar.core.Config
 import com.google.ar.core.Frame
 import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARScene
+import io.github.sceneview.ar.arcore.createAnchor
+import io.github.sceneview.ar.arcore.hitTest
 import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.ar.rememberARCameraNode
 import io.github.sceneview.ar.rememberARCameraStream
-import io.github.sceneview.math.Position
-import io.github.sceneview.model.ModelInstance
+import io.github.sceneview.model.Model
 import io.github.sceneview.node.ModelNode
 import io.github.sceneview.rememberCollisionSystem
 import io.github.sceneview.rememberEngine
@@ -44,12 +47,14 @@ import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ArSuccessScan(navController: NavController) {
-    //global variable into qr Content (displayed for proof of concept)
     val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
     val qrContent = globeVal?.content
-    val location_sites = DatabaseProvider.database.getModelByQRCode(qrContent ?: "")
+    val location_sites = remember(qrContent) {
+        qrContent?.let { DatabaseProvider.database.getModelByQRCode(it) }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -109,16 +114,10 @@ fun ArSuccessScan(navController: NavController) {
                     contentAlignment = Alignment.Center
                 ) {
 
-                    if (qrContent != null && qrContent.contains("cagsawa")) {
-                        ModelDisplay("albayrealitycagsawa")
-                    }
-                    else if (qrContent != null && qrContent.contains("munisipyo")) {
-                        ModelDisplay("albayrealitymunisipyo")
-                    }
-                    else if (qrContent != null && qrContent.contains("stjohnchurch")) {
-                        ModelDisplay("albayrealitystjohnchurch")
-                    }else {
-                        Text("No 3D model found for this QR code. $qrContent")
+                    if (qrContent?.contains("albayreality") == true ) {
+                        ModelDisplay(modelName = qrContent)
+                    } else {
+                        Text("No 3D model found for this QR code. Scanned: $qrContent")
                     }
                 }
 
@@ -180,8 +179,9 @@ fun ArSuccessScan(navController: NavController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
-fun ModelDisplay(modelName: String) {
+fun ModelDisplay(modelName: String?) {
 
     val engine = rememberEngine()
     val modelLoader = rememberModelLoader(engine = engine)
@@ -195,9 +195,16 @@ fun ModelDisplay(modelName: String) {
     val trackingFailureReason = remember { mutableStateOf<TrackingFailureReason?>(null) }
     val frame = remember { mutableStateOf<Frame?>(null) }
 
-    var modelInstance by remember { mutableStateOf<ModelInstance?>(null) }
+    var model by remember { mutableStateOf<Model?>(null) }
+
     LaunchedEffect(modelName) {
-        modelInstance = modelLoader.createModelInstance("models/${modelName}.glb")
+        if (modelName != null) {
+            try {
+                model = modelLoader.createModel("models/${modelName}.glb")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     ARScene(
@@ -207,6 +214,7 @@ fun ModelDisplay(modelName: String) {
         engine = engine,
         view = view,
         modelLoader = modelLoader,
+        materialLoader = materialLoader,
         collisionSystem = collisionSystem,
         sessionConfiguration = { session, config ->
             config.depthMode =
@@ -225,26 +233,26 @@ fun ModelDisplay(modelName: String) {
         onTrackingFailureChanged = {
             trackingFailureReason.value = it
         },
+        onSessionPaused = ({
+            childNodes.clear()
+            planeRenderer.value = true
+        }),
+        onSessionCreated = {session -> session.resume()},
         onGestureListener = rememberOnGestureListener(
             onSingleTapConfirmed = { motionEvent, node ->
                 if (node == null) {
-                    modelInstance?.let { instance ->
-                        frame.value?.hitTest(motionEvent)?.firstOrNull { it.isValid() }?.let { hitResult ->
+                    model?.let { loadedModel ->
+                        frame.value?.hitTest(motionEvent.x, motionEvent.y)?.firstOrNull {
+                            it.isValid(depthPoint = false)
+                        }?.createAnchor()?.let { anchor ->
                             planeRenderer.value = false
-                            childNodes.add(
-                                AnchorNode(
-                                    engine = engine,
-                                    anchor = hitResult.createAnchor()
-                                ).apply {
-                                    addChildNode(
-                                        ModelNode(
-                                            modelInstance = instance,
-                                            scaleToUnits = 0.5f,
-                                            centerOrigin = Position(y = -0.5f)
-                                        )
-                                    )
-                                }
-                            )
+                            val anchorNode = AnchorNode(engine = engine, anchor = anchor)
+                            val modelNode = ModelNode(
+                                modelInstance = modelLoader.createInstance(loadedModel)!!,
+                                scaleToUnits = 0.2f
+                            ).apply { isEditable = true }
+                            anchorNode.addChildNode(modelNode)
+                            childNodes.add(anchorNode)
                         }
                     }
                 }
@@ -252,3 +260,4 @@ fun ModelDisplay(modelName: String) {
         )
     )
 }
+

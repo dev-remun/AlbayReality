@@ -11,7 +11,7 @@ composeBom = "2024.09.00"
 navigationCompose = "2.9.5"
 zxingAndroidEmbedded = "4.3.0"
 core = "3.5.3"
-scenecore = "1.0.0-alpha08"
+scenecore = "1.0.0-alpha09"
 coreVersion = "1.17.1"
 sceneformUx = "1.17.1"
 
@@ -31,11 +31,7 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
-core = { group = "com.google.zxing", name = "core", version.ref = "core" }
-androidx-scenecore = { group = "androidx.xr.scenecore", name = "scenecore", version.ref = "scenecore" }
-sceneform-core = { group = "com.google.ar.sceneform", name = "core", version.ref = "coreVersion" }
-sceneform-ux = { group = "com.google.ar.sceneform.ux", name = "sceneform-ux", version.ref = "sceneformUx" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

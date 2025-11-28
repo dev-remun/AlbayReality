@@ -74,7 +74,7 @@ fun checkSystemSupport(activity: Activity): Boolean {
     if (openGlVersion.toDouble() >= 3.0) {
         return true
     } else {
-        Toast.makeText(activity, "App needs OpenGl Version 3.0 or later", Toast.LENGTH_SHORT)
+        Toast.makeText(activity, "App needs OpenGl Version 3.0 or later", Toast.LENGTH_LONG)
             .show()
         activity.finish()
         return false
