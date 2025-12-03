@@ -23,7 +23,7 @@ import com.barabad.albayreality.ui.theme.Inter
 fun ArFailedScan(navController: NavController) {
     //global variable into qr Content (displayed for proof of concept)
     val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
-    val qrContent = globeVal?.content
+    val qrContent = globeVal?.getContent()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
