@@ -1,6 +1,8 @@
 package com.barabad.albayreality.screens
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -34,7 +36,10 @@ fun ArScreen(navController: NavController) {
     // # Yo etong ui ng screen ang minodify ko and nagdagdag ako ng ui para macatch ung exception
     var qrCodeValue by remember { mutableStateOf<String?>(null) }
     val scrollState = rememberScrollState()
-    val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
+
+    // We need the context to start the browser Activity
+    val context = LocalContext.current
+    val globeVal: GlobalVar? = context.applicationContext as? GlobalVar
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -95,7 +100,7 @@ fun ArScreen(navController: NavController) {
                     }
                 } else {
                     Text(
-                        text = "QR Code scanned!",
+                        text = "Redirecting...",
                         color = Color.Black
                     )
                 }
@@ -103,18 +108,26 @@ fun ArScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Logic to open the Website
             qrCodeValue?.let { qr ->
-                if (qr.contains("albayreality")) {
-                    globeVal?.content = qrCodeValue
-                    // # Valid QR Code -> navigate to ArSuccessScan
-                    LaunchedEffect(qr) {
+                globeVal?.setContent(qrCodeValue)
+
+                LaunchedEffect(qr) {
+                    if (qr.startsWith("http")) {
+                        try {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(qr))
+                            context.startActivity(intent)
+                        } catch (e: Exception) {
+                            // Handle error; invalid url
+                            e.printStackTrace()
+                        }
+                    }
+                    else if (qr.contains("albayreality")) {
+                        globeVal?.setContent(qrCodeValue)
                         navController.navigate("ar_success_scan")
                     }
-                }
-                else {
-                    globeVal?.content = qrCodeValue
-                    // # Invalid QR Code -> navigate to ArFailedScan
-                    LaunchedEffect(qr) {
+                    else {
+                        globeVal?.setContent(qrCodeValue)
                         navController.navigate("ar_failed_scan")
                     }
                 }

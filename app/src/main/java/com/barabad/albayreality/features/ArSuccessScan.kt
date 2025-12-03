@@ -51,7 +51,7 @@ import io.github.sceneview.rememberView
 @Composable
 fun ArSuccessScan(navController: NavController) {
     val globeVal: GlobalVar? = LocalContext.current.applicationContext as? GlobalVar
-    val qrContent = globeVal?.content
+    val qrContent = globeVal?.getContent()
     val location_sites = remember(qrContent) {
         qrContent?.let { DatabaseProvider.database.getModelByQRCode(it) }
     }
@@ -72,8 +72,7 @@ fun ArSuccessScan(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState()),
+                    .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -128,6 +127,7 @@ fun ArSuccessScan(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
                         Text(
                             text = location_sites.getName().toString(),
@@ -249,7 +249,7 @@ fun ModelDisplay(modelName: String?) {
                             val anchorNode = AnchorNode(engine = engine, anchor = anchor)
                             val modelNode = ModelNode(
                                 modelInstance = modelLoader.createInstance(loadedModel)!!,
-                                scaleToUnits = 0.2f
+                                scaleToUnits = 2f
                             ).apply { isEditable = true }
                             anchorNode.addChildNode(modelNode)
                             childNodes.add(anchorNode)

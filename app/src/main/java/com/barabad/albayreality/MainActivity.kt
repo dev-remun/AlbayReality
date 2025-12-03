@@ -3,10 +3,12 @@ package com.barabad.albayreality
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.*
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +38,7 @@ class MainActivity : ComponentActivity() {
         location = "Camalig, Albay",
         description = "St. John the Baptist Church, also known as Camalig Church, is a historic Roman Catholic parish in Camalig, Albay. First built in 1579 by Franciscan missionaries as a simple wooden structure, it was later reconstructed in stone in 1605. The church was destroyed during the 1814 eruption of Mount Mayon, which forced the town to relocate temporarily. When residents returned, they rebuilt the church using volcanic stones from Mayon, beginning restoration work in the 1830s and completing it in 1848.\n\nOver time, wealthy local families donated significant furnishings such as bells, marble holy water fonts, and a crystal chandelier, giving the interior a distinctive heritage character. The church has survived wars, natural disasters, and volcanic activity, symbolizing the resilience and faith of the community. Today, it is officially recognized as a Level II Historic Structure by the National Historical Commission and designated as an Important Cultural Property by the National Museum, making it a central cultural landmark in Camalig and a key part of the town’s identity as a heritage area.")
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_AlbayReality)
         super.onCreate(savedInstanceState)
