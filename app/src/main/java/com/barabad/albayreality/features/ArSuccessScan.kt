@@ -1,6 +1,9 @@
 package com.barabad.albayreality.features
 
 import android.os.Build
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,6 +42,7 @@ import io.github.sceneview.ar.rememberARCameraNode
 import io.github.sceneview.ar.rememberARCameraStream
 import io.github.sceneview.model.Model
 import io.github.sceneview.node.ModelNode
+import io.github.sceneview.node.Node
 import io.github.sceneview.rememberCollisionSystem
 import io.github.sceneview.rememberEngine
 import io.github.sceneview.rememberMaterialLoader
@@ -183,6 +187,7 @@ fun ArSuccessScan(navController: NavController) {
 @Composable
 fun ModelDisplay(modelName: String?) {
 
+    val context = LocalContext.current
     val engine = rememberEngine()
     val modelLoader = rememberModelLoader(engine = engine)
     val materialLoader = rememberMaterialLoader(engine = engine)
@@ -237,24 +242,32 @@ fun ModelDisplay(modelName: String?) {
             childNodes.clear()
             planeRenderer.value = true
         }),
-        onSessionCreated = {session -> session.resume()},
+        onSessionCreated = {session ->
+            session.resume()
+            Toast.makeText(context, "Tap to place the model when the white dots appear", Toast.LENGTH_SHORT).show()
+                           },
         onGestureListener = rememberOnGestureListener(
             onSingleTapConfirmed = { motionEvent, node ->
                 if (node == null) {
                     model?.let { loadedModel ->
                         frame.value?.hitTest(motionEvent.x, motionEvent.y)?.firstOrNull {
-                            it.isValid(depthPoint = false)
+                            it.isValid(depthPoint = true)
                         }?.createAnchor()?.let { anchor ->
                             planeRenderer.value = false
                             val anchorNode = AnchorNode(engine = engine, anchor = anchor)
                             val modelNode = ModelNode(
                                 modelInstance = modelLoader.createInstance(loadedModel)!!,
-                                scaleToUnits = 2f
+                                scaleToUnits = 1f
                             ).apply { isEditable = true }
                             anchorNode.addChildNode(modelNode)
                             childNodes.add(anchorNode)
                         }
                     }
+                }
+            },
+            onScale = { detector,_ ,node ->
+                if (node is ModelNode) {
+                    node.scale = node.scale * detector.scaleFactor
                 }
             }
         )
