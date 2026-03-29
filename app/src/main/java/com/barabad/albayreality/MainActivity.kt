@@ -10,6 +10,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.*
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
 import com.barabad.albayreality.data.DatabaseProvider
@@ -19,7 +22,10 @@ import com.barabad.albayreality.features.ArSuccessScan
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
 import com.barabad.albayreality.frontend.screens.ArScreen
 import com.barabad.albayreality.frontend.screens.HomeScreen
+import com.barabad.albayreality.frontend.screens.LandingScreen
+import com.barabad.albayreality.frontend.screens.LogInScreen
 import com.barabad.albayreality.frontend.screens.MapScreen
+import com.barabad.albayreality.frontend.screens.RegisterScreen
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -47,6 +53,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         checkSystemSupport(this)
 
+        // Allow full screen drawing
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+
+        // Hide BOTH status bar and navigation bar
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+
+        // Allow swipe to temporarily show bars
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
         DatabaseProvider.database.addModel(cagsawa_church)
         DatabaseProvider.database.addModel(old_albay_munisipyo)
         DatabaseProvider.database.addModel(st_john_church)
@@ -55,7 +73,10 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 val navController = rememberNavController()
 
-                NavHost(navController, startDestination = "home") {
+                NavHost(navController, startDestination = "landing") {
+                    composable("login") { LogInScreen(navController) }
+                    composable("register") { RegisterScreen(navController) }
+                    composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
                     composable("ar") { ArScreen(navController) }
                     composable("map") { MapScreen(navController) }
