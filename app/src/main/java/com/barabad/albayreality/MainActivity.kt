@@ -16,7 +16,10 @@ import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.data.ThreeDModel
 import com.barabad.albayreality.features.ArFailedScan
 import com.barabad.albayreality.features.ArSuccessScan
-import com.barabad.albayreality.screens.*
+import com.barabad.albayreality.frontend.screens.AboutUsScreen
+import com.barabad.albayreality.frontend.screens.ArScreen
+import com.barabad.albayreality.frontend.screens.HomeScreen
+import com.barabad.albayreality.frontend.screens.MapScreen
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {

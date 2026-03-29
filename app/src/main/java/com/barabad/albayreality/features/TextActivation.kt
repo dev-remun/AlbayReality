@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.barabad.albayreality.components.*
 import com.barabad.albayreality.R
+import com.barabad.albayreality.frontend.components.BulletList
+import com.barabad.albayreality.frontend.components.Heading
+import com.barabad.albayreality.frontend.components.NumberList
+import com.barabad.albayreality.frontend.components.Paragraph
+import com.barabad.albayreality.frontend.components.Subheading
 
 @Composable
 fun TextActivation(selectedPin: String?) {
@@ -21,16 +25,16 @@ fun TextActivation(selectedPin: String?) {
             Paragraph(
                 "Daraga is a first-class municipality that serves as a key gateway for commerce and tourism, " +
                         "thanks to its strategic landlocked location. Its economy is rooted in agriculture; especially rice, " +
-                        "coconut and vegetables. Daraga is known for its scenic and historic attractions. Barangay Busay in Daraga "+
-                "(where the Cagsawa Ruins is specifically located) is a hilly area just north of Legazpi City that serves as the gateway "+
-                "to several attractions in Albay.",
+                        "coconut and vegetables. Daraga is known for its scenic and historic attractions. Barangay Busay in Daraga " +
+                        "(where the Cagsawa Ruins is specifically located) is a hilly area just north of Legazpi City that serves as the gateway " +
+                        "to several attractions in Albay.",
             )
 
             Subheading("What to See")
             BulletList(
                 listOf(
-                    "View of the Mayon Volcano - The ruins offer a dramatic, postcard-like frame of the Mayon along "+
-                    "with the bell tower (belfry).",
+                    "View of the Mayon Volcano - The ruins offer a dramatic, postcard-like frame of the Mayon along " +
+                            "with the bell tower (belfry).",
                     "The bell tower (belfry) - a resilient remnant of the  old church, symbolizing resilience and survival.",
                     "Lush gardens surrounding the ruins, offering a tranquil, green spot to relax and enjoy the view."
                 )
@@ -41,7 +45,7 @@ fun TextActivation(selectedPin: String?) {
                 listOf(
                     "Take the iconic photo of the belfry with Mayon in the background; you can ask the locals for the best angles.",
                     "The ruins and the Mayon Volcano make an incredible photo playground. Guides can " +
-                    "help you stage photos where you can create fun illusions.",
+                            "help you stage photos where you can create fun illusions.",
                     "Visit the Cagsawa National Museum and uncover the history and fascinating stories of this historical site. ",
                     "Nearby stalls around the area offering unique handicrafts and souvenirs that you can browse and purchase.",
                     "Embark on an ATV adventure for the closest possible encounter with Mayon's landscape.",
@@ -65,17 +69,19 @@ fun TextActivation(selectedPin: String?) {
             BulletList(
                 listOf(
                     "From Legazpi Grand Terminal, take a jeepney bound for Daraga/Camalig route",
-                    "Ask to be dropped off at Cagsawa Ruins "+
-                    "; just look for the belfry on the highway."
+                    "Ask to be dropped off at Cagsawa Ruins " +
+                            "; just look for the belfry on the highway."
                 )
             )
 
             Paragraph("\uD83D\uDEFA By Tricycle (direct ride, negotiate the fare with the drivers situated across the city)")
 
             Subheading("You can also visit:")
-            Paragraph("Bicol National Museum - Located just next to the Cagsawa Church Ruins "+
-            "and it holds dear the history of the Bicol Region, who have been, for centuries, withstanding "+
-            "the eruptions of the Mayon.")
+            Paragraph(
+                "Bicol National Museum - Located just next to the Cagsawa Church Ruins " +
+                        "and it holds dear the history of the Bicol Region, who have been, for centuries, withstanding " +
+                        "the eruptions of the Mayon."
+            )
 
             ImageCarousel(
                 images = listOf(
@@ -90,9 +96,11 @@ fun TextActivation(selectedPin: String?) {
             Heading("Old Albay Munisipyo")
             Subheading("Legazpi City, Albay")
 
-            Paragraph("Legazpi is the capital city of Albay and it serves as Bicol’s hub for transportation, education, health services, commerce, and tourism. "+
-            "Old Albay District is the historic core of Legazpi City in Abay. This district is rich in colonial-era architecture, plazas and buildings that "+
-            "shows its importance in the city’s history, both political and religious.")
+            Paragraph(
+                "Legazpi is the capital city of Albay and it serves as Bicol’s hub for transportation, education, health services, commerce, and tourism. " +
+                        "Old Albay District is the historic core of Legazpi City in Abay. This district is rich in colonial-era architecture, plazas and buildings that " +
+                        "shows its importance in the city’s history, both political and religious."
+            )
 
             Subheading("What to See")
             BulletList(
@@ -117,8 +125,8 @@ fun TextActivation(selectedPin: String?) {
             Subheading("Tips for Visitors")
             BulletList(
                 listOf(
-                    "Best time to go: Visit between March to April for Holy Week, May to August for the summer, and "+
-                    "November to January for the holidays. August is also the month of the Ibalong festival.",
+                    "Best time to go: Visit between March to April for Holy Week, May to August for the summer, and " +
+                            "November to January for the holidays. August is also the month of the Ibalong festival.",
                     "Time your visit: Early morning or late afternoon for cooler weather and better lighting for photos.",
                     "Bring sun protection like a hat, umbrella and sunscreen to combat harsh hot weather, and stay hydrated.",
                     "Keep in mind Peñaranda Park is currently closed until further notice."
@@ -181,12 +189,12 @@ fun TextActivation(selectedPin: String?) {
             BulletList(
                 listOf(
                     "A majestic stone facade made from volcanic rocks.",
-                    "Interior paintings by local artist Frank Borin and Interior Art and Furnishings contributed "+
-                    "by the towns prominent families including wood, glass, silver, gold, brass or copper.",
+                    "Interior paintings by local artist Frank Borin and Interior Art and Furnishings contributed " +
+                            "by the towns prominent families including wood, glass, silver, gold, brass or copper.",
                     "Historical tombs from notable locals and spanish period along with paintings.",
-                    "A level II Historic structure with a marker from the National Historical Commission "+
-                    "of the Philippines and is also declared as an important intellectual Cultural Property by "+
-                    "the National Museum in 2017.",
+                    "A level II Historic structure with a marker from the National Historical Commission " +
+                            "of the Philippines and is also declared as an important intellectual Cultural Property by " +
+                            "the National Museum in 2017.",
                 )
             )
 

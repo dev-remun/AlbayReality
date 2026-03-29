@@ -1,4 +1,4 @@
-package com.barabad.albayreality.screens
+package com.barabad.albayreality.frontend.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,11 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
-import com.barabad.albayreality.components.CardTypeA
-import com.barabad.albayreality.components.CardTypeB
-import com.barabad.albayreality.components.Footer
-import com.barabad.albayreality.components.Header
-import com.barabad.albayreality.components.SubHeaderTypeA
+import com.barabad.albayreality.frontend.components.CardTypeA
+import com.barabad.albayreality.frontend.components.CardTypeB
+import com.barabad.albayreality.frontend.components.Footer
+import com.barabad.albayreality.frontend.components.Header
+import com.barabad.albayreality.frontend.components.SubHeaderTypeA
 
 @Composable
 fun AboutUsScreen(navController: NavController) {

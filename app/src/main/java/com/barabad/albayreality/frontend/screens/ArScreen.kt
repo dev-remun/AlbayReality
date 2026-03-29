@@ -1,5 +1,6 @@
-package com.barabad.albayreality.screens
+package com.barabad.albayreality.frontend.screens
 
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -26,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import com.barabad.albayreality.components.Footer
+import com.barabad.albayreality.frontend.components.Footer
 import com.barabad.albayreality.features.GlobalVar
 import com.barabad.albayreality.ui.theme.Inter
 import com.journeyapps.barcodescanner.CompoundBarcodeView
@@ -146,7 +147,7 @@ fun QrCodeScanner(onQrCodeScanned: (String) -> Unit) {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
                 context,
-                android.Manifest.permission.CAMERA
+                Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
@@ -158,7 +159,7 @@ fun QrCodeScanner(onQrCodeScanned: (String) -> Unit) {
 
     LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
-            launcher.launch(android.Manifest.permission.CAMERA)
+            launcher.launch(Manifest.permission.CAMERA)
         }
     }
 

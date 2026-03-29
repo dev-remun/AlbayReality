@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.components.ButtonTypeB
+import com.barabad.albayreality.frontend.components.ButtonTypeB
 import com.barabad.albayreality.ui.theme.Inter
 
 @Composable

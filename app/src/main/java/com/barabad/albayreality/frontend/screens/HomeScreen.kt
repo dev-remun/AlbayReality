@@ -1,4 +1,4 @@
-package com.barabad.albayreality.screens
+package com.barabad.albayreality.frontend.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.ui.text.font.FontWeight
@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.components.Header
-import com.barabad.albayreality.components.Footer
+import com.barabad.albayreality.frontend.components.Header
+import com.barabad.albayreality.frontend.components.Footer
 import com.barabad.albayreality.R
-import com.barabad.albayreality.components.ButtonTypeA
+import com.barabad.albayreality.frontend.components.ButtonTypeA
 import com.barabad.albayreality.ui.theme.Inter
 
 @Composable

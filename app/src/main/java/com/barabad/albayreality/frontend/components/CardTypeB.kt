@@ -1,4 +1,4 @@
-package com.barabad.albayreality.components
+package com.barabad.albayreality.frontend.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.barabad.albayreality.components
+package com.barabad.albayreality.frontend.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text

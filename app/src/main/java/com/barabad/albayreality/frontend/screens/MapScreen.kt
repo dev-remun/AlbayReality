@@ -1,4 +1,4 @@
-package com.barabad.albayreality.screens
+package com.barabad.albayreality.frontend.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.components.Footer
-import com.barabad.albayreality.components.Header
+import com.barabad.albayreality.frontend.components.Footer
 import com.barabad.albayreality.features.MapBox
 import com.barabad.albayreality.features.TextActivation
 import com.barabad.albayreality.ui.theme.Inter
