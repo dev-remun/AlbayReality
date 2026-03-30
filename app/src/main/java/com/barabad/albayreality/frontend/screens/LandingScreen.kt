@@ -32,45 +32,68 @@ fun LandingScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // Top Spacer to push content down
         Spacer(modifier = Modifier.height(160.dp))
 
-        // Title
-        Box(contentAlignment = Alignment.Center) {
-            // Main Fill Text
-            Text(
-                text = "ALBAY\nReality",
-                style = TextStyle(
-                    fontSize = 64.sp,
-                    fontWeight = FontWeight.Black,
-                    color = primary,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 60.sp,
-                    fontFamily = TitanOne
-                )
-            )
-            // Outline Text
-            Text(
-                text = "ALBAY\nReality",
-                style = TextStyle(
-                    fontSize = 64.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = strokes,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 60.sp,
-                    drawStyle = Stroke(
-                        miter = 10f,
-                        width = 4f,
-                        join = StrokeJoin.Round
+        // # Title
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            // # Outline + Fill Text for "ALBAY"
+            Box(contentAlignment = Alignment.Center) {
+                // # Outline Text for "ALBAY"
+                Text(
+                    text = "ALBAY",
+                    style = TextStyle(
+                        fontSize = 60.sp,
+                        fontFamily = TitanOne,
+                        fontWeight = FontWeight.Black,
+                        color = strokes,
+                        drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                     )
                 )
-            )
+                // # Fill Text for "ALBAY"
+                Text(
+                    text = "ALBAY",
+                    style = TextStyle(
+                        fontSize = 60.sp,
+                        fontFamily = TitanOne,
+                        fontWeight = FontWeight.Black,
+                        color = primary
+                    )
+                )
+            }
+
+            // # Spacer
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // # Outline + Fill Text for "Reality"
+            Box(contentAlignment = Alignment.Center) {
+                // # Outline Text for "Reality"
+                Text(
+                    text = "Reality",
+                    style = TextStyle(
+                        fontSize = 51.sp,
+                        fontFamily = TitanOne,
+                        fontWeight = FontWeight.Black,
+                        color = strokes,
+                        drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
+                    )
+                )
+                // # Fill Text for "Reality"
+                Text(
+                    text = "Reality",
+                    style = TextStyle(
+                        fontSize = 51.sp,
+                        fontFamily = TitanOne,
+                        fontWeight = FontWeight.Black,
+                        color = primary
+                    )
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Subtitle
+        // # Subtitle
         Text(
             text = "Exploring Albay, One scan at a time",
             fontFamily = Inter,
@@ -80,10 +103,9 @@ fun LandingScreen(navController: NavController) {
             textAlign = TextAlign.Center
         )
 
-        // Spacer
         Spacer(modifier = Modifier.weight(0.6f))
 
-        // Login Button
+        // # Login Button
         Button(
             text = "Login",
             isPrimary = true,
@@ -92,14 +114,13 @@ fun LandingScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Register Button
+        // # Register Button
         Button(
             text = "Register",
             isPrimary = false,
             onClick = { navController.navigate("register") }
         )
 
-        // Spacer
         Spacer(modifier = Modifier.weight(0.3f))
     }
 }

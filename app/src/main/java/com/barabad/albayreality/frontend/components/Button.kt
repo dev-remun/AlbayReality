@@ -24,8 +24,8 @@ fun Button(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Determine background color based on the type of button
-    val backgroundColor = if (isPrimary) primary else Color.White
+    // # Determine background color based on the type of button
+    val background_color = if (isPrimary) primary else Color.White
 
     Button(
         onClick = onClick,
@@ -34,14 +34,14 @@ fun Button(
             .height(60.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = strokes // Text color remains brown for both
+            containerColor = background_color,
+            contentColor = strokes
         ),
-        border = BorderStroke(3.dp, strokes) // Border remains brown for both
+        border = BorderStroke(2.dp, strokes)
     ) {
         Text(
             text = text,
-            fontSize = 18.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
     }
