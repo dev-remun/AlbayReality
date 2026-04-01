@@ -18,24 +18,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.frontend.components.Button
-import com.barabad.albayreality.frontend.components.InputField
-import com.barabad.albayreality.frontend.components.PasswordInputField
-import com.barabad.albayreality.ui.theme.TitanOne
-import com.barabad.albayreality.ui.theme.error_message_color
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
+import com.barabad.albayreality.frontend.components.Button
+import com.barabad.albayreality.frontend.components.InputField
+import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
+import com.barabad.albayreality.ui.theme.TitanOne
 
 @Composable
-fun LogInScreen(navController: NavController) {
+fun RegisterScreen1(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
 
-    // # state variables for inputs
-    var username_input by remember { mutableStateOf("") }
-    var password_input by remember { mutableStateOf("") }
+    // # State variables for inputs
+    var firstname by remember { mutableStateOf(user_registration_info_object.user_registration_info.firstname) }
+    var middlename by remember { mutableStateOf(user_registration_info_object.user_registration_info.middlename) }
+    var lastname by remember { mutableStateOf(user_registration_info_object.user_registration_info.lastname) }
 
-    // # state variables for error messages
-    var username_error by remember { mutableStateOf(false) }
-    var password_error by remember { mutableStateOf(false) }
+    // # State variables for error messages
+    var has_firstname_error by remember { mutableStateOf(false) }
+    var has_middlename_error by remember { mutableStateOf(false) }
+    var has_lastname_error by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -45,10 +46,10 @@ fun LogInScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.25f),
+                .padding(top = 80.dp, bottom = 40.dp),
             contentAlignment = Alignment.Center
         ) {
-            // # outline text for app title
+            // # Outline Text
             Text(
                 text = "Albay Reality",
                 style = TextStyle(
@@ -59,7 +60,7 @@ fun LogInScreen(navController: NavController) {
                     drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                 )
             )
-            // # fill text for app title
+            // # Fill Text
             Text(
                 text = "Albay Reality",
                 style = TextStyle(
@@ -71,7 +72,7 @@ fun LogInScreen(navController: NavController) {
             )
         }
 
-        // # login form
+        // # Register Form
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,13 +94,13 @@ fun LogInScreen(navController: NavController) {
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
                 Text(
-                    text = "Login",
+                    text = "Register",
                     color = strokes,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(
-                    text = "Please input your credentials",
+                    text = "Please input your personal information",
                     color = strokes.copy(alpha = 0.80f),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -107,81 +108,105 @@ fun LogInScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // # username input field
+                // # Firstname Field
                 InputField(
-                    title = "Username",
-                    value = username_input,
+                    title = "First Name",
+                    value = firstname,
                     onValueChange = {
-                        username_input = it
-                        if (username_error) username_error = false
+                        firstname = it
+                        if (has_firstname_error) has_firstname_error = false
                     },
-                    placeholder = "Enter your username",
-                    has_error = username_error,
-                    error_message = "Please input your username"
+                    placeholder = "Juan",
+                    has_error = has_firstname_error,
+                    error_message = "Please input your first name"
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-                // # password input field
-                PasswordInputField(
-                    title = "Password",
-                    value = password_input,
-                    onValueChange = {
-                        password_input = it
-                        if (password_error) password_error = false
-                    },
-                    placeholder = "Enter your password",
-                    has_error = password_error,
-                    error_message = "Please input your password"
+                // # Middlename Field (optional)
+                InputField(
+                    title = "Middle Name",
+                    value = middlename,
+                    onValueChange = { middlename = it },
+                    placeholder = "Santos (optional)",
+                    has_error = has_middlename_error,
+                    error_message = "Please input your middle name"
                 )
 
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(6.dp))
 
-                // # login button
+                // # Lastname Field
+                InputField(
+                    title = "Last Name",
+                    value = lastname,
+                    onValueChange = {
+                        lastname = it
+                        if (has_lastname_error) has_lastname_error = false
+                    },
+                    placeholder = "Dela Cruz",
+                    has_error = has_lastname_error,
+                    error_message = "Please input your last name"
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // # Register Button
                 Button(
-                    text = "Login",
+                    text = "Next",
                     isPrimary = true,
                     onClick = {
                         var has_error = false
 
-                        if (username_input.isBlank()) {
-                            username_error = true
+                        if (firstname.isBlank()) {
+                            has_firstname_error = true
                             has_error = true
                         }
-                        if (password_input.isBlank()) {
-                            password_error = true
+
+                        if (lastname.isBlank()) {
+                            has_lastname_error = true
                             has_error = true
                         }
 
                         if (!has_error) {
-                            Log.d("log_in_screen", "username: $username_input")
-                            Log.d("log_in_screen", "password: $password_input")
 
-                            // # navigate to home screen
-                            // navController.navigate("home")
+                            // # Substitute the "NA" value for the middlename if the user did not enter an input
+                            if (middlename.isBlank()) {
+                                middlename = "NA"
+                            }
+
+                            user_registration_info_object.updateUserInformation("firstname", firstname)
+                            user_registration_info_object.updateUserInformation("middlename", middlename)
+                            user_registration_info_object.updateUserInformation("lastname", lastname)
+
+                            Log.d("register_screen", "Firstname: $firstname")
+                            Log.d("register_screen", "Middlename: $middlename")
+                            Log.d("register_screen", "Lastname: $lastname")
+
+                            // TODO: navigate to next step
+                            navController.navigate("register2")
                         }
                     }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // # register link
+                // # Login Link
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Row {
                         Text(
-                            text = "Don't have an account? ",
+                            text = "Already have an account? ",
                             color = strokes,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
 
                         Text(
-                            text = "Register",
+                            text = "Login",
                             color = primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
                             modifier = Modifier.clickable {
-                                navController.navigate("register1")
+                                navController.navigate("login")
                             }
                         )
                     }

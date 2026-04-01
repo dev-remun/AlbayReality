@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,24 +19,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.frontend.components.Button
-import com.barabad.albayreality.frontend.components.InputField
-import com.barabad.albayreality.frontend.components.PasswordInputField
-import com.barabad.albayreality.ui.theme.TitanOne
-import com.barabad.albayreality.ui.theme.error_message_color
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
+import com.barabad.albayreality.frontend.components.Button
+import com.barabad.albayreality.frontend.components.DropdownField
+import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
+import com.barabad.albayreality.ui.theme.TitanOne
 
 @Composable
-fun LogInScreen(navController: NavController) {
+fun RegisterScreen3(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
 
-    // # state variables for inputs
-    var username_input by remember { mutableStateOf("") }
-    var password_input by remember { mutableStateOf("") }
+    // # Data sources for dropdown
+    val sex_options = listOf("Male", "Female")
 
-    // # state variables for error messages
-    var username_error by remember { mutableStateOf(false) }
-    var password_error by remember { mutableStateOf(false) }
+    // # State variables for inputs
+    var sex by remember { mutableStateOf(user_registration_info_object.user_registration_info.sex) }
+
+    // # State variables for error handling
+    var has_sex_error by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -45,10 +46,10 @@ fun LogInScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.25f),
+                .padding(top = 80.dp, bottom = 40.dp),
             contentAlignment = Alignment.Center
         ) {
-            // # outline text for app title
+            // # Outline Text
             Text(
                 text = "Albay Reality",
                 style = TextStyle(
@@ -59,7 +60,7 @@ fun LogInScreen(navController: NavController) {
                     drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                 )
             )
-            // # fill text for app title
+            // # Fill Text
             Text(
                 text = "Albay Reality",
                 style = TextStyle(
@@ -71,7 +72,7 @@ fun LogInScreen(navController: NavController) {
             )
         }
 
-        // # login form
+        // # Register Form
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,13 +94,13 @@ fun LogInScreen(navController: NavController) {
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
                 Text(
-                    text = "Login",
+                    text = "Register",
                     color = strokes,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(
-                    text = "Please input your credentials",
+                    text = "Please input your personal information",
                     color = strokes.copy(alpha = 0.80f),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -107,81 +108,71 @@ fun LogInScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // # username input field
-                InputField(
-                    title = "Username",
-                    value = username_input,
-                    onValueChange = {
-                        username_input = it
-                        if (username_error) username_error = false
-                    },
-                    placeholder = "Enter your username",
-                    has_error = username_error,
-                    error_message = "Please input your username"
+                // # Sex Dropdown
+                DropdownField(
+                    title = "Sex",
+                    value = sex,
+                    options = sex_options,
+                    placeholder = "Select Sex",
+                    isError = has_sex_error,
+                    errorMessage = "Please select your sex",
+                    onValueChange = { selected_value ->
+                        sex = selected_value
+                        if (has_sex_error) has_sex_error = false
+                    }
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(240.dp))
 
-                // # password input field
-                PasswordInputField(
-                    title = "Password",
-                    value = password_input,
-                    onValueChange = {
-                        password_input = it
-                        if (password_error) password_error = false
-                    },
-                    placeholder = "Enter your password",
-                    has_error = password_error,
-                    error_message = "Please input your password"
-                )
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                // # login button
+                // # Register Button
                 Button(
-                    text = "Login",
+                    text = "Next",
                     isPrimary = true,
                     onClick = {
                         var has_error = false
 
-                        if (username_input.isBlank()) {
-                            username_error = true
-                            has_error = true
-                        }
-                        if (password_input.isBlank()) {
-                            password_error = true
+                        if (sex.isBlank()) {
+                            has_sex_error = true
                             has_error = true
                         }
 
                         if (!has_error) {
-                            Log.d("log_in_screen", "username: $username_input")
-                            Log.d("log_in_screen", "password: $password_input")
+                            user_registration_info_object.updateUserInformation("sex", sex)
+                            Log.d("register_screen3", "Sex: $sex")
 
-                            // # navigate to home screen
-                            // navController.navigate("home")
+                            Log.d("register_screen3", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
+                            Log.d("register_screen3", "Middle Name: ${user_registration_info_object.user_registration_info.middlename}")
+                            Log.d("register_screen3", "Last Name: ${user_registration_info_object.user_registration_info.lastname}")
+                            Log.d("register_screen3", "Sex: ${user_registration_info_object.user_registration_info.sex}")
+                            Log.d("register_screen3", "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}")
+                            Log.d("register_screen3", "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}")
+                            Log.d("register_screen3", "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}")
+
+                            // TODO: navigate to next step
+                            navController.navigate("register4")
                         }
                     }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // # register link
+                // # Login Link
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Row {
                         Text(
-                            text = "Don't have an account? ",
+                            text = "Already have an account? ",
                             color = strokes,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
 
                         Text(
-                            text = "Register",
+                            text = "Login",
                             color = primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
                             modifier = Modifier.clickable {
-                                navController.navigate("register1")
+                                navController.navigate("login")
                             }
                         )
                     }

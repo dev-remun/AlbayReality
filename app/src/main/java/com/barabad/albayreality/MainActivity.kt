@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.*
+import androidx.compose.runtime.remember
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -25,7 +26,12 @@ import com.barabad.albayreality.frontend.screens.HomeScreen
 import com.barabad.albayreality.frontend.screens.LandingScreen
 import com.barabad.albayreality.frontend.screens.LogInScreen
 import com.barabad.albayreality.frontend.screens.MapScreen
-import com.barabad.albayreality.frontend.screens.RegisterScreen
+import com.barabad.albayreality.frontend.screens.RegisterScreen1
+import com.barabad.albayreality.frontend.screens.RegisterScreen2
+import com.barabad.albayreality.frontend.screens.RegisterScreen3
+import com.barabad.albayreality.frontend.screens.RegisterScreen4
+import com.barabad.albayreality.frontend.screens.RegisterScreen5
+import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -53,15 +59,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         checkSystemSupport(this)
 
-        // Allow full screen drawing
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         val controller = WindowInsetsControllerCompat(window, window.decorView)
 
-        // Hide BOTH status bar and navigation bar
+        // # this hides the status and navigation bar of the phone
         controller.hide(WindowInsetsCompat.Type.systemBars())
 
-        // Allow swipe to temporarily show bars
+        // # this shows the nav and status bar, if the user swipe the nav or status bar
         controller.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
@@ -72,10 +76,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
+                val user_registration_info_object = remember { UserRegistrationInformations() }
 
-                NavHost(navController, startDestination = "landing") {
+                NavHost(navController, startDestination = "login") {
                     composable("login") { LogInScreen(navController) }
-                    composable("register") { RegisterScreen(navController) }
+                    composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
+                    composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
+                    composable("register3") { RegisterScreen3(navController, user_registration_info_object) }
+                    composable("register4") { RegisterScreen4(navController, user_registration_info_object) }
+                    composable("register5") { RegisterScreen5(navController, user_registration_info_object) }
                     composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
                     composable("ar") { ArScreen(navController) }
