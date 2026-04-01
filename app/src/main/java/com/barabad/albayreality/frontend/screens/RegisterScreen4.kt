@@ -212,9 +212,9 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
 
                         if (!has_error) {
 
-                            user_registration_info_object.updateUserInformation("region", selected_region)
-                            user_registration_info_object.updateUserInformation("province", selected_province)
-                            user_registration_info_object.updateUserInformation("city_municipality", selected_city_municipality)
+                            user_registration_info_object.updateUserRegistrationInformation("region", selected_region)
+                            user_registration_info_object.updateUserRegistrationInformation("province", selected_province)
+                            user_registration_info_object.updateUserRegistrationInformation("city_municipality", selected_city_municipality)
 
                             // # log selection for debugging
                             Log.d("register_screen4", "Region: $selected_region")

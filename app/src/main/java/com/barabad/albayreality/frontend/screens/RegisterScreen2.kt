@@ -192,9 +192,9 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
 
                         if (!has_error) {
 
-                            user_registration_info_object.updateUserInformation("birth_month", birth_month)
-                            user_registration_info_object.updateUserInformation("birth_date", birthdate)
-                            user_registration_info_object.updateUserInformation("birth_year", birth_year)
+                            user_registration_info_object.updateUserRegistrationInformation("birth_month", birth_month)
+                            user_registration_info_object.updateUserRegistrationInformation("birth_date", birthdate)
+                            user_registration_info_object.updateUserRegistrationInformation("birth_year", birth_year)
 
                             Log.d("register_screen2", "Birth Month: $birth_month")
                             Log.d("register_screen2", "Birthdate: $birthdate")

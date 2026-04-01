@@ -23,9 +23,10 @@ import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.InputField
 import com.barabad.albayreality.frontend.components.PasswordInputField
+import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
 import com.barabad.albayreality.ui.theme.TitanOne
-import com.barabad.albayreality.ui.theme.error_message_color
+import com.barabad.albayreality.R
 
 @Composable
 fun RegisterScreen5(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
@@ -33,12 +34,43 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
     // # State variables for inputs
     var username by remember { mutableStateOf(user_registration_info_object.user_registration_info.username) }
     var password by remember { mutableStateOf(user_registration_info_object.user_registration_info.password) }
-    var confirmPassword by remember { mutableStateOf("") }
+    var confirm_password by remember { mutableStateOf("") }
 
     // # State variables for error messages
-    var usernameError by remember { mutableStateOf(false) }
-    var passwordError by remember { mutableStateOf(false) }
-    var confirmPasswordError by remember { mutableStateOf(false) }
+    var username_error by remember { mutableStateOf(false) }
+    var password_error by remember { mutableStateOf(false) }
+    var confirm_password_error by remember { mutableStateOf(false) }
+
+    // # State variable to control the popup
+    var display_popup by remember { mutableStateOf(false) }
+
+    if (display_popup) {
+        PopUp(
+            icon = R.drawable.check_icon,
+            message = "Successful Registration!",
+            button_text = "Go to Login",
+            onButtonClick = {
+                // # reset the values in the global state object back to "" to avoid getting the previous values when the user register another account
+                user_registration_info_object.updateUserRegistrationInformation("firstname", "")
+                user_registration_info_object.updateUserRegistrationInformation("middlename", "")
+                user_registration_info_object.updateUserRegistrationInformation("lastname", "")
+                user_registration_info_object.updateUserRegistrationInformation("sex", "")
+                user_registration_info_object.updateUserRegistrationInformation("birth_month", "")
+                user_registration_info_object.updateUserRegistrationInformation("birth_date", "")
+                user_registration_info_object.updateUserRegistrationInformation("birth_year", "")
+                user_registration_info_object.updateUserRegistrationInformation("region", "")
+                user_registration_info_object.updateUserRegistrationInformation("province", "")
+                user_registration_info_object.updateUserRegistrationInformation("city_municipality", "")
+                user_registration_info_object.updateUserRegistrationInformation("username", "")
+                user_registration_info_object.updateUserRegistrationInformation("password", "")
+                display_popup = false
+                navController.navigate("login")
+            },
+            onDismiss = {
+                display_popup = true
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -116,10 +148,10 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     value = username,
                     onValueChange = {
                         username = it
-                        if (usernameError) usernameError = false
+                        if (username_error) username_error = false
                     },
                     placeholder = "Enter your username",
-                    has_error = usernameError,
+                    has_error = username_error,
                     error_message = "Please input your username"
                 )
 
@@ -131,10 +163,10 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     value = password,
                     onValueChange = {
                         password = it
-                        if (passwordError) passwordError = false
+                        if (password_error) password_error = false
                     },
                     placeholder = "Enter your password",
-                    has_error = passwordError,
+                    has_error = password_error,
                     error_message = "Please input your password"
                 )
 
@@ -143,13 +175,13 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                 // # Confirm Password Field
                 PasswordInputField(
                     title = "Confirm Password",
-                    value = confirmPassword,
+                    value = confirm_password,
                     onValueChange = {
-                        confirmPassword = it
-                        if (confirmPasswordError) confirmPasswordError = false
+                        confirm_password = it
+                        if (confirm_password_error) confirm_password_error = false
                     },
                     placeholder = "Re-enter your password",
-                    has_error = confirmPasswordError,
+                    has_error = confirm_password_error,
                     error_message = "Passwords do not match"
                 )
 
@@ -163,22 +195,22 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                         var hasError = false
 
                         if (username.isBlank()) {
-                            usernameError = true
+                            username_error = true
                             hasError = true
                         }
                         if (password.isBlank()) {
-                            passwordError = true
+                            password_error = true
                             hasError = true
                         }
-                        if (confirmPassword.isBlank() || confirmPassword != password) {
-                            confirmPasswordError = true
+                        if (confirm_password.isBlank() || confirm_password != password) {
+                            confirm_password_error = true
                             hasError = true
                         }
 
                         if (!hasError) {
 
-                            user_registration_info_object.updateUserInformation("username", username)
-                            user_registration_info_object.updateUserInformation("password", password)
+                            user_registration_info_object.updateUserRegistrationInformation("username", username)
+                            user_registration_info_object.updateUserRegistrationInformation("password", password)
 
                             Log.d("register_screen5", "Username: $username")
                             Log.d("register_screen5", "Password: $password")
@@ -195,9 +227,26 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                             Log.d("register_screen5", "City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}")
                             Log.d("register_screen5", "Username: ${user_registration_info_object.user_registration_info.username}")
                             Log.d("register_screen5", "Password: ${user_registration_info_object.user_registration_info.password}")
+                            println(
+                                """
+                                === USER REGISTRATION INFO ===
+                                First Name: ${user_registration_info_object.user_registration_info.firstname}
+                                Middle Name: ${user_registration_info_object.user_registration_info.middlename}
+                                Last Name: ${user_registration_info_object.user_registration_info.lastname}
+                                Sex: ${user_registration_info_object.user_registration_info.sex}
+                                Birth Month: ${user_registration_info_object.user_registration_info.birth_month}
+                                Birth Date: ${user_registration_info_object.user_registration_info.birth_date}
+                                Birth Year: ${user_registration_info_object.user_registration_info.birth_year}
+                                Region: ${user_registration_info_object.user_registration_info.region}
+                                Province: ${user_registration_info_object.user_registration_info.province}
+                                City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}
+                                Username: ${user_registration_info_object.user_registration_info.username}
+                                Password: ${user_registration_info_object.user_registration_info.password}
+                                =============================
+                                """.trimIndent()
+                            )
 
-                            // TODO: navigate to next step
-                            navController.navigate("home")
+                            display_popup = true
                         }
                     }
                 )

@@ -12,7 +12,7 @@ class UserRegistrationInformations : ViewModel() {
         private set
 
     // # use this to update the global state variable user_registration_info
-    fun updateUserInformation(field: String, value: String) {
+    fun updateUserRegistrationInformation(field: String, value: String) {
         when(field) {
             "firstname" -> user_registration_info = user_registration_info.copy(firstname = value)
             "lastname" -> user_registration_info = user_registration_info.copy(lastname = value)

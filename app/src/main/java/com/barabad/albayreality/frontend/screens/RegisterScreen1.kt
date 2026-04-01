@@ -174,9 +174,9 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
                                 middlename = "NA"
                             }
 
-                            user_registration_info_object.updateUserInformation("firstname", firstname)
-                            user_registration_info_object.updateUserInformation("middlename", middlename)
-                            user_registration_info_object.updateUserInformation("lastname", lastname)
+                            user_registration_info_object.updateUserRegistrationInformation("firstname", firstname)
+                            user_registration_info_object.updateUserRegistrationInformation("middlename", middlename)
+                            user_registration_info_object.updateUserRegistrationInformation("lastname", lastname)
 
                             Log.d("register_screen", "Firstname: $firstname")
                             Log.d("register_screen", "Middlename: $middlename")

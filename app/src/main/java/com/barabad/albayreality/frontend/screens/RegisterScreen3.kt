@@ -137,7 +137,7 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                         }
 
                         if (!has_error) {
-                            user_registration_info_object.updateUserInformation("sex", sex)
+                            user_registration_info_object.updateUserRegistrationInformation("sex", sex)
                             Log.d("register_screen3", "Sex: $sex")
 
                             Log.d("register_screen3", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
