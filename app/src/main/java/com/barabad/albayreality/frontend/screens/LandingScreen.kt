@@ -118,7 +118,7 @@ fun LandingScreen(navController: NavController) {
         Button(
             text = "Register",
             isPrimary = false,
-            onClick = { navController.navigate("register") }
+            onClick = { navController.navigate("register1") }
         )
 
         Spacer(modifier = Modifier.weight(0.3f))
