@@ -35,8 +35,11 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
     // # State variables for inputs
     var sex by remember { mutableStateOf(user_registration_info_object.user_registration_info.sex) }
 
-    // # State variables for error handling
+    // # State variables to detect errors in the unoput field
     var has_sex_error by remember { mutableStateOf(false) }
+
+    // # state variables for custome error message
+    var sex_error_message by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -115,7 +118,7 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                     options = sex_options,
                     placeholder = "Select Sex",
                     isError = has_sex_error,
-                    errorMessage = "Please select your sex",
+                    errorMessage = sex_error_message,
                     onValueChange = { selected_value ->
                         sex = selected_value
                         if (has_sex_error) has_sex_error = false
@@ -133,6 +136,7 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
 
                         if (sex.isBlank()) {
                             has_sex_error = true
+                            sex_error_message = "Please input your sex."
                             has_error = true
                         }
 

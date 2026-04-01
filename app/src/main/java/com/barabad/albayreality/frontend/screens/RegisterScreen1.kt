@@ -33,10 +33,18 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
     var middlename by remember { mutableStateOf(user_registration_info_object.user_registration_info.middlename) }
     var lastname by remember { mutableStateOf(user_registration_info_object.user_registration_info.lastname) }
 
-    // # State variables for error messages
+    // # State variables to detect errors in the input fields
     var has_firstname_error by remember { mutableStateOf(false) }
     var has_middlename_error by remember { mutableStateOf(false) }
     var has_lastname_error by remember { mutableStateOf(false) }
+
+    // # state variables for custom error messages
+    var firstname_error_message by remember { mutableStateOf("") }
+    var middlename_error_message by remember { mutableStateOf("") }
+    var lastname_error_message by remember { mutableStateOf("") }
+
+    // # this is used to validate if an input is invalid like firstname containes digits or symbols etc etc
+    val valid_string_input_regex = Regex("^[a-zA-Z ]+$")
 
     Column(
         modifier = Modifier
@@ -118,7 +126,7 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
                     },
                     placeholder = "Juan",
                     has_error = has_firstname_error,
-                    error_message = "Please input your first name"
+                    error_message = firstname_error_message
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -127,10 +135,13 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
                 InputField(
                     title = "Middle Name",
                     value = middlename,
-                    onValueChange = { middlename = it },
+                    onValueChange = {
+                        middlename = it
+                        if (has_middlename_error) has_middlename_error = false
+                    },
                     placeholder = "Santos (optional)",
                     has_error = has_middlename_error,
-                    error_message = "Please input your middle name"
+                    error_message = middlename_error_message
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -145,7 +156,7 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
                     },
                     placeholder = "Dela Cruz",
                     has_error = has_lastname_error,
-                    error_message = "Please input your last name"
+                    error_message = lastname_error_message
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -159,11 +170,27 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
 
                         if (firstname.isBlank()) {
                             has_firstname_error = true
+                            firstname_error_message = "Please input your first name."
+                            has_error = true
+                        } else if (!valid_string_input_regex.matches(firstname)) {
+                            has_firstname_error = true
+                            firstname_error_message = "Please input a valid first name."
+                            has_error = true
+                        }
+
+                        if (!valid_string_input_regex.matches(middlename) && middlename.isNotBlank()) {
+                            has_middlename_error = true
+                            middlename_error_message = "Please input a valid middle name."
                             has_error = true
                         }
 
                         if (lastname.isBlank()) {
                             has_lastname_error = true
+                            lastname_error_message = "Please input your last name."
+                            has_error = true
+                        } else if (!valid_string_input_regex.matches(lastname)) {
+                            has_lastname_error = true
+                            lastname_error_message = "Please input a valid last name."
                             has_error = true
                         }
 

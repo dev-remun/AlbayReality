@@ -36,10 +36,15 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
     var password by remember { mutableStateOf(user_registration_info_object.user_registration_info.password) }
     var confirm_password by remember { mutableStateOf("") }
 
-    // # State variables for error messages
-    var username_error by remember { mutableStateOf(false) }
-    var password_error by remember { mutableStateOf(false) }
-    var confirm_password_error by remember { mutableStateOf(false) }
+    // # State variables to detect errors oin the input fields
+    var has_username_error by remember { mutableStateOf(false) }
+    var has_password_error by remember { mutableStateOf(false) }
+    var has_confirm_password_error by remember { mutableStateOf(false) }
+
+    // # state variables for custome error message
+    var username_error_message by remember { mutableStateOf("") }
+    var password_error_message by remember { mutableStateOf("") }
+    var confirm_password_error_message by remember { mutableStateOf("") }
 
     // # State variable to control the popup
     var display_popup by remember { mutableStateOf(false) }
@@ -148,11 +153,11 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     value = username,
                     onValueChange = {
                         username = it
-                        if (username_error) username_error = false
+                        if (has_username_error) has_username_error = false
                     },
                     placeholder = "Enter your username",
-                    has_error = username_error,
-                    error_message = "Please input your username"
+                    has_error = has_username_error,
+                    error_message = username_error_message
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -163,11 +168,11 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     value = password,
                     onValueChange = {
                         password = it
-                        if (password_error) password_error = false
+                        if (has_password_error) has_password_error = false
                     },
                     placeholder = "Enter your password",
-                    has_error = password_error,
-                    error_message = "Please input your password"
+                    has_error = has_password_error,
+                    error_message = password_error_message
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -178,11 +183,11 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     value = confirm_password,
                     onValueChange = {
                         confirm_password = it
-                        if (confirm_password_error) confirm_password_error = false
+                        if (has_confirm_password_error) has_confirm_password_error = false
                     },
                     placeholder = "Re-enter your password",
-                    has_error = confirm_password_error,
-                    error_message = "Passwords do not match"
+                    has_error = has_confirm_password_error,
+                    error_message = confirm_password_error_message
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -195,15 +200,26 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                         var hasError = false
 
                         if (username.isBlank()) {
-                            username_error = true
+                            has_username_error = true
+                            username_error_message = "Please input your username."
                             hasError = true
                         }
+
                         if (password.isBlank()) {
-                            password_error = true
+                            has_password_error = true
+                            password_error_message = "Please input your password."
                             hasError = true
                         }
-                        if (confirm_password.isBlank() || confirm_password != password) {
-                            confirm_password_error = true
+
+                        if (confirm_password.isBlank()) {
+                            has_confirm_password_error = true
+                            confirm_password_error_message = "Please re-enter your password."
+                            hasError = true
+                        }
+
+                        if (confirm_password != password) {
+                            has_confirm_password_error = true
+                            confirm_password_error_message = "Password does not match."
                             hasError = true
                         }
 

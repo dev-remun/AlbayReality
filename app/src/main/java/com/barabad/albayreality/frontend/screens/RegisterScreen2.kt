@@ -44,10 +44,15 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
     var birthdate by remember { mutableStateOf(user_registration_info_object.user_registration_info.birth_date) }
     var birth_year by remember { mutableStateOf(user_registration_info_object.user_registration_info.birth_year) }
 
-    // # State variables for error handling
+    // # State variables to detect errors in the input fiels
     var has_birth_month_error by remember { mutableStateOf(false) }
     var has_birthdate_error by remember { mutableStateOf(false) }
     var has_birth_year_error by remember { mutableStateOf(false) }
+
+    // # state variables for custom error message
+    var birth_month_error_message by remember { mutableStateOf("") }
+    var birthdate_error_message by remember { mutableStateOf("") }
+    var birth_year_error_message by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -126,7 +131,7 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
                     options = months,
                     placeholder = "Select Month",
                     isError = has_birth_month_error,
-                    errorMessage = "Please select your birth month",
+                    errorMessage = birth_month_error_message,
                     onValueChange = {
                             selected_value ->
                         birth_month = selected_value
@@ -143,7 +148,7 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
                     options = dates,
                     placeholder = "Select Date",
                     isError = has_birthdate_error,
-                    errorMessage = "Please select your birth date",
+                    errorMessage = birthdate_error_message,
                     onValueChange = {
                             selected_value ->
                         birthdate = selected_value
@@ -160,7 +165,7 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
                     options = years,
                     placeholder = "Select Year",
                     isError = has_birth_year_error,
-                    errorMessage = "Please select your birth year",
+                    errorMessage = birth_year_error_message,
                     onValueChange = {
                         selected_value ->
                             birth_year = selected_value
@@ -179,14 +184,17 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
 
                         if (birth_month.isBlank()) {
                             has_birth_month_error = true
+                            birth_month_error_message = "Please input your birth month."
                             has_error = true
                         }
                         if (birthdate.isBlank()) {
                             has_birthdate_error = true
+                            birthdate_error_message = "Please input your birth date."
                             has_error = true
                         }
                         if (birth_year.isBlank()) {
                             has_birth_year_error = true
+                            birth_year_error_message = "Please input your birth year."
                             has_error = true
                         }
 

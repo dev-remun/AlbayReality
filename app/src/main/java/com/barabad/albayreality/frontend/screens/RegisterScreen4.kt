@@ -65,9 +65,15 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
     val province_options = location_data[selected_region]?.keys?.toList()?.sorted() ?: emptyList()
     val city_options = location_data[selected_region]?.get(selected_province) ?: emptyList()
 
+    // # state variables to detect errors in the input fields
     var has_region_error by remember { mutableStateOf(false) }
     var has_province_error by remember { mutableStateOf(false) }
     var has_citymun_error by remember { mutableStateOf(false) }
+
+    // # state variables custom error message
+    var region_error_message by remember { mutableStateOf("") }
+    var province_error_message by remember { mutableStateOf("") }
+    var citymun_error_message by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -146,7 +152,7 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
                     options = region_options,
                     placeholder = "Select Region",
                     isError = has_region_error,
-                    errorMessage = "Please select your region",
+                    errorMessage = region_error_message,
                     onValueChange = { new_region ->
                         selected_region = new_region
                         selected_province = ""              // # reset province
@@ -164,7 +170,7 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
                     options = province_options,
                     placeholder = "Select Province",
                     isError = has_province_error,
-                    errorMessage = "Please select your province",
+                    errorMessage = province_error_message,
                     onValueChange = { new_province ->
                         selected_province = new_province       // # update selected province
                         selected_city_municipality = ""        // # reset city when province changes
@@ -181,7 +187,7 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
                     options = city_options,
                     placeholder = "Select City / Municipality",
                     isError = has_citymun_error,
-                    errorMessage = "Please select your city or municipality",
+                    errorMessage = citymun_error_message,
                     onValueChange = { new_city ->
                         selected_city_municipality = new_city   // # update selected city / municipality
                         if (has_citymun_error) has_citymun_error = false
@@ -199,14 +205,17 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
 
                         if (selected_region.isBlank()) {
                             has_region_error = true
+                            region_error_message = "Please input your region."
                             has_error = true
                         }
                         if (selected_province.isBlank()) {
                             has_province_error = true
+                            province_error_message = "Please input your province."
                             has_error = true
                         }
                         if (selected_city_municipality.isBlank()) {
                             has_citymun_error = true
+                            citymun_error_message = "Please input your city / municipality."
                             has_error = true
                         }
 

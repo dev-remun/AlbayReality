@@ -21,10 +21,12 @@ import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.InputField
 import com.barabad.albayreality.frontend.components.PasswordInputField
+import com.barabad.albayreality.frontend.components.PopUp
+import com.barabad.albayreality.R
 import com.barabad.albayreality.ui.theme.TitanOne
-import com.barabad.albayreality.ui.theme.error_message_color
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
+import kotlinx.coroutines.delay
 
 @Composable
 fun LogInScreen(navController: NavController) {
@@ -33,9 +35,41 @@ fun LogInScreen(navController: NavController) {
     var username_input by remember { mutableStateOf("") }
     var password_input by remember { mutableStateOf("") }
 
-    // # state variables for error messages
-    var username_error by remember { mutableStateOf(false) }
-    var password_error by remember { mutableStateOf(false) }
+    // # state variables to detect errors
+    var has_username_error by remember { mutableStateOf(false) }
+    var has_password_error by remember { mutableStateOf(false) }
+
+    // # state variable for error message
+    var username_error_message by remember { mutableStateOf("") }
+    var password_error_message by remember { mutableStateOf("") }
+
+    // # State variable to control the popup
+    var display_popup by remember { mutableStateOf(false) }
+
+
+    // # Handle the 2-second delay and navigation
+    if (display_popup) {
+        // LaunchedEffect runs when showPopup becomes true
+        LaunchedEffect(Unit) {
+            delay(2000) // 2 seconds delay
+            display_popup = false
+            navController.navigate("home") {
+                // Pop up to the login screen to prevent user from going back to log in
+                popUpTo("login") { inclusive = true }
+            }
+        }
+
+        PopUp(
+            icon = R.drawable.check_icon, // Make sure this exists in res/drawable
+            message = "Login Successful!",
+            button_text = "Proceeding...",
+            onButtonClick = {
+                // Optional: Allow manual override to skip delay
+                navController.navigate("home")
+            },
+            onDismiss = { display_popup = false }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -113,11 +147,11 @@ fun LogInScreen(navController: NavController) {
                     value = username_input,
                     onValueChange = {
                         username_input = it
-                        if (username_error) username_error = false
+                        if (has_username_error) has_username_error = false
                     },
                     placeholder = "Enter your username",
-                    has_error = username_error,
-                    error_message = "Please input your username"
+                    has_error = has_username_error,
+                    error_message = username_error_message
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -128,11 +162,11 @@ fun LogInScreen(navController: NavController) {
                     value = password_input,
                     onValueChange = {
                         password_input = it
-                        if (password_error) password_error = false
+                        if (has_password_error) has_password_error = false
                     },
                     placeholder = "Enter your password",
-                    has_error = password_error,
-                    error_message = "Please input your password"
+                    has_error = has_password_error,
+                    error_message = password_error_message
                 )
 
                 Spacer(modifier = Modifier.height(48.dp))
@@ -145,20 +179,24 @@ fun LogInScreen(navController: NavController) {
                         var has_error = false
 
                         if (username_input.isBlank()) {
-                            username_error = true
+                            has_username_error = true
+                            username_error_message = "Please input your username."
                             has_error = true
                         }
                         if (password_input.isBlank()) {
-                            password_error = true
+                            has_password_error = true
+                            password_error_message = "Please input your password."
                             has_error = true
                         }
+
+                        // # call a backend function to verify if the user exist in the backend
+                        // # authUser() or something
 
                         if (!has_error) {
                             Log.d("log_in_screen", "username: $username_input")
                             Log.d("log_in_screen", "password: $password_input")
 
-                            // # navigate to home screen
-                            // navController.navigate("home")
+                            display_popup = true
                         }
                     }
                 )
