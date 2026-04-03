@@ -18,7 +18,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.backend.FirebaseAuthRegister
+import com.barabad.albayreality.backend.FirebaseAuthManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.frontend.components.Button
@@ -33,7 +35,7 @@ import com.barabad.albayreality.R
 fun RegisterScreen5(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
 
     // # firebase variable
-    val auth_register = FirebaseAuthRegister()
+    val auth_register = FirebaseAuthManager()
 
     // # state variables for inputs
     var email by remember { mutableStateOf(user_registration_info_object.user_registration_info.email) }
@@ -205,11 +207,32 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                             Log.d("register_screen5", "Password: ${user_registration_info_object.user_registration_info.password}")
 
                             // # registers the user
-                            auth_register.registerUser(email, password, object : FirebaseAuthRegister.AuthCallback {
+                            auth_register.registerUser(email, password, object : FirebaseAuthManager.AuthCallback {
                                 override fun onSuccess() {
                                     println("Registration success")
-                                    // # triggers the success popup
-                                    show_success_popup = true
+
+                                    // Initializes the user's register data
+                                    val userId = FirebaseAuth.getInstance().currentUser?.uid
+                                    val userMap = hashMapOf(
+                                        "firstname" to user_registration_info_object.user_registration_info.firstname,
+                                        "lastname" to user_registration_info_object.user_registration_info.lastname,
+                                        "middlename" to user_registration_info_object.user_registration_info.middlename,
+                                        "sex" to user_registration_info_object.user_registration_info.sex,
+                                        "birthdate" to "${user_registration_info_object.user_registration_info.birth_year}-${user_registration_info_object.user_registration_info.birth_month}-${user_registration_info_object.user_registration_info.birth_date}",
+                                        "region" to user_registration_info_object.user_registration_info.region,
+                                        "province" to user_registration_info_object.user_registration_info.province,
+                                        "city_municipality" to user_registration_info_object.user_registration_info.city_municipality,
+                                        "email" to user_registration_info_object.user_registration_info.email
+                                    )
+
+                                    // Register the user's data into firestore
+                                    FirebaseFirestore.getInstance()
+                                        .collection("users")
+                                        .document(userId!!)
+                                        .set(userMap)
+                                        .addOnSuccessListener {
+                                            show_success_popup = true
+                                        }
                                 }
 
                                 override fun onFailure(errorMessage: String?) {

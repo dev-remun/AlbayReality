@@ -23,6 +23,7 @@ import com.barabad.albayreality.frontend.components.InputField
 import com.barabad.albayreality.frontend.components.PasswordInputField
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.R
+import com.barabad.albayreality.backend.FirebaseAuthManager
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
@@ -31,16 +32,19 @@ import kotlinx.coroutines.delay
 @Composable
 fun LogInScreen(navController: NavController) {
 
+    // Firebase Variable
+    val authLogin = FirebaseAuthManager()
+
     // # state variables for inputs
-    var username_input by remember { mutableStateOf("") }
+    var email_input by remember { mutableStateOf("") }
     var password_input by remember { mutableStateOf("") }
 
     // # state variables to detect errors
-    var has_username_error by remember { mutableStateOf(false) }
+    var has_email_error by remember { mutableStateOf(false) }
     var has_password_error by remember { mutableStateOf(false) }
 
     // # state variable for error message
-    var username_error_message by remember { mutableStateOf("") }
+    var email_error_message by remember { mutableStateOf("") }
     var password_error_message by remember { mutableStateOf("") }
 
     // # State variable to control the popup
@@ -141,17 +145,17 @@ fun LogInScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // # username input field
+                // # email input field
                 InputField(
-                    title = "Username",
-                    value = username_input,
+                    title = "Email",
+                    value = email_input,
                     onValueChange = {
-                        username_input = it
-                        if (has_username_error) has_username_error = false
+                        email_input = it
+                        if (has_email_error) has_email_error = false
                     },
-                    placeholder = "Enter your username",
-                    has_error = has_username_error,
-                    error_message = username_error_message
+                    placeholder = "Enter your email",
+                    has_error = has_email_error,
+                    error_message = email_error_message
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -178,9 +182,9 @@ fun LogInScreen(navController: NavController) {
                     onClick = {
                         var has_error = false
 
-                        if (username_input.isBlank()) {
-                            has_username_error = true
-                            username_error_message = "Please input your username."
+                        if (email_input.isBlank()) {
+                            has_email_error = true
+                            email_error_message = "Please input your email."
                             has_error = true
                         }
                         if (password_input.isBlank()) {
@@ -189,14 +193,21 @@ fun LogInScreen(navController: NavController) {
                             has_error = true
                         }
 
-                        // # call a backend function to verify if the user exist in the backend
-                        // # authUser() or something
 
                         if (!has_error) {
-                            Log.d("log_in_screen", "username: $username_input")
+                            Log.d("log_in_screen", "email: $email_input")
                             Log.d("log_in_screen", "password: $password_input")
 
-                            display_popup = true
+                            authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
+
+                                override fun onSuccess() {
+                                    display_popup = true
+                                }
+
+                                override fun onFailure(errorMessage: String?) {
+                                    println("Login error: $errorMessage")
+                                }
+                            })
                         }
                     }
                 )
