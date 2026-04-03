@@ -42,10 +42,15 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
     var password by remember { mutableStateOf(user_registration_info_object.user_registration_info.password) }
     var confirm_password by remember { mutableStateOf("") }
 
-    // # state variables for error messages
+    // # state variables to detect errors
     var email_error by remember { mutableStateOf(false) }
     var password_error by remember { mutableStateOf(false) }
     var confirm_password_error by remember { mutableStateOf(false) }
+
+    // # state variables for custom error messages
+    var email_error_message by remember { mutableStateOf("") }
+    var password_error_message by remember { mutableStateOf("") }
+    var confirm_password_error_message by remember { mutableStateOf("") }
 
     // # state variable to manage loading status
     var is_loading by remember { mutableStateOf(false) }
@@ -136,7 +141,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     },
                     placeholder = "Enter your email",
                     has_error = email_error,
-                    error_message = "Please input your email"
+                    error_message = email_error_message
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -151,7 +156,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     },
                     placeholder = "Enter your password",
                     has_error = password_error,
-                    error_message = "Please input your password"
+                    error_message = password_error_message
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
@@ -166,7 +171,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     },
                     placeholder = "Re-enter your password",
                     has_error = confirm_password_error,
-                    error_message = "Passwords do not match"
+                    error_message = confirm_password_error_message
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -187,17 +192,28 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                         var has_error = false
 
                         if (email.isBlank()) {
+                            email_error_message = "Please input your email."
                             email_error = true
                             has_error = true
                         }
                         if (password.isBlank()) {
+                            password_error_message = "Please input your password."
                             password_error = true
                             has_error = true
                         }
-                        if (confirm_password.isBlank() || confirm_password != password) {
+
+                        if (confirm_password.isBlank()) {
+                            confirm_password_error_message = "Please re-enter your password."
                             confirm_password_error = true
                             has_error = true
                         }
+
+                        if (confirm_password != password) {
+                            confirm_password_error_message = "Passwords does not match."
+                            confirm_password_error = true
+                            has_error = true
+                        }
+
 
                         if (!has_error) {
 
@@ -228,7 +244,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                 override fun onSuccess() {
                                     println("Registration success")
 
-                                    // # initializes the user's register data
+                                    // Initializes the user's register data
                                     val userId = FirebaseAuth.getInstance().currentUser?.uid
                                     val userMap = hashMapOf(
                                         "firstname" to user_registration_info_object.user_registration_info.firstname,
@@ -242,7 +258,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                         "email" to user_registration_info_object.user_registration_info.email
                                     )
 
-                                    // # register the user's data into firestore
+                                    // Register the user's data into firestore
                                     FirebaseFirestore.getInstance()
                                         .collection("users")
                                         .document(userId!!)
@@ -261,7 +277,6 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                 }
 
                                 override fun onFailure(errorMessage: String?) {
-                                    // # reset loading state and trigger error popup on failure
                                     is_loading = false
                                     display_error_popup = true
                                     Log.e("register_screen5", "registration error: $errorMessage")
