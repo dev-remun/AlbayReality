@@ -12,6 +12,6 @@ data class UserRegistrationInfoModel(
     val region: String = "",
     val province: String = "",
     val city_municipality: String = "",
-    val username: String = "",
+    val email: String = "",
     val password: String = ""
 )

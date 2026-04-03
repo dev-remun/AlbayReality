@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.barabad.albayreality.backend.FirebaseAuthRegister
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.frontend.components.Button
@@ -31,51 +32,21 @@ import com.barabad.albayreality.R
 @Composable
 fun RegisterScreen5(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
 
-    // # State variables for inputs
-    var username by remember { mutableStateOf(user_registration_info_object.user_registration_info.username) }
+    // # firebase variable
+    val auth_register = FirebaseAuthRegister()
+
+    // # state variables for inputs
+    var email by remember { mutableStateOf(user_registration_info_object.user_registration_info.email) }
     var password by remember { mutableStateOf(user_registration_info_object.user_registration_info.password) }
     var confirm_password by remember { mutableStateOf("") }
 
-    // # State variables to detect errors oin the input fields
-    var has_username_error by remember { mutableStateOf(false) }
-    var has_password_error by remember { mutableStateOf(false) }
-    var has_confirm_password_error by remember { mutableStateOf(false) }
+    // # state variables for error messages
+    var email_error by remember { mutableStateOf(false) }
+    var password_error by remember { mutableStateOf(false) }
+    var confirm_password_error by remember { mutableStateOf(false) }
 
-    // # state variables for custome error message
-    var username_error_message by remember { mutableStateOf("") }
-    var password_error_message by remember { mutableStateOf("") }
-    var confirm_password_error_message by remember { mutableStateOf("") }
-
-    // # State variable to control the popup
-    var display_popup by remember { mutableStateOf(false) }
-
-    if (display_popup) {
-        PopUp(
-            icon = R.drawable.check_icon,
-            message = "Successful Registration!",
-            button_text = "Go to Login",
-            onButtonClick = {
-                // # reset the values in the global state object back to "" to avoid getting the previous values when the user register another account
-                user_registration_info_object.updateUserRegistrationInformation("firstname", "")
-                user_registration_info_object.updateUserRegistrationInformation("middlename", "")
-                user_registration_info_object.updateUserRegistrationInformation("lastname", "")
-                user_registration_info_object.updateUserRegistrationInformation("sex", "")
-                user_registration_info_object.updateUserRegistrationInformation("birth_month", "")
-                user_registration_info_object.updateUserRegistrationInformation("birth_date", "")
-                user_registration_info_object.updateUserRegistrationInformation("birth_year", "")
-                user_registration_info_object.updateUserRegistrationInformation("region", "")
-                user_registration_info_object.updateUserRegistrationInformation("province", "")
-                user_registration_info_object.updateUserRegistrationInformation("city_municipality", "")
-                user_registration_info_object.updateUserRegistrationInformation("username", "")
-                user_registration_info_object.updateUserRegistrationInformation("password", "")
-                display_popup = false
-                navController.navigate("login")
-            },
-            onDismiss = {
-                display_popup = true
-            }
-        )
-    }
+    // # state variable for success popup
+    var show_success_popup by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -88,7 +59,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                 .padding(top = 80.dp, bottom = 40.dp),
             contentAlignment = Alignment.Center
         ) {
-            // # Outline Text
+            // # outline text
             Text(
                 text = "Albay Reality",
                 style = TextStyle(
@@ -99,7 +70,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                 )
             )
-            // # Fill Text
+            // # fill text
             Text(
                 text = "Albay Reality",
                 style = TextStyle(
@@ -111,18 +82,18 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
             )
         }
 
-        // # Register Form
+        // # register form
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.75f)
                 .drawBehind {
-                    val strokeWidth = 4.dp.toPx()
+                    val stroke_width = 4.dp.toPx()
                     drawLine(
                         color = strokes,
                         start = Offset(0f, 0f),
                         end = Offset(size.width, 0f),
-                        strokeWidth = strokeWidth
+                        strokeWidth = stroke_width
                     )
                 },
             color = Color.White
@@ -147,88 +118,77 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // # Username Field
+                // # email field
                 InputField(
-                    title = "Username",
-                    value = username,
+                    title = "Email",
+                    value = email,
                     onValueChange = {
-                        username = it
-                        if (has_username_error) has_username_error = false
+                        email = it
+                        if (email_error) email_error = false
                     },
-                    placeholder = "Enter your username",
-                    has_error = has_username_error,
-                    error_message = username_error_message
+                    placeholder = "Enter your email",
+                    has_error = email_error,
+                    error_message = "Please input your email"
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // # Password Field
+                // # password field
                 PasswordInputField(
                     title = "Password",
                     value = password,
                     onValueChange = {
                         password = it
-                        if (has_password_error) has_password_error = false
+                        if (password_error) password_error = false
                     },
                     placeholder = "Enter your password",
-                    has_error = has_password_error,
-                    error_message = password_error_message
+                    has_error = password_error,
+                    error_message = "Please input your password"
                 )
 
                 Spacer(modifier = Modifier.height(6.dp))
 
-                // # Confirm Password Field
+                // # confirm password field
                 PasswordInputField(
                     title = "Confirm Password",
                     value = confirm_password,
                     onValueChange = {
                         confirm_password = it
-                        if (has_confirm_password_error) has_confirm_password_error = false
+                        if (confirm_password_error) confirm_password_error = false
                     },
                     placeholder = "Re-enter your password",
-                    has_error = has_confirm_password_error,
-                    error_message = confirm_password_error_message
+                    has_error = confirm_password_error,
+                    error_message = "Passwords do not match"
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // # Register Button
+                // # register button
                 Button(
                     text = "Register",
                     isPrimary = true,
                     onClick = {
-                        var hasError = false
+                        var has_error = false
 
-                        if (username.isBlank()) {
-                            has_username_error = true
-                            username_error_message = "Please input your username."
-                            hasError = true
+                        if (email.isBlank()) {
+                            email_error = true
+                            has_error = true
                         }
-
                         if (password.isBlank()) {
-                            has_password_error = true
-                            password_error_message = "Please input your password."
-                            hasError = true
+                            password_error = true
+                            has_error = true
+                        }
+                        if (confirm_password.isBlank() || confirm_password != password) {
+                            confirm_password_error = true
+                            has_error = true
                         }
 
-                        if (confirm_password.isBlank()) {
-                            has_confirm_password_error = true
-                            confirm_password_error_message = "Please re-enter your password."
-                            hasError = true
-                        }
+                        if (!has_error) {
 
-                        if (confirm_password != password) {
-                            has_confirm_password_error = true
-                            confirm_password_error_message = "Password does not match."
-                            hasError = true
-                        }
-
-                        if (!hasError) {
-
-                            user_registration_info_object.updateUserRegistrationInformation("username", username)
+                            user_registration_info_object.updateUserRegistrationInformation("email", email)
                             user_registration_info_object.updateUserRegistrationInformation("password", password)
 
-                            Log.d("register_screen5", "Username: $username")
+                            Log.d("register_screen5", "Username: $email")
                             Log.d("register_screen5", "Password: $password")
 
                             Log.d("register_screen5", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
@@ -241,35 +201,28 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                             Log.d("register_screen5", "Region: ${user_registration_info_object.user_registration_info.region}")
                             Log.d("register_screen5", "Province: ${user_registration_info_object.user_registration_info.province}")
                             Log.d("register_screen5", "City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}")
-                            Log.d("register_screen5", "Username: ${user_registration_info_object.user_registration_info.username}")
+                            Log.d("register_screen5", "Username: ${user_registration_info_object.user_registration_info.email}")
                             Log.d("register_screen5", "Password: ${user_registration_info_object.user_registration_info.password}")
-                            println(
-                                """
-                                === USER REGISTRATION INFO ===
-                                First Name: ${user_registration_info_object.user_registration_info.firstname}
-                                Middle Name: ${user_registration_info_object.user_registration_info.middlename}
-                                Last Name: ${user_registration_info_object.user_registration_info.lastname}
-                                Sex: ${user_registration_info_object.user_registration_info.sex}
-                                Birth Month: ${user_registration_info_object.user_registration_info.birth_month}
-                                Birth Date: ${user_registration_info_object.user_registration_info.birth_date}
-                                Birth Year: ${user_registration_info_object.user_registration_info.birth_year}
-                                Region: ${user_registration_info_object.user_registration_info.region}
-                                Province: ${user_registration_info_object.user_registration_info.province}
-                                City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}
-                                Username: ${user_registration_info_object.user_registration_info.username}
-                                Password: ${user_registration_info_object.user_registration_info.password}
-                                =============================
-                                """.trimIndent()
-                            )
 
-                            display_popup = true
+                            // # registers the user
+                            auth_register.registerUser(email, password, object : FirebaseAuthRegister.AuthCallback {
+                                override fun onSuccess() {
+                                    println("Registration success")
+                                    // # triggers the success popup
+                                    show_success_popup = true
+                                }
+
+                                override fun onFailure(errorMessage: String?) {
+                                    println("Error: $errorMessage")
+                                }
+                            })
                         }
                     }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // # Login Link
+                // # login link
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Row {
                         Text(
@@ -292,5 +245,21 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                 }
             }
         }
+    }
+
+    // # display popup on success
+    if (show_success_popup) {
+        PopUp(
+            icon = R.drawable.check_icon,
+            message = "Account registered successfully!",
+            button_text = "Go to Log In",
+            onButtonClick = {
+                show_success_popup = false
+                navController.navigate("login")
+            },
+            onDismiss = {
+                show_success_popup = true
+            }
+        )
     }
 }

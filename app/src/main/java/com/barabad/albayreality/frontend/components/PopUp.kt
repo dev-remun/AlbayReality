@@ -90,7 +90,7 @@ fun PopUp(
                     text = button_text,
                     isPrimary = true,
                     onClick = onButtonClick,
-                    modifier = Modifier.fillMaxWidth() // override width if needed
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
