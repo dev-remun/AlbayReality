@@ -32,7 +32,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun LogInScreen(navController: NavController) {
 
-    // Firebase Variable
+    // # firebase variable
     val authLogin = FirebaseAuthManager()
 
     // # state variables for inputs
@@ -47,31 +47,45 @@ fun LogInScreen(navController: NavController) {
     var email_error_message by remember { mutableStateOf("") }
     var password_error_message by remember { mutableStateOf("") }
 
-    // # State variable to control the popup
-    var display_popup by remember { mutableStateOf(false) }
+    // # state variable to control the success popup
+    var display_successs_popup by remember { mutableStateOf(false) }
 
+    // # state variable to control the error popup
+    var display_error_popup by remember { mutableStateOf(false) }
 
-    // # Handle the 2-second delay and navigation
-    if (display_popup) {
-        // LaunchedEffect runs when showPopup becomes true
+    // # handle the 2-second delay and navigation for success
+    if (display_successs_popup) {
+        // # launched effect runs when display_popup becomes true
         LaunchedEffect(Unit) {
-            delay(2000) // 2 seconds delay
-            display_popup = false
+            delay(2000) // # 2 seconds delay
+            display_successs_popup = false
             navController.navigate("home") {
-                // Pop up to the login screen to prevent user from going back to log in
+                // # pop up to the login screen to prevent user from going back to log in
                 popUpTo("login") { inclusive = true }
             }
         }
 
         PopUp(
-            icon = R.drawable.check_icon, // Make sure this exists in res/drawable
+            icon = R.drawable.check_icon,
             message = "Login Successful!",
             button_text = "Proceeding...",
             onButtonClick = {
-                // Optional: Allow manual override to skip delay
                 navController.navigate("home")
             },
-            onDismiss = { display_popup = false }
+            onDismiss = { display_successs_popup = true }
+        )
+    }
+
+    // # handle the error popup display
+    if (display_error_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Log In Failed. Invalid credentials.",
+            button_text = "Try again",
+            onButtonClick = {
+                display_error_popup = false
+            },
+            onDismiss = { display_error_popup = false }
         )
     }
 
@@ -193,7 +207,6 @@ fun LogInScreen(navController: NavController) {
                             has_error = true
                         }
 
-
                         if (!has_error) {
                             Log.d("log_in_screen", "email: $email_input")
                             Log.d("log_in_screen", "password: $password_input")
@@ -201,11 +214,13 @@ fun LogInScreen(navController: NavController) {
                             authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
 
                                 override fun onSuccess() {
-                                    display_popup = true
+                                    display_successs_popup = true
                                 }
 
                                 override fun onFailure(errorMessage: String?) {
-                                    println("Login error: $errorMessage")
+                                    // # trigger error popup on failure
+                                    display_error_popup = true
+                                    Log.e("log_in_screen", "login error: $errorMessage")
                                 }
                             })
                         }

@@ -91,29 +91,60 @@ fun ARViewCataglogContentScreen(
                     )
                 }
 
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = site_title,
-                        textAlign = TextAlign.Center,
-                        style = TextStyle(
-                            fontSize = 32.sp,
-                            fontFamily = TitanOne,
-                            fontWeight = FontWeight.Black,
-                            color = strokes,
-                            drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
+                // # ung if-else statement na to ginawa ko para ma-catch ko ung St. John the Baptist Church so pwede ko pa maayos ung orientation ng title niya :<
+                // # Medyo mahaba kasi ung title niya kapag one line lang. Kaya nilagyan ko ng '\n'
+                // # ung else statement jan na ung other sites
+                if (site_title == "St. John the Baptist Church") {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "St. John the\nBaptist Church",
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(
+                                fontSize = 32.sp,
+                                fontFamily = TitanOne,
+                                fontWeight = FontWeight.Black,
+                                color = strokes,
+                                drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
+                            )
                         )
-                    )
-                    Text(
-                        text = site_title,
-                        textAlign = TextAlign.Center,
-                        style = TextStyle(
-                            fontSize = 32.sp,
-                            fontFamily = TitanOne,
-                            fontWeight = FontWeight.Black,
-                            color = primary
+                        Text(
+                            text = "St. John the\nBaptist Church",
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(
+                                fontSize = 32.sp,
+                                fontFamily = TitanOne,
+                                fontWeight = FontWeight.Black,
+                                color = primary
+                            )
                         )
-                    )
+                    }
+                } else {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(
+                            text = site_title,
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(
+                                fontSize = 32.sp,
+                                fontFamily = TitanOne,
+                                fontWeight = FontWeight.Black,
+                                color = strokes,
+                                drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
+                            )
+                        )
+                        Text(
+                            text = site_title,
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(
+                                fontSize = 32.sp,
+                                fontFamily = TitanOne,
+                                fontWeight = FontWeight.Black,
+                                color = primary
+                            )
+                        )
+                    }
                 }
+
+
             }
 
             // # main content area

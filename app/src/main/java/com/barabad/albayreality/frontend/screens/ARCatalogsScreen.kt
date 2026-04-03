@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
 import com.barabad.albayreality.frontend.components.NavBar
+import com.barabad.albayreality.frontend.utilities.data.listOfHistoricalSites
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
@@ -103,7 +104,7 @@ fun ARCatalogsScreen(navController: NavController) {
                 }
             }
 
-            // # List of Catalogs (Removed verticalScroll from here)
+            // # list of catalogs
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,85 +112,18 @@ fun ARCatalogsScreen(navController: NavController) {
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                CatalogButton(
-                    title = "St. John the Baptist Church",
-                    subtitle = "Camalig, Albay",
-                    onClick = { navController.navigate("view_catalog/st_john_church") }
-                )
+                // # generate catalog buttons from data list
+                listOfHistoricalSites.forEach { historical_site ->
+                    CatalogButton(
+                        title = historical_site.title,
+                        subtitle = historical_site.location,
+                        onClick = { navController.navigate("view_catalog/${historical_site.site_id}") }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Old Albay",
-                    subtitle = "Legazpi City, Albay",
-                    onClick = { navController.navigate("view_catalog/old_albay_hall") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Cagsawa Ruins Church",
-                    subtitle = "Daraga, Albay",
-                    onClick = { navController.navigate("view_catalog/cagsawa_church") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CatalogButton(
-                    title = "Lorem Ipsum",
-                    subtitle = "Lorem Ipsum, Albay",
-                    onClick = { navController.navigate("view_catalog/id") }
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
@@ -240,7 +174,7 @@ fun CatalogButton(
                 )
             }
 
-            // # Material Icon used for the right-facing chevron
+            // # material icon used for the right-facing chevron
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
                 contentDescription = "View Catalog",

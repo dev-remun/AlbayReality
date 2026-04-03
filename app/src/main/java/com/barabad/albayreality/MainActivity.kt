@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
 
-                NavHost(navController, startDestination = "register5") {
+                NavHost(navController, startDestination = "home") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
