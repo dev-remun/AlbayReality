@@ -5,12 +5,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 
-public class FirebaseAuthRegister {
+public class FirebaseAuthManager {
 
     // firebase initialization
     private FirebaseAuth mAuth;
 
-    public FirebaseAuthRegister() {
+    public FirebaseAuthManager() {
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -28,7 +28,17 @@ public class FirebaseAuthRegister {
                     }
                 });
     }
-
+    // Login functionn
+    public void loginUser(String email, String password, AuthCallback callback) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFailure(task.getException().getMessage());
+                    }
+                });
+    }
     // Callback interface
     public interface AuthCallback {
         void onSuccess();
