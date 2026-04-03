@@ -53,6 +53,9 @@ fun LogInScreen(navController: NavController) {
     // # state variable to control the error popup
     var display_error_popup by remember { mutableStateOf(false) }
 
+    // # state variable to manage loading status
+    var is_loading by remember { mutableStateOf(false) }
+
     // # handle the 2-second delay and navigation for success
     if (display_successs_popup) {
         // # launched effect runs when display_popup becomes true
@@ -191,9 +194,17 @@ fun LogInScreen(navController: NavController) {
 
                 // # login button
                 Button(
-                    text = "Login",
+                    text = if (is_loading) "Please wait" else "Login",
+                    is_enabled = if (!is_loading) {
+                        true
+                    } else {
+                        false
+                    },
                     isPrimary = true,
                     onClick = {
+                        // # prevent multiple clicks while loading
+                        if (is_loading) return@Button
+
                         var has_error = false
 
                         if (email_input.isBlank()) {
@@ -208,17 +219,23 @@ fun LogInScreen(navController: NavController) {
                         }
 
                         if (!has_error) {
+                            // # trigger loading state
+                            is_loading = true
+
                             Log.d("log_in_screen", "email: $email_input")
                             Log.d("log_in_screen", "password: $password_input")
 
                             authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
 
                                 override fun onSuccess() {
+                                    // # reset loading state and show success popup
+                                    is_loading = false
                                     display_successs_popup = true
                                 }
 
                                 override fun onFailure(errorMessage: String?) {
-                                    // # trigger error popup on failure
+                                    // # reset loading state and trigger error popup on failure
+                                    is_loading = false
                                     display_error_popup = true
                                     Log.e("log_in_screen", "login error: $errorMessage")
                                 }

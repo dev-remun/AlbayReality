@@ -22,6 +22,7 @@ fun Button(
     text: String,
     isPrimary: Boolean,
     onClick: () -> Unit,
+    is_enabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     // # Determine background color based on the type of button
@@ -29,6 +30,7 @@ fun Button(
 
     Button(
         onClick = onClick,
+        enabled = is_enabled,
         modifier = modifier
             .width(310.dp)
             .height(60.dp),
