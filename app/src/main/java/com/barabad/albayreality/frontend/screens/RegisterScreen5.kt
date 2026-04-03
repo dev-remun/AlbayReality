@@ -47,8 +47,14 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
     var password_error by remember { mutableStateOf(false) }
     var confirm_password_error by remember { mutableStateOf(false) }
 
+    // # state variable to manage loading status
+    var is_loading by remember { mutableStateOf(false) }
+
     // # state variable for success popup
-    var show_success_popup by remember { mutableStateOf(false) }
+    var display_success_popup by remember { mutableStateOf(false) }
+
+    // # state variable to control the error popup
+    var display_error_popup by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -167,9 +173,17 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
 
                 // # register button
                 Button(
-                    text = "Register",
+                    text = if (is_loading) "Please wait" else "Register",
+                    is_enabled = if (!is_loading) {
+                        true
+                    } else {
+                        false
+                    },
                     isPrimary = true,
                     onClick = {
+                        // # prevent multiple clicks while loading
+                        if (is_loading) return@Button
+
                         var has_error = false
 
                         if (email.isBlank()) {
@@ -186,6 +200,9 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                         }
 
                         if (!has_error) {
+
+                            // # trigger loading state
+                            is_loading = true
 
                             user_registration_info_object.updateUserRegistrationInformation("email", email)
                             user_registration_info_object.updateUserRegistrationInformation("password", password)
@@ -211,7 +228,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                 override fun onSuccess() {
                                     println("Registration success")
 
-                                    // Initializes the user's register data
+                                    // # initializes the user's register data
                                     val userId = FirebaseAuth.getInstance().currentUser?.uid
                                     val userMap = hashMapOf(
                                         "firstname" to user_registration_info_object.user_registration_info.firstname,
@@ -225,18 +242,29 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                         "email" to user_registration_info_object.user_registration_info.email
                                     )
 
-                                    // Register the user's data into firestore
+                                    // # register the user's data into firestore
                                     FirebaseFirestore.getInstance()
                                         .collection("users")
                                         .document(userId!!)
                                         .set(userMap)
                                         .addOnSuccessListener {
-                                            show_success_popup = true
+                                            // # reset loading state and show success popup
+                                            is_loading = false
+                                            display_success_popup = true
+                                        }
+                                        .addOnFailureListener { e ->
+                                            // # reset loading state and show error if firestore fails
+                                            is_loading = false
+                                            display_error_popup = true
+                                            Log.e("register_screen5", "firestore error: ${e.message}")
                                         }
                                 }
 
                                 override fun onFailure(errorMessage: String?) {
-                                    println("Error: $errorMessage")
+                                    // # reset loading state and trigger error popup on failure
+                                    is_loading = false
+                                    display_error_popup = true
+                                    Log.e("register_screen5", "registration error: $errorMessage")
                                 }
                             })
                         }
@@ -270,18 +298,31 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
         }
     }
 
+    // # handle the error popup display
+    if (display_error_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Registration Failed. Please try again.",
+            button_text = "Try again",
+            onButtonClick = {
+                display_error_popup = false
+            },
+            onDismiss = { display_error_popup = false }
+        )
+    }
+
     // # display popup on success
-    if (show_success_popup) {
+    if (display_success_popup) {
         PopUp(
             icon = R.drawable.check_icon,
             message = "Account registered successfully!",
             button_text = "Go to Log In",
             onButtonClick = {
-                show_success_popup = false
+                display_success_popup = false
                 navController.navigate("login")
             },
             onDismiss = {
-                show_success_popup = true
+                display_success_popup = true
             }
         )
     }
