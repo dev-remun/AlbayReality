@@ -20,18 +20,23 @@ import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.data.ThreeDModel
 import com.barabad.albayreality.features.ArFailedScan
 import com.barabad.albayreality.features.ArSuccessScan
+import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
+import com.barabad.albayreality.frontend.screens.ARGameScreen
+import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
 import com.barabad.albayreality.frontend.screens.ArScreen
 import com.barabad.albayreality.frontend.screens.HomeScreen
 import com.barabad.albayreality.frontend.screens.LandingScreen
 import com.barabad.albayreality.frontend.screens.LogInScreen
 import com.barabad.albayreality.frontend.screens.MapScreen
+import com.barabad.albayreality.frontend.screens.ProfileScreen
 import com.barabad.albayreality.frontend.screens.RegisterScreen1
 import com.barabad.albayreality.frontend.screens.RegisterScreen2
 import com.barabad.albayreality.frontend.screens.RegisterScreen3
 import com.barabad.albayreality.frontend.screens.RegisterScreen4
 import com.barabad.albayreality.frontend.screens.RegisterScreen5
 import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.data.listOfHistoricalSites
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -78,7 +83,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
 
-                NavHost(navController, startDestination = "landing") {
+                NavHost(navController, startDestination = "register5") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -87,6 +92,33 @@ class MainActivity : ComponentActivity() {
                     composable("register5") { RegisterScreen5(navController, user_registration_info_object) }
                     composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
+
+                    composable("catalogs") { ARCatalogsScreen(navController) }
+                    composable("view_catalog/{site_id}") { back_stack_entry ->
+                        // Extract the ID from the navigation route
+                        val site_id = back_stack_entry.arguments?.getString("site_id")
+
+                        // Find the matching site in your database
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        // If we found the data, pass it into your dynamic screen
+                        if (site_data != null) {
+                            ARViewCataglogContentScreen(
+                                navController = navController,
+                                site_title = site_data.title,
+                                site_location = site_data.location,
+                                site_description = site_data.description,
+                                site_images = site_data.images
+                            )
+                        } else {
+                            // Optional: Show an error screen or fallback if ID doesn't exist
+                            Text("Site not found")
+                        }
+                    }
+
+
+                    composable("games") { ARGameScreen(navController) }
+                    composable("profile") { ProfileScreen(navController) }
                     composable("ar") { ArScreen(navController) }
                     composable("map") { MapScreen(navController) }
                     composable("aboutus") { AboutUsScreen(navController) }

@@ -24,7 +24,7 @@ class UserRegistrationInformations : ViewModel() {
             "region" -> user_registration_info = user_registration_info.copy(region = value)
             "province" -> user_registration_info = user_registration_info.copy(province = value)
             "city_municipality" -> user_registration_info = user_registration_info.copy(city_municipality = value)
-            "username" -> user_registration_info = user_registration_info.copy(username = value)
+            "email" -> user_registration_info = user_registration_info.copy(email = value)
             "password" -> user_registration_info = user_registration_info.copy(password = value)
         }
     }
