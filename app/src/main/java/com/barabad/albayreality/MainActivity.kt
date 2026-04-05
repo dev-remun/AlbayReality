@@ -22,6 +22,7 @@ import com.barabad.albayreality.features.ArFailedScan
 import com.barabad.albayreality.features.ArSuccessScan
 import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
 import com.barabad.albayreality.frontend.screens.ARGameScreen
+import com.barabad.albayreality.frontend.screens.ARMapScreen
 import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
 import com.barabad.albayreality.frontend.screens.ArScreen
@@ -83,7 +84,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
 
-                NavHost(navController, startDestination = "landing") {
+                NavHost(navController, startDestination = "map") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -120,7 +121,7 @@ class MainActivity : ComponentActivity() {
                     composable("games") { ARGameScreen(navController) }
                     composable("profile") { ProfileScreen(navController) }
                     composable("ar") { ArScreen(navController) }
-                    composable("map") { MapScreen(navController) }
+                    composable("map") { ARMapScreen(navController) }
                     composable("aboutus") { AboutUsScreen(navController) }
                     composable("ar_failed_scan") { ArFailedScan(navController) }
                     composable("ar_success_scan") { ArSuccessScan(navController) }

@@ -17,16 +17,20 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import com.barabad.albayreality.frontend.utilities.data.HistoricalSiteModel
 
 @Composable
 fun MapBox(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(20.dp),
-    onPinSelected: (String) -> Unit
+    sites: List<HistoricalSiteModel>,
+    is_zoomable: Boolean = true,
+    is_scrollable: Boolean = true,
+    on_pin_selected: (String) -> Unit
 ) {
     val context = LocalContext.current
 
-    // Load OSMDroid config
+    // # load osmdroid config
     Configuration.getInstance()
         .load(context, PreferenceManager.getDefaultSharedPreferences(context))
 
@@ -44,40 +48,26 @@ fun MapBox(
             factory = { ctx ->
                 MapView(ctx).apply {
 
-                    // Map Config
                     setTileSource(TileSourceFactory.MAPNIK)
-                    setMultiTouchControls(true)
-                    controller.setZoom(13.0)
-                    controller.setCenter(GeoPoint(13.150, 123.710))
 
-                    // ---- Add Pins With Click ----
+                    setMultiTouchControls(is_zoomable)
 
-                    addInteractivePin(
-                        map = this,
-                        lat = 13.16613,
-                        lon = 123.70116,
-                        title = "Cagsawa Church",
-                        id = "cagsawa",
-                        onPinSelected = onPinSelected
-                    )
+                    controller.setZoom(10.6)
 
-                    addInteractivePin(
-                        map = this,
-                        lat = 13.138276,
-                        lon = 123.734580,
-                        title = "Legazpi City Hall",
-                        id = "cityhall",
-                        onPinSelected = onPinSelected
-                    )
+                    // # set center roughly around albay
+                    controller.setCenter(GeoPoint(13.25667, 123.68500))
 
-                    addInteractivePin(
-                        map = this,
-                        lat = 13.182389,
-                        lon = 123.654583,
-                        title = "John the Baptist Church",
-                        id = "church",
-                        onPinSelected = onPinSelected
-                    )
+                    // # loop through the provided sites and plot them dynamically
+                    sites.forEach { site ->
+                        addInteractivePin(
+                            map = this,
+                            lat = site.latitude,
+                            lon = site.longitude,
+                            title = site.title,
+                            id = site.site_id,
+                            on_pin_selected = on_pin_selected
+                        )
+                    }
                 }
             },
             modifier = Modifier.fillMaxSize()
@@ -85,14 +75,13 @@ fun MapBox(
     }
 }
 
-// ---------- Helper: adds a clickable + zoomable pin ----------
 private fun addInteractivePin(
     map: MapView,
     lat: Double,
     lon: Double,
     title: String,
     id: String,
-    onPinSelected: (String) -> Unit
+    on_pin_selected: (String) -> Unit
 ) {
     val marker = Marker(map)
     marker.position = GeoPoint(lat, lon)
@@ -100,7 +89,7 @@ private fun addInteractivePin(
     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
     marker.setOnMarkerClickListener { m, _ ->
-        onPinSelected(id)
+        on_pin_selected(id)
 
         map.controller.animateTo(
             m.position,

@@ -12,7 +12,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.churchext, R.drawable.churchint)
+        images = listOf(R.drawable.churchext, R.drawable.churchint),
+        latitude = 13.1820646,
+        longitude = 123.6546855
     ),
     HistoricalSiteModel(
         site_id = "cagsawa_church",
@@ -23,7 +25,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2)
+        images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2),
+        latitude = 13.16611,
+        longitude = 123.70111
     ),
     HistoricalSiteModel(
         site_id = "old_albay_hall",
@@ -34,7 +38,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.hall1, R.drawable.hall2)
+        images = listOf(R.drawable.hall1, R.drawable.hall2),
+        latitude = 13.1383411,
+        longitude = 123.734589
     ),
     HistoricalSiteModel(
         site_id = "lorem4",
@@ -45,7 +51,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.14402215,
+        longitude = 123.722812561326
     ),
     HistoricalSiteModel(
         site_id = "lorem5",
@@ -56,7 +64,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.3585,
+        longitude = 123.7320
     ),
 
     HistoricalSiteModel(
@@ -68,7 +78,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.2384,
+        longitude = 123.5358
     ),
 
     HistoricalSiteModel(
@@ -80,7 +92,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.2045,
+        longitude = 123.7667
     ),
     HistoricalSiteModel(
         site_id = "lorem8",
@@ -91,7 +105,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.4616,
+        longitude = 123.6791
     ),
     HistoricalSiteModel(
         site_id = "lorem9",
@@ -102,7 +118,9 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.0645,
+        longitude = 123.5975
     ),
     HistoricalSiteModel(
         site_id = "lorem10",
@@ -113,6 +131,8 @@ val listOfHistoricalSites = listOf(
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage)
+        images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+        latitude = 13.1887,
+        longitude = 123.5956
     ),
 )
