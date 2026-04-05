@@ -70,11 +70,7 @@ fun MapScreen(navController: NavController) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            // Map container: pass callback to receive pin id when tapped
-            MapBox(
-                modifier = Modifier.fillMaxWidth(),
-                onPinSelected = { id -> selectedPin = id }
-            )
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
