@@ -6,5 +6,7 @@ data class HistoricalSiteModel(
     val title: String,
     val location: String,
     val description: String,
-    val images: List<Int>
+    val images: List<Int>,
+    val latitude: Double,
+    val longitude: Double
 )
