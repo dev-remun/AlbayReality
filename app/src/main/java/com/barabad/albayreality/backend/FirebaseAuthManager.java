@@ -4,6 +4,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 
 public class FirebaseAuthManager {
 
@@ -16,6 +17,18 @@ public class FirebaseAuthManager {
 
     // Register function from mAuth
     public void registerUser(String email, String password, AuthCallback callback) {
+        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                // URL you want to redirect back to. The domain (www.example.com) for this
+                // URL must be whitelisted in the Firebase Console.
+                .setUrl("https://firebaseapp.com")
+                // This must be true
+                .setHandleCodeInApp(true)
+                .setAndroidPackageName(
+                        "com.barabad.albayreality",
+                        true, /* installIfNotAvailable */
+                        "12"    /* minimumVersion */)
+                .build();
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -28,7 +41,7 @@ public class FirebaseAuthManager {
                     }
                 });
     }
-    // Login functionn
+    // Login function
     public void loginUser(String email, String password, AuthCallback callback) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
