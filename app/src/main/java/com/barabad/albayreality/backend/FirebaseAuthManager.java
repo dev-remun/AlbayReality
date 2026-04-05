@@ -20,7 +20,7 @@ public class FirebaseAuthManager {
         ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
                 // URL you want to redirect back to. The domain (www.example.com) for this
                 // URL must be whitelisted in the Firebase Console.
-                .setUrl("https://firebaseapp.com")
+                .setUrl("https://albay-reality.web.app/")
                 // This must be true
                 .setHandleCodeInApp(true)
                 .setAndroidPackageName(
