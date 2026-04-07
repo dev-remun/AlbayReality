@@ -29,15 +29,14 @@ import com.barabad.albayreality.frontend.screens.ArScreen
 import com.barabad.albayreality.frontend.screens.HomeScreen
 import com.barabad.albayreality.frontend.screens.LandingScreen
 import com.barabad.albayreality.frontend.screens.LogInScreen
-import com.barabad.albayreality.frontend.screens.MapScreen
 import com.barabad.albayreality.frontend.screens.ProfileScreen
 import com.barabad.albayreality.frontend.screens.RegisterScreen1
 import com.barabad.albayreality.frontend.screens.RegisterScreen2
 import com.barabad.albayreality.frontend.screens.RegisterScreen3
 import com.barabad.albayreality.frontend.screens.RegisterScreen4
 import com.barabad.albayreality.frontend.screens.RegisterScreen5
-import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
-import com.barabad.albayreality.frontend.utilities.data.listOfHistoricalSites
+import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -84,7 +83,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
 
-                NavHost(navController, startDestination = "map") {
+                NavHost(navController, startDestination = "landing") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }

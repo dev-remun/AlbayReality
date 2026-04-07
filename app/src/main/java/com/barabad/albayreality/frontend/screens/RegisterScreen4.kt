@@ -25,7 +25,7 @@ import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
-import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.utils.loadJsonFile
 import com.barabad.albayreality.frontend.utilities.utils.mapRegProvCity
 import com.barabad.albayreality.frontend.utilities.utils.parseCities

@@ -1,4 +1,4 @@
-package com.barabad.albayreality.frontend.utilities.data
+package com.barabad.albayreality.frontend.utilities.data.user_registration
 
 // # user registration data model
 data class UserRegistrationInfoModel(

@@ -25,7 +25,7 @@ import androidx.navigation.NavController
 import com.barabad.albayreality.R
 import com.barabad.albayreality.features.MapBox
 import com.barabad.albayreality.frontend.components.NavBar
-import com.barabad.albayreality.frontend.utilities.data.listOfHistoricalSites
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes

@@ -1,9 +1,9 @@
-package com.barabad.albayreality.frontend.utilities.data
+package com.barabad.albayreality.frontend.utilities.data.user_registration
 
-import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 
 class UserRegistrationInformations : ViewModel() {
 

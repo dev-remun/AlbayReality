@@ -26,7 +26,7 @@ import com.barabad.albayreality.ui.theme.inputfield_bg
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
 import com.barabad.albayreality.frontend.components.InputField
-import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.error_message_color
 
