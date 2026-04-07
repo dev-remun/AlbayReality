@@ -1,4 +1,4 @@
-package com.barabad.albayreality.frontend.utilities.data
+package com.barabad.albayreality.frontend.utilities.data.historicalsites
 
 // The data structure for a historical site
 data class HistoricalSiteModel(

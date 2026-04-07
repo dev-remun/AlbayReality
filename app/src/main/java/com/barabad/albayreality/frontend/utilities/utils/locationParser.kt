@@ -1,8 +1,8 @@
 package com.barabad.albayreality.frontend.utilities.utils
 
-import com.barabad.albayreality.frontend.utilities.data.CityMunicipalityModel
-import com.barabad.albayreality.frontend.utilities.data.ProvinceModel
-import com.barabad.albayreality.frontend.utilities.data.RegionModel
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.CityMunicipalityModel
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.ProvinceModel
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.RegionModel
 import org.json.JSONObject
 
 // # parse region json string and return a list of RegionModel

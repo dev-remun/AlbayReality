@@ -27,7 +27,7 @@ import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.InputField
 import com.barabad.albayreality.frontend.components.PasswordInputField
 import com.barabad.albayreality.frontend.components.PopUp
-import com.barabad.albayreality.frontend.utilities.data.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.R
 
@@ -55,7 +55,7 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
     // # state variable to manage loading status
     var is_loading by remember { mutableStateOf(false) }
 
-    // # state variable for success popup
+    // # state variable to control the success popup
     var display_success_popup by remember { mutableStateOf(false) }
 
     // # state variable to control the error popup
@@ -278,7 +278,23 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
 
                                 override fun onFailure(errorMessage: String?) {
                                     is_loading = false
+
+                                    val error_message_firebase = errorMessage ?: "An unknown error occured."
                                     display_error_popup = true
+
+                                    val check_error_message_firebase = error_message_firebase.lowercase()
+                                    if (check_error_message_firebase.contains("email") ||
+                                        check_error_message_firebase.contains("address") ||
+                                        check_error_message_firebase.contains("taken") ||
+                                        check_error_message_firebase.contains("format")) {
+                                        email_error = true
+                                        email_error_message = error_message_firebase
+                                    }
+                                    if (check_error_message_firebase.contains("password")) {
+                                        password_error = true
+                                        password_error_message = "Password should be at least 6 characters."
+                                    }
+
                                     Log.e("register_screen5", "registration error: $errorMessage")
                                 }
                             })

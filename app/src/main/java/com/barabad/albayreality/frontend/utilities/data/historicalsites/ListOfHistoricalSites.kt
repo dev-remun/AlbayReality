@@ -1,4 +1,4 @@
-package com.barabad.albayreality.frontend.utilities.data
+package com.barabad.albayreality.frontend.utilities.data.historicalsites
 
 import com.barabad.albayreality.R
 
