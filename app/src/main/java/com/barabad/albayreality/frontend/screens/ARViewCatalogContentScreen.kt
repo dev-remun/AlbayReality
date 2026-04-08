@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.barabad.albayreality.R
 import com.barabad.albayreality.features.ImageCarousel
 import com.barabad.albayreality.frontend.components.Button
+import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.TitanOne
@@ -46,6 +47,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ARViewCataglogContentScreen(
     navController: NavController,
+    site_id: String,
     site_title: String,
     site_location: String,
     site_description: String,
@@ -71,81 +73,14 @@ fun ARViewCataglogContentScreen(
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(inner_padding)
+                .padding( top = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                IconButton(
-                    onClick = { navController.popBackStack() },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.back_icon),
-                        contentDescription = "Back",
-                        tint = strokes,
-                        modifier = Modifier.size(26.dp)
-                    )
-                }
 
-                // # ung if-else statement na to ginawa ko para ma-catch ko ung St. John the Baptist Church so pwede ko pa maayos ung orientation ng title niya :<
-                // # Medyo mahaba kasi ung title niya kapag one line lang. Kaya nilagyan ko ng '\n'
-                // # ung else statement jan na ung other sites
-                if (site_title == "St. John the Baptist Church") {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "St. John the\nBaptist Church",
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(
-                                fontSize = 32.sp,
-                                fontFamily = TitanOne,
-                                fontWeight = FontWeight.Black,
-                                color = strokes,
-                                drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                            )
-                        )
-                        Text(
-                            text = "St. John the\nBaptist Church",
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(
-                                fontSize = 32.sp,
-                                fontFamily = TitanOne,
-                                fontWeight = FontWeight.Black,
-                                color = primary
-                            )
-                        )
-                    }
-                } else {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text(
-                            text = site_title,
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(
-                                fontSize = 32.sp,
-                                fontFamily = TitanOne,
-                                fontWeight = FontWeight.Black,
-                                color = strokes,
-                                drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                            )
-                        )
-                        Text(
-                            text = site_title,
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(
-                                fontSize = 32.sp,
-                                fontFamily = TitanOne,
-                                fontWeight = FontWeight.Black,
-                                color = primary
-                            )
-                        )
-                    }
-                }
-
-
-            }
+            Header(
+                nav_controller = navController,
+                title = site_title
+            )
 
             // # main content area
             Column(
@@ -187,7 +122,9 @@ fun ARViewCataglogContentScreen(
                 Button(
                     text = "AR Mode",
                     isPrimary = true,
-                    onClick = { /* TODO: Navigate to AR Mode */ },
+                    onClick = {
+                        navController.navigate("armode/${site_id}")
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
 

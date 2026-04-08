@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
 import com.barabad.albayreality.features.MapBox
+import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.ui.theme.TitanOne
@@ -58,55 +59,20 @@ fun ARMapScreen(nav_controller: NavController) {
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(inner_padding)
-                .padding(start = 24.dp, end = 24.dp, top = 60.dp)
+                .padding( top = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             // # top header section
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                IconButton(
-                    onClick = { nav_controller.popBackStack() },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.back_icon),
-                        contentDescription = "Back",
-                        tint = strokes,
-                        modifier = Modifier.size(26.dp)
-                    )
-                }
-
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "AR Map",
-                        style = TextStyle(
-                            fontSize = 32.sp,
-                            fontFamily = TitanOne,
-                            fontWeight = FontWeight.Black,
-                            color = strokes,
-                            drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                        )
-                    )
-                    Text(
-                        text = "AR Map",
-                        style = TextStyle(
-                            fontSize = 32.sp,
-                            fontFamily = TitanOne,
-                            fontWeight = FontWeight.Black,
-                            color = primary
-                        )
-                    )
-                }
-            }
+            Header(
+                nav_controller = nav_controller,
+                title = "Albay Map"
+            )
 
             // # map and dynamic content container
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
             ) {
                 Text(
                     text = "Tap a pin location",
@@ -123,7 +89,7 @@ fun ARMapScreen(nav_controller: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(350.dp)
-                        .clip(RoundedCornerShape(12.dp)),
+                        .clip(RoundedCornerShape(8.dp)),
                     sites = listOfHistoricalSites,
                     is_zoomable = true,
                     is_scrollable = true,
