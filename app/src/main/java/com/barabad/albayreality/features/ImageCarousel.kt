@@ -45,9 +45,9 @@ fun ImageCarousel(
             .border(
                 width = 2.dp,
                 color = strokes,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(8.dp)
             ),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(6.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -63,7 +63,7 @@ fun ImageCarousel(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(20.dp)) // # ensures the image fills the rounded bounds properly
+                    .clip(RoundedCornerShape(8.dp)) // # ensures the image fills the rounded bounds properly
             )
         }
     }
