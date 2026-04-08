@@ -23,6 +23,7 @@ import com.barabad.albayreality.features.ArSuccessScan
 import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
 import com.barabad.albayreality.frontend.screens.ARGameScreen
 import com.barabad.albayreality.frontend.screens.ARMapScreen
+import com.barabad.albayreality.frontend.screens.ARModeScreen
 import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
 import com.barabad.albayreality.frontend.screens.ArScreen
@@ -83,7 +84,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
 
-                NavHost(navController, startDestination = "landing") {
+                NavHost(navController, startDestination = "home") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -105,6 +106,7 @@ class MainActivity : ComponentActivity() {
                         if (site_data != null) {
                             ARViewCataglogContentScreen(
                                 navController = navController,
+                                site_id = site_data.site_id,
                                 site_title = site_data.title,
                                 site_location = site_data.location,
                                 site_description = site_data.description,
@@ -116,6 +118,25 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    composable("armode/{site_id}") { back_stack_entry ->
+                        // Extract the ID from the navigation route
+                        val site_id = back_stack_entry.arguments?.getString("site_id")
+
+                        // Find the matching site in your database
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        // If we found the data, pass it into your dynamic screen
+                        if (site_data != null) {
+                            ARModeScreen(
+                                navController = navController,
+                                site_id = site_data.site_id,
+                                site_title = site_data.title
+                            )
+                        } else {
+                            // Optional: Show an error screen or fallback if ID doesn't exist
+                            Text("Site not found")
+                        }
+                    }
 
                     composable("games") { ARGameScreen(navController) }
                     composable("profile") { ProfileScreen(navController) }

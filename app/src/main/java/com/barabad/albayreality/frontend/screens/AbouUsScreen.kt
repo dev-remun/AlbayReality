@@ -48,8 +48,7 @@ fun AboutUsScreen(navController: NavController) {
         ) {
             Spacer(modifier = Modifier.height(54.dp))
 
-            // # Header - Please refer to the components/Header.kt
-            Header()
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
