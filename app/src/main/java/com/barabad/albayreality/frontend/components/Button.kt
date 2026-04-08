@@ -34,7 +34,7 @@ fun Button(
         modifier = modifier
             .width(310.dp)
             .height(60.dp),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = background_color,
             contentColor = strokes
