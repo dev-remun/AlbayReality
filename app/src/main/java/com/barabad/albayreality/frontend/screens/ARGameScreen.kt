@@ -40,7 +40,8 @@ import com.barabad.albayreality.ui.theme.strokes
 fun ARGameScreen(navController: NavController) {
 
     var active_tab by remember { mutableStateOf(-1) }
-
+    // can the value be passed here kung anong site id ang tig press? para ma build a quiz nalang ako on one screen and not multiple
+    // also
     // # scaffold handles the layout for top bars, bottom bars, and floating action buttons
     Scaffold(
         bottomBar = {
@@ -72,16 +73,25 @@ fun ARGameScreen(navController: NavController) {
             ) {
                 // # fill text for app title
                 Text(
-                    text = "AR Game Screen",
+                    //put this to the top of screen  or something
+                    text = "Game Screen",
                     style = TextStyle(
-                        fontSize = 40.sp,
+                        fontSize = 20.sp,
                         fontFamily = TitanOne,
                         fontWeight = FontWeight.Black,
                         color = primary
                     )
                 )
+                //not yet implemented so commented out muna
+                //Quiz(site_id)
             }
 
         }
     }
+}
+
+
+@Composable
+fun Quiz(quizNo: String?) {
+    TODO("Not yet implemented")
 }

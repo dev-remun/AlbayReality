@@ -18,15 +18,12 @@ import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
 import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.data.ThreeDModel
-import com.barabad.albayreality.features.ArFailedScan
-import com.barabad.albayreality.features.ArSuccessScan
 import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
 import com.barabad.albayreality.frontend.screens.ARGameScreen
 import com.barabad.albayreality.frontend.screens.ARMapScreen
 import com.barabad.albayreality.frontend.screens.ARModeScreen
 import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
-import com.barabad.albayreality.frontend.screens.ArScreen
 import com.barabad.albayreality.frontend.screens.HomeScreen
 import com.barabad.albayreality.frontend.screens.LandingScreen
 import com.barabad.albayreality.frontend.screens.LogInScreen
@@ -140,11 +137,8 @@ class MainActivity : ComponentActivity() {
 
                     composable("games") { ARGameScreen(navController) }
                     composable("profile") { ProfileScreen(navController) }
-                    composable("ar") { ArScreen(navController) }
                     composable("map") { ARMapScreen(navController) }
                     composable("aboutus") { AboutUsScreen(navController) }
-                    composable("ar_failed_scan") { ArFailedScan(navController) }
-                    composable("ar_success_scan") { ArSuccessScan(navController) }
                 }
             }
         }
