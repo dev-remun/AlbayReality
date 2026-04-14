@@ -10,13 +10,34 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.material3.*
+import androidx.compose.runtime.remember
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
 import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.data.ThreeDModel
 import com.barabad.albayreality.features.ArFailedScan
 import com.barabad.albayreality.features.ArSuccessScan
-import com.barabad.albayreality.screens.*
+import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
+import com.barabad.albayreality.frontend.screens.ARGameScreen
+import com.barabad.albayreality.frontend.screens.ARMapScreen
+import com.barabad.albayreality.frontend.screens.ARModeScreen
+import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
+import com.barabad.albayreality.frontend.screens.AboutUsScreen
+import com.barabad.albayreality.frontend.screens.ArScreen
+import com.barabad.albayreality.frontend.screens.HomeScreen
+import com.barabad.albayreality.frontend.screens.LandingScreen
+import com.barabad.albayreality.frontend.screens.LogInScreen
+import com.barabad.albayreality.frontend.screens.ProfileScreen
+import com.barabad.albayreality.frontend.screens.RegisterScreen1
+import com.barabad.albayreality.frontend.screens.RegisterScreen2
+import com.barabad.albayreality.frontend.screens.RegisterScreen3
+import com.barabad.albayreality.frontend.screens.RegisterScreen4
+import com.barabad.albayreality.frontend.screens.RegisterScreen5
+import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -44,6 +65,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         checkSystemSupport(this)
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+
+        // # this hides the status and navigation bar of the phone
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+
+        // # this shows the nav and status bar, if the user swipe the nav or status bar
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+
         DatabaseProvider.database.addModel(cagsawa_church)
         DatabaseProvider.database.addModel(old_albay_munisipyo)
         DatabaseProvider.database.addModel(st_john_church)
@@ -51,11 +82,66 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
+                val user_registration_info_object = remember { UserRegistrationInformations() }
 
                 NavHost(navController, startDestination = "home") {
+                    composable("login") { LogInScreen(navController) }
+                    composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
+                    composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
+                    composable("register3") { RegisterScreen3(navController, user_registration_info_object) }
+                    composable("register4") { RegisterScreen4(navController, user_registration_info_object) }
+                    composable("register5") { RegisterScreen5(navController, user_registration_info_object) }
+                    composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
+
+                    composable("catalogs") { ARCatalogsScreen(navController) }
+                    composable("view_catalog/{site_id}") { back_stack_entry ->
+                        // Extract the ID from the navigation route
+                        val site_id = back_stack_entry.arguments?.getString("site_id")
+
+                        // Find the matching site in your database
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        // If we found the data, pass it into your dynamic screen
+                        if (site_data != null) {
+                            ARViewCataglogContentScreen(
+                                navController = navController,
+                                site_id = site_data.site_id,
+                                site_title = site_data.title,
+                                site_location = site_data.location,
+                                site_description = site_data.description,
+                                site_images = site_data.images
+                            )
+                        } else {
+                            // Optional: Show an error screen or fallback if ID doesn't exist
+                            Text("Site not found")
+                        }
+                    }
+
+                    composable("armode/{site_id}") { back_stack_entry ->
+                        // Extract the ID from the navigation route
+                        val site_id = back_stack_entry.arguments?.getString("site_id")
+
+                        // Find the matching site in your database
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        // If we found the data, pass it into your dynamic screen
+                        if (site_data != null) {
+                            ARModeScreen(
+                                navController = navController,
+                                site_id = site_data.site_id,
+                                site_title = site_data.title
+                            )
+                        } else {
+                            // Optional: Show an error screen or fallback if ID doesn't exist
+                            Text("Site not found")
+                        }
+                    }
+
+                    composable("games") { ARGameScreen(navController) }
+                    composable("profile") { ProfileScreen(navController) }
                     composable("ar") { ArScreen(navController) }
-                    composable("map") { MapScreen(navController) }
+                    composable("map") { ARMapScreen(navController) }
                     composable("aboutus") { AboutUsScreen(navController) }
                     composable("ar_failed_scan") { ArFailedScan(navController) }
                     composable("ar_success_scan") { ArSuccessScan(navController) }

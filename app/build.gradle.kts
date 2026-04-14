@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -59,6 +60,13 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.1")
     implementation("io.github.sceneview:arsceneview:2.2.0")
     implementation("org.osmdroid:osmdroid-android:6.1.18")
+    implementation(platform("com.google.firebase:firebase-bom:34.11.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore:26.1.2")
+    implementation(libs.firebase.auth)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

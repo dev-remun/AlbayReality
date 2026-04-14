@@ -1,6 +1,7 @@
 package com.barabad.albayreality.features
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.pager.HorizontalPager
@@ -14,40 +15,46 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.barabad.albayreality.ui.theme.strokes
 import kotlinx.coroutines.delay
 
 @Composable
 fun ImageCarousel(
     images: List<Int>,
     modifier: Modifier = Modifier,
-    autoSlideDuration: Long = 5000L  // 5 seconds per slide
+    auto_slide_duration: Long = 2000L // # 2 seconds per slide
 ) {
-    val pagerState = rememberPagerState(
+    val pager_state = rememberPagerState(
         initialPage = 0,
         pageCount = { images.size }
     )
 
-    // Auto-slide coroutine
+    // # auto-slide coroutine
     LaunchedEffect(Unit) {
         while (true) {
-            delay(autoSlideDuration)
-            val nextPage = (pagerState.currentPage + 1) % images.size
-            pagerState.animateScrollToPage(nextPage)
+            delay(auto_slide_duration)
+            val next_page = (pager_state.currentPage + 1) % images.size
+            pager_state.animateScrollToPage(next_page)
         }
     }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(220.dp),
-        shape = RoundedCornerShape(20.dp),
+            .height(220.dp)
+            .border(
+                width = 2.dp,
+                color = strokes,
+                shape = RoundedCornerShape(8.dp)
+            ),
+        shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(6.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
         HorizontalPager(
-            state = pagerState,
+            state = pager_state,
             modifier = Modifier.fillMaxSize()
         ) { page ->
             Image(
@@ -56,7 +63,7 @@ fun ImageCarousel(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(8.dp)) // # ensures the image fills the rounded bounds properly
             )
         }
     }

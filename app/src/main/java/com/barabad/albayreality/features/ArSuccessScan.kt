@@ -27,15 +27,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.components.ButtonTypeB
+import com.barabad.albayreality.frontend.components.ButtonTypeB
 import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.ui.theme.Inter
 import com.google.ar.core.Config
 import com.google.ar.core.Frame
 import com.google.ar.core.TrackingFailureReason
 import io.github.sceneview.ar.ARScene
-import io.github.sceneview.ar.arcore.createAnchor
-import io.github.sceneview.ar.arcore.hitTest
 import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.ar.rememberARCameraNode
