@@ -146,7 +146,7 @@ fun HomeScreen(navController: NavController) {
                 // # ar game button
                 ButtonImageB(
                     image_res = R.drawable.ar_game_btn_bgimage,
-                    title = "AR Game",
+                    title = "Game",
                     on_click = { navController.navigate("games") },
                     modifier = Modifier
                         .weight(1f)
