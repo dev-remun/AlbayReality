@@ -76,7 +76,6 @@ fun ARViewCataglogContentScreen(
                 .padding( top = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-
             Header(
                 nav_controller = navController,
                 title = site_title
@@ -133,7 +132,7 @@ fun ARViewCataglogContentScreen(
                 Button(
                     text = "Quiz Mode",
                     isPrimary = false,
-                    onClick = { navController.navigate("games") },
+                    onClick = { navController.navigate("argame_playground/${site_id}") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
