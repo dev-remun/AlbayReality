@@ -4,31 +4,31 @@ package com.barabad.albayreality.frontend.utilities.data.quizzes
 
 val Quiz1 = listOf(
     QuizzesModel(
-        question = "one",
+        question = "CagsawaChurch 1",
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
-        option4 = "choice3",
+        option4 = "choice4",
         correctAnswer = "choice1",
     ),
     QuizzesModel(
-        question = "two",
+        question = "CagsawaChurch 2",
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
-        option4 = "choice3",
+        option4 = "choice4",
         correctAnswer = "choice1",
     ),
     QuizzesModel(
-        question = "three",
+        question = "CagsawaChurch 3",
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
-        option4 = "choice3",
+        option4 = "choice4",
         correctAnswer = "choice1",
     ),
     QuizzesModel(
-        question = "4",
+        question = "CagsawaChurch 4",
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
@@ -72,7 +72,7 @@ val Quiz1 = listOf(
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
-        option4 = "choice3",
+        option4 = "choice4",
         correctAnswer = "choice1",
     ),
     QuizzesModel(
@@ -80,7 +80,7 @@ val Quiz1 = listOf(
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
-        option4 = "choice3",
+        option4 = "choice4",
         correctAnswer = "choice1",
     ),
     QuizzesModel(
@@ -88,7 +88,7 @@ val Quiz1 = listOf(
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
-        option4 = "choice3",
+        option4 = "choice4",
         correctAnswer = "choice1",
     ),
     QuizzesModel(

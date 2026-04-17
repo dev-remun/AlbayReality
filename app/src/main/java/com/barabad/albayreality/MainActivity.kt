@@ -14,12 +14,19 @@ import androidx.compose.runtime.remember
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.data.ThreeDModel
 import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
+import com.barabad.albayreality.frontend.screens.ARGamePlaygroundScreen
+import com.barabad.albayreality.frontend.screens.ARGameResultScreen
 import com.barabad.albayreality.frontend.screens.ARGameScreen
+import com.barabad.albayreality.frontend.screens.ARGameSummaryScreen
 import com.barabad.albayreality.frontend.screens.ARMapScreen
 import com.barabad.albayreality.frontend.screens.ARModeScreen
 import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
@@ -35,6 +42,7 @@ import com.barabad.albayreality.frontend.screens.RegisterScreen4
 import com.barabad.albayreality.frontend.screens.RegisterScreen5
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
+import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -80,6 +88,7 @@ class MainActivity : ComponentActivity() {
             MaterialTheme {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
+                val quiz_state: QuizState = viewModel()
 
                 NavHost(navController, startDestination = "home") {
                     composable("login") { LogInScreen(navController) }
@@ -93,13 +102,10 @@ class MainActivity : ComponentActivity() {
 
                     composable("catalogs") { ARCatalogsScreen(navController) }
                     composable("view_catalog/{site_id}") { back_stack_entry ->
-                        // Extract the ID from the navigation route
                         val site_id = back_stack_entry.arguments?.getString("site_id")
 
-                        // Find the matching site in your database
                         val site_data = listOfHistoricalSites.find { it.site_id == site_id }
 
-                        // If we found the data, pass it into your dynamic screen
                         if (site_data != null) {
                             ARViewCataglogContentScreen(
                                 navController = navController,
@@ -110,19 +116,15 @@ class MainActivity : ComponentActivity() {
                                 site_images = site_data.images
                             )
                         } else {
-                            // Optional: Show an error screen or fallback if ID doesn't exist
                             Text("Site not found")
                         }
                     }
 
                     composable("armode/{site_id}") { back_stack_entry ->
-                        // Extract the ID from the navigation route
                         val site_id = back_stack_entry.arguments?.getString("site_id")
 
-                        // Find the matching site in your database
                         val site_data = listOfHistoricalSites.find { it.site_id == site_id }
 
-                        // If we found the data, pass it into your dynamic screen
                         if (site_data != null) {
                             ARModeScreen(
                                 navController = navController,
@@ -130,9 +132,52 @@ class MainActivity : ComponentActivity() {
                                 site_title = site_data.title
                             )
                         } else {
-                            // Optional: Show an error screen or fallback if ID doesn't exist
                             Text("Site not found")
                         }
+                    }
+
+                    composable("argame_playground/{site_id}") { back_stack_entry ->
+                        val site_id = back_stack_entry.arguments?.getString("site_id")
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        if (site_data != null) {
+                            ARGamePlaygroundScreen(
+                                navController = navController,
+                                site_id = site_data.site_id,
+                                site_title = site_data.title,
+                                quiz_state = quiz_state
+                            )
+                        }
+                    }
+
+                    composable("argame_result/{site_id}/{result_status}") { back_stack_entry ->
+                        val site_id = back_stack_entry.arguments?.getString("site_id") ?: ""
+                        val result_status = back_stack_entry.arguments?.getString("result_status") ?: ""
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        if (site_data != null) {
+                            ARGameResultScreen(
+                                navController = navController,
+                                site_title = site_data.title,
+                                site_id = site_id,
+                                result_status = result_status,
+                                quiz_state = quiz_state
+                            )
+                        }
+                    }
+
+                    composable("argame_summary/{site_id}") { back_stack_entry ->
+                        val site_id = back_stack_entry.arguments?.getString("site_id") ?: ""
+                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+
+                        if (site_data != null) {
+                            ARGameSummaryScreen(
+                                navController = navController,
+                                site_title = site_data.title,
+                                quiz_state = quiz_state
+                            )
+                        }
+
                     }
 
                     composable("games") { ARGameScreen(navController) }

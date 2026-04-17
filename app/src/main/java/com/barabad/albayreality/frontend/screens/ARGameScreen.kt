@@ -30,6 +30,9 @@ import com.barabad.albayreality.frontend.components.NavBar // # imported your ne
 import com.barabad.albayreality.R
 import com.barabad.albayreality.frontend.components.ButtonImageA
 import com.barabad.albayreality.frontend.components.ButtonImageB
+import com.barabad.albayreality.frontend.components.CatalogCard
+import com.barabad.albayreality.frontend.components.Header
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
@@ -41,6 +44,8 @@ fun ARGameScreen(navController: NavController) {
 
     var active_tab by remember { mutableStateOf(-1) }
     // can the value be passed here kung anong site id ang tig press? para ma build a quiz nalang ako on one screen and not multiple
+    // # Eto ung landing ng kahoot game, andito ung different quizzes for each sites
+    // # ung need ng site_id is ung sa may actual kahoot na, ung PlayGroundScreen
     // also
     // # scaffold handles the layout for top bars, bottom bars, and floating action buttons
     Scaffold(
@@ -62,36 +67,40 @@ fun ARGameScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(inner_padding)
                 .background(Color.White)
+                .padding(inner_padding)
+                .padding( top = 24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            Box(
+            Header(
+                nav_controller = navController,
+                title = "Game"
+            )
+
+            // # list of kahoot games/quizzes
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.25f),
-                contentAlignment = Alignment.Center
+                    .padding(horizontal = 24.dp)
             ) {
-                // # fill text for app title
-                Text(
-                    //put this to the top of screen  or something
-                    text = "Game Screen",
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        fontFamily = TitanOne,
-                        fontWeight = FontWeight.Black,
-                        color = primary
+
+                // # generate catalog buttons from data list
+                listOfHistoricalSites.forEach { historical_site ->
+                    CatalogCard(
+                        title = historical_site.title,
+                        catalog_image = historical_site.images[0],
+                        button_text = "Play",
+                        is_enabled = historical_site.is_viewed,
+                        disabled_help_text = "View site information first",
+                        onClick = { navController.navigate("argame_playground/${historical_site.site_id}") }
                     )
-                )
-                //not yet implemented so commented out muna
-                //Quiz(site_id)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
         }
     }
-}
-
-
-@Composable
-fun Quiz(quizNo: String?) {
-    TODO("Not yet implemented")
 }
