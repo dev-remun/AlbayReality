@@ -2,7 +2,23 @@ package com.barabad.albayreality.frontend.utilities.data.quizzes
 
 val Quiz2 = listOf(
     QuizzesModel(
-        question = "one",
+        question = "Old ALbay 1",
+        option1 = "asdasd",
+        option2 = "aasdf",
+        option3 = "choice3",
+        option4 = "choice4",
+        correctAnswer = "asdasd",
+    ),
+    QuizzesModel(
+        question = "Old ALbay 2",
+        option1 = "gdad",
+        option2 = "fhfdh",
+        option3 = "choice3",
+        option4 = "choice3",
+        correctAnswer = "fhfdh",
+    ),
+    QuizzesModel(
+        question = "Old ALbay 3",
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",
@@ -10,23 +26,7 @@ val Quiz2 = listOf(
         correctAnswer = "choice1",
     ),
     QuizzesModel(
-        question = "two",
-        option1 = "choice1",
-        option2 = "choice2",
-        option3 = "choice3",
-        option4 = "choice3",
-        correctAnswer = "choice1",
-    ),
-    QuizzesModel(
-        question = "three",
-        option1 = "choice1",
-        option2 = "choice2",
-        option3 = "choice3",
-        option4 = "choice3",
-        correctAnswer = "choice1",
-    ),
-    QuizzesModel(
-        question = "4",
+        question = "Old ALbay 4",
         option1 = "choice1",
         option2 = "choice2",
         option3 = "choice3",

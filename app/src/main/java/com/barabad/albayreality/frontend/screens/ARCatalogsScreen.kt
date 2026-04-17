@@ -71,6 +71,7 @@ fun ARCatalogsScreen(navController: NavController) {
                 .padding( top = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+
             Header(
                 nav_controller = navController,
                 title = "Catalogs"
@@ -82,13 +83,13 @@ fun ARCatalogsScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
 
                 // # generate catalog buttons from data list
                 listOfHistoricalSites.forEach { historical_site ->
                     CatalogCard(
                         title = historical_site.title,
                         catalog_image = historical_site.images[0],
+                        button_text = "Learn",
                         onClick = { navController.navigate("view_catalog/${historical_site.site_id}") }
                     )
 
