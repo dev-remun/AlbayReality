@@ -73,7 +73,6 @@ class QuizState : ViewModel() {
         missed_items = 0
     }
 
-    // # HELPER FUNCTION TO CLEAR THE SITE ID SO THE USER CAN REPLAY THE SAME QUIZ LATER
     fun clearSiteId() {
         site_id = ""
     }
