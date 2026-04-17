@@ -21,7 +21,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.churchext, R.drawable.churchint),
         latitude = 13.1820646,
         longitude = 123.6546855,
-        is_viewed = false
+        is_viewed = true
     ),
     HistoricalSiteModel(
         site_id = "cagsawa_church",
@@ -35,7 +35,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2),
         latitude = 13.16611,
         longitude = 123.70111,
-        is_viewed = false
+        is_viewed = true
     ),
     HistoricalSiteModel(
         site_id = "old_albay_hall",
@@ -49,7 +49,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.hall1, R.drawable.hall2),
         latitude = 13.1383411,
         longitude = 123.734589,
-        is_viewed = false
+        is_viewed = true
     ),
     HistoricalSiteModel(
         site_id = "lorem4",
@@ -63,7 +63,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.14402215,
         longitude = 123.722812561326,
-        is_viewed = false
+        is_viewed = true
     ),
     HistoricalSiteModel(
         site_id = "lorem5",

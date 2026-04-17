@@ -8,6 +8,14 @@ val inputfield_bg = primary.copy(alpha = 0.28f)
 val hint_color = Color(0xFFAFAFAF)
 val error_message_color = Color(0xFFFF6B6B)
 
+val orange = Color(0xFFFDB067)
+val yellow = Color(0xFFFDF082)
+val green = Color(0xFF85FF8A)
+val blue = Color(0xFF58B9FC)
+val red = Color(0xFFFF8A8A)
+
+
+
 val white = Color(0xFFFFFFFF)
 val white100 = Color(0xE6FFFFFF)    // # 90% opaque
 

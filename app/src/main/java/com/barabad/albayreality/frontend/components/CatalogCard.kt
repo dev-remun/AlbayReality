@@ -43,7 +43,7 @@ fun CatalogCard(
     button_text: String = "View",
     catalog_image: Int,
     is_enabled: Boolean = true,
-    disabled_help_text: String = "View site information first",
+    disabled_help_text: String = "Help text",
     onClick: () -> Unit
 ) {
     Surface(
