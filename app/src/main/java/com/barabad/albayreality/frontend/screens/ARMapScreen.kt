@@ -78,7 +78,7 @@ fun ARMapScreen(nav_controller: NavController) {
                     text = "Tap a pin location",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = strokes
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
