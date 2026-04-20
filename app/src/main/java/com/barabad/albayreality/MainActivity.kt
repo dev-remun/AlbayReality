@@ -31,6 +31,7 @@ import com.barabad.albayreality.frontend.screens.ARMapScreen
 import com.barabad.albayreality.frontend.screens.ARModeScreen
 import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
+import com.barabad.albayreality.frontend.screens.EditProfileScreen
 import com.barabad.albayreality.frontend.screens.HomeScreen
 import com.barabad.albayreality.frontend.screens.LandingScreen
 import com.barabad.albayreality.frontend.screens.LogInScreen
@@ -43,6 +44,7 @@ import com.barabad.albayreality.frontend.screens.RegisterScreen5
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -89,8 +91,9 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
                 val quiz_state: QuizState = viewModel()
+                val user_info_state: UserState = viewModel()
 
-                NavHost(navController, startDestination = "home") {
+                NavHost(navController, startDestination = "profile") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -180,8 +183,10 @@ class MainActivity : ComponentActivity() {
 
                     }
 
+                    composable("edit_profile") { EditProfileScreen(navController, user_info_state) }
+
+                    composable("profile") { ProfileScreen(navController, user_info_state) }
                     composable("games") { ARGameScreen(navController) }
-                    composable("profile") { ProfileScreen(navController) }
                     composable("map") { ARMapScreen(navController) }
                     composable("aboutus") { AboutUsScreen(navController) }
                 }
