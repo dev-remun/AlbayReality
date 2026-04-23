@@ -38,6 +38,8 @@ import com.barabad.albayreality.features.ImageCarousel
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
@@ -51,10 +53,14 @@ fun ARViewCataglogContentScreen(
     site_title: String,
     site_location: String,
     site_description: String,
-    site_images: List<Int>
+    site_images: List<Int>,
+    user_state: UserState
 ) {
 
     var active_tab by remember { mutableStateOf(-1) }
+    LaunchedEffect(key1 = site_id) {
+        user_state.setLocationSiteViewed(site_id)
+    }
 
     Scaffold(
         bottomBar = {

@@ -32,7 +32,9 @@ import com.barabad.albayreality.frontend.components.ButtonImageA
 import com.barabad.albayreality.frontend.components.ButtonImageB
 import com.barabad.albayreality.frontend.components.CatalogCard
 import com.barabad.albayreality.frontend.components.Header
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
@@ -40,7 +42,10 @@ import com.barabad.albayreality.ui.theme.strokes
 
 
 @Composable
-fun ARGameScreen(navController: NavController) {
+fun ARGameScreen(
+    navController: NavController,
+    user_state: UserState
+) {
 
     var active_tab by remember { mutableStateOf(-1) }
     // can the value be passed here kung anong site id ang tig press? para ma build a quiz nalang ako on one screen and not multiple
@@ -85,7 +90,7 @@ fun ARGameScreen(navController: NavController) {
             ) {
 
                 // # generate catalog buttons from data list
-                listOfHistoricalSites.forEach { historical_site ->
+                getListOfHistoricalSites(user_state).forEach { historical_site ->
                     CatalogCard(
                         title = historical_site.title,
                         catalog_image = historical_site.images[0],

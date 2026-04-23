@@ -47,6 +47,40 @@ class UserState : ViewModel() {
         user_data.password = password
     }
 
+    fun isLocationSiteViewed(site_id: String): Boolean {
+        if (site_id == "st_john_church") {
+            return user_data.is_st_john_church_viewed
+        } else if (site_id == "cagsawa_church") {
+            return user_data.is_cagsawa_church_viewed
+        } else if (site_id == "old_albay_hall") {
+            return user_data.is_old_albay_hall_viewed
+        } else if (site_id == "site_four") {
+            return user_data.is_site_four_viewed
+        } else if (site_id == "site_five") {
+            return user_data.is_site_five_viewed
+        } else if (site_id == "site_six") {
+            return user_data.is_site_six_viewed
+        } else {
+            return false
+        }
+    }
+
+    fun setLocationSiteViewed(site_id: String) {
+        if (site_id == "st_john_church") {
+            user_data.is_st_john_church_viewed = true
+        } else if (site_id == "cagsawa_church") {
+            user_data.is_cagsawa_church_viewed = true
+        } else if (site_id == "old_albay_hall") {
+            user_data.is_old_albay_hall_viewed = true
+        } else if (site_id == "site_four") {
+            user_data.is_site_four_viewed = true
+        } else if (site_id == "site_five") {
+            user_data.is_site_five_viewed = true
+        } else if (site_id == "site_six") {
+            user_data.is_site_six_viewed = true
+        }
+    }
+
     fun getFirstName(): String {
         return user_data.firstname
     }
