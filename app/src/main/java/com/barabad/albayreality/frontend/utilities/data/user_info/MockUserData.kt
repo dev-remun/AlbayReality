@@ -13,7 +13,7 @@ object MockUserData {
         birth_month = "04",
         birth_date = "21",
         birth_year = "2000",
-        email = "jdelacruz",
+        email = "jdelacruz@test.com",
         password = "password123"
     )
 }
