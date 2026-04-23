@@ -41,6 +41,7 @@ import com.barabad.albayreality.frontend.screens.RegisterScreen2
 import com.barabad.albayreality.frontend.screens.RegisterScreen3
 import com.barabad.albayreality.frontend.screens.RegisterScreen4
 import com.barabad.albayreality.frontend.screens.RegisterScreen5
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
@@ -93,7 +94,7 @@ class MainActivity : ComponentActivity() {
                 val quiz_state: QuizState = viewModel()
                 val user_info_state: UserState = viewModel()
 
-                NavHost(navController, startDestination = "profile") {
+                NavHost(navController, startDestination = "home") {
                     composable("login") { LogInScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -103,11 +104,11 @@ class MainActivity : ComponentActivity() {
                     composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
 
-                    composable("catalogs") { ARCatalogsScreen(navController) }
+                    composable("catalogs") { ARCatalogsScreen(navController, user_info_state) }
                     composable("view_catalog/{site_id}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id")
 
-                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+                        val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
 
                         if (site_data != null) {
                             ARViewCataglogContentScreen(
@@ -116,7 +117,8 @@ class MainActivity : ComponentActivity() {
                                 site_title = site_data.title,
                                 site_location = site_data.location,
                                 site_description = site_data.description,
-                                site_images = site_data.images
+                                site_images = site_data.images,
+                                user_state = user_info_state
                             )
                         } else {
                             Text("Site not found")
@@ -126,7 +128,7 @@ class MainActivity : ComponentActivity() {
                     composable("armode/{site_id}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id")
 
-                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+                        val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
 
                         if (site_data != null) {
                             ARModeScreen(
@@ -141,7 +143,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("argame_playground/{site_id}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id")
-                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+                        val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
 
                         if (site_data != null) {
                             ARGamePlaygroundScreen(
@@ -156,7 +158,7 @@ class MainActivity : ComponentActivity() {
                     composable("argame_result/{site_id}/{result_status}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id") ?: ""
                         val result_status = back_stack_entry.arguments?.getString("result_status") ?: ""
-                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+                        val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
 
                         if (site_data != null) {
                             ARGameResultScreen(
@@ -171,7 +173,7 @@ class MainActivity : ComponentActivity() {
 
                     composable("argame_summary/{site_id}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id") ?: ""
-                        val site_data = listOfHistoricalSites.find { it.site_id == site_id }
+                        val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
 
                         if (site_data != null) {
                             ARGameSummaryScreen(
@@ -186,8 +188,8 @@ class MainActivity : ComponentActivity() {
                     composable("edit_profile") { EditProfileScreen(navController, user_info_state) }
 
                     composable("profile") { ProfileScreen(navController, user_info_state) }
-                    composable("games") { ARGameScreen(navController) }
-                    composable("map") { ARMapScreen(navController) }
+                    composable("games") { ARGameScreen(navController, user_info_state) }
+                    composable("map") { ARMapScreen(navController, user_info_state) }
                     composable("aboutus") { AboutUsScreen(navController) }
                 }
             }
