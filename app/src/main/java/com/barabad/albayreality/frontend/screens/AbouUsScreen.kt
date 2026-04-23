@@ -35,7 +35,7 @@ import com.barabad.albayreality.ui.theme.strokes
 @Composable
 fun AboutUsScreen(navController: NavController) {
 
-    // # 2 represents the about us tab based on standard app routing
+    // # 2 represents the about us tab
     var active_tab by remember { mutableStateOf(2) }
 
     Scaffold(
