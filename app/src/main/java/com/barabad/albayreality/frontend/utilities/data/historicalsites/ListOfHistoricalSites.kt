@@ -1,12 +1,103 @@
 package com.barabad.albayreality.frontend.utilities.data.historicalsites
 
 import com.barabad.albayreality.R
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 
 /**
  * is_viewed = isSiteViewed(userID, site)
  * return is_viewed
  *
  */
+
+fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> {
+    return listOf(
+        HistoricalSiteModel(
+            site_id = "st_john_church",
+            title = "St. John the Baptist Church",
+            location = "Camalig, Albay",
+            description = "" +
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            images = listOf(R.drawable.churchext, R.drawable.churchint),
+            latitude = 13.1820646,
+            longitude = 123.6546855,
+            is_viewed = user_state.isLocationSiteViewed("st_john_church")
+        ),
+        HistoricalSiteModel(
+            site_id = "cagsawa_church",
+            title = "Cagsawa Ruins Church",
+            location = "Daraga, Albay",
+            description = "" +
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2),
+            latitude = 13.16611,
+            longitude = 123.70111,
+            is_viewed = user_state.isLocationSiteViewed("cagsawa_church")
+        ),
+        HistoricalSiteModel(
+            site_id = "old_albay_hall",
+            title = "Old Albay Hall",
+            location = "Legazpi City, Albay",
+            description = "" +
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            images = listOf(R.drawable.hall1, R.drawable.hall2),
+            latitude = 13.1383411,
+            longitude = 123.734589,
+            is_viewed = user_state.isLocationSiteViewed("old_albay_hall")
+        ),
+        HistoricalSiteModel(
+            site_id = "site_four",
+            title = "Lorem Ipsum 4",
+            location = "Lorem Ipsum, Albay",
+            description = "" +
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+            latitude = 13.14402215,
+            longitude = 123.722812561326,
+            is_viewed = user_state.isLocationSiteViewed("site_four")
+        ),
+        HistoricalSiteModel(
+            site_id = "site_five",
+            title = "Lorem Ipsum 5",
+            location = "Lorem Ipsum, Albay",
+            description = "" +
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+            latitude = 13.3585,
+            longitude = 123.7320,
+            is_viewed = user_state.isLocationSiteViewed("site_five")
+        ),
+
+        HistoricalSiteModel(
+            site_id = "site_six",
+            title = "Lorem Ipsum 6",
+            location = "Lorem Ipsum, Albay",
+            description = "" +
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur." +
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
+            latitude = 13.2384,
+            longitude = 123.5358,
+            is_viewed = user_state.isLocationSiteViewed("site_six")
+        )
+    )
+}
 
 val listOfHistoricalSites = listOf(
     HistoricalSiteModel(
@@ -21,7 +112,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.churchext, R.drawable.churchint),
         latitude = 13.1820646,
         longitude = 123.6546855,
-        is_viewed = true
+        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "cagsawa_church",
@@ -35,7 +126,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2),
         latitude = 13.16611,
         longitude = 123.70111,
-        is_viewed = true
+        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "old_albay_hall",
@@ -49,7 +140,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.hall1, R.drawable.hall2),
         latitude = 13.1383411,
         longitude = 123.734589,
-        is_viewed = true
+        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem4",
@@ -63,7 +154,7 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.14402215,
         longitude = 123.722812561326,
-        is_viewed = true
+        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem5",

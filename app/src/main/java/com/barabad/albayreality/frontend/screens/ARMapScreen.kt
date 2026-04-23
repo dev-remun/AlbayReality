@@ -26,13 +26,18 @@ import com.barabad.albayreality.R
 import com.barabad.albayreality.features.MapBox
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
+import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 
 @Composable
-fun ARMapScreen(nav_controller: NavController) {
+fun ARMapScreen(
+    nav_controller: NavController,
+    user_state: UserState
+) {
 
     // # state variable for holding the currently selected pin id
     var selected_pin by remember { mutableStateOf<String?>(null) }
@@ -41,7 +46,7 @@ fun ARMapScreen(nav_controller: NavController) {
     var active_tab by remember { mutableStateOf(-1) }
 
     // # find the selected site details dynamically from the list
-    val selected_site = listOfHistoricalSites.find { it.site_id == selected_pin }
+    val selected_site = getListOfHistoricalSites(user_state).find { it.site_id == selected_pin }
 
     Scaffold(
         bottomBar = {
@@ -90,7 +95,7 @@ fun ARMapScreen(nav_controller: NavController) {
                         .fillMaxWidth()
                         .height(350.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    sites = listOfHistoricalSites,
+                    sites = getListOfHistoricalSites(user_state),
                     is_zoomable = true,
                     is_scrollable = true,
                     on_pin_selected = { id -> selected_pin = id }

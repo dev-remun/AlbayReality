@@ -46,6 +46,7 @@ fun ARGamePlaygroundScreen(
     quiz_state: QuizState
 ) {
     var active_tab by remember { mutableStateOf(-1) }
+    var timer = 4
 
     LaunchedEffect(site_id) {
         quiz_state.loadQuizForSite(site_id)
@@ -68,9 +69,16 @@ fun ARGamePlaygroundScreen(
     val choice_colors = listOf(orange, yellow, green, blue)
 
     // # timer and selection state
-    var timer_value by remember { mutableIntStateOf(4) }
+    var timer_value by remember { mutableIntStateOf(timer) }
     var is_answered by remember { mutableStateOf(false) }
     var selected_option by remember { mutableStateOf("") }
+
+    // # reset the local states when a new question loads
+    LaunchedEffect(current_item.question) {
+        timer_value = timer
+        is_answered = false
+        selected_option = ""
+    }
 
     // # timer logic
     LaunchedEffect(timer_value, is_answered) {

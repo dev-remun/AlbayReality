@@ -76,14 +76,6 @@ val Quiz1 = listOf(
         correctAnswer = "choice1",
     ),
     QuizzesModel(
-        question = "9",
-        option1 = "choice1",
-        option2 = "choice2",
-        option3 = "choice3",
-        option4 = "choice4",
-        correctAnswer = "choice1",
-    ),
-    QuizzesModel(
         question = "10",
         option1 = "choice1",
         option2 = "choice2",
