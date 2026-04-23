@@ -101,6 +101,11 @@ fun ARGameSummaryScreen(
                 text = "Continue",
                 isPrimary = true,
                 onClick = {
+                    println("Score: " + quiz_state.correct_answered_items)
+                    println("Incorrect items: " + quiz_state.incorrect_answered_items)
+                    println("Missed items: " + quiz_state.missed_items)
+                    println("Total items: " + quiz_state.active_quiz.size)
+
                     // # clear the site ID so the user can replay the same quiz later if they want
                     quiz_state.clearSiteId()
                     quiz_state.resetQuiz()

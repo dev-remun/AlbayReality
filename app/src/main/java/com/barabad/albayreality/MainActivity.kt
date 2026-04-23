@@ -15,11 +15,8 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.barabad.albayreality.data.DatabaseProvider
 import com.barabad.albayreality.data.ThreeDModel
 import com.barabad.albayreality.frontend.screens.ARCatalogsScreen
@@ -43,7 +40,6 @@ import com.barabad.albayreality.frontend.screens.RegisterScreen4
 import com.barabad.albayreality.frontend.screens.RegisterScreen5
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
-import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import java.util.Objects

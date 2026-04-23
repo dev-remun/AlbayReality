@@ -8,12 +8,10 @@ import androidx.lifecycle.ViewModel
 class UserState : ViewModel() {
 
     // # actual state variable
-    /*var user_data by mutableStateOf<UserModel?>(null)
-        private set*/
+    /*var user_data by mutableStateOf<UserModel?>(null)*/
 
     // # development
     var user_data by mutableStateOf(MockUserData.current_user)
-        private set
 
     fun setFirstName(firstname: String) {
         user_data.firstname = firstname

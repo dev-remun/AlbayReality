@@ -18,7 +18,6 @@ import com.barabad.albayreality.frontend.components.CatalogCard
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListOfHistoricalSites
-import com.barabad.albayreality.frontend.utilities.data.historicalsites.listOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 
 @Composable
