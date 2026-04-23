@@ -32,7 +32,7 @@ fun ProfileScreen(
     // # extract current user data from viewmodel
     val user = user_state.user_data
 
-    // # format the name strings safely
+    // # format the name strings
     val firstname = user.firstname.ifEmpty { "User" }
     val lastname = user.lastname.ifEmpty { "Name" }
     val middle_initial = if (user.middlename.isNotEmpty()) "${user.middlename.first()}." else ""
@@ -116,7 +116,7 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // # edit profile button row
+            // # edit profile button
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.clickable {

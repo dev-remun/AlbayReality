@@ -36,10 +36,7 @@ fun LandingScreen(navController: NavController) {
 
         // # Title
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            // # Outline + Fill Text for "ALBAY"
             Box(contentAlignment = Alignment.Center) {
-                // # Outline Text for "ALBAY"
                 Text(
                     text = "ALBAY",
                     style = TextStyle(
@@ -50,7 +47,6 @@ fun LandingScreen(navController: NavController) {
                         drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                     )
                 )
-                // # Fill Text for "ALBAY"
                 Text(
                     text = "ALBAY",
                     style = TextStyle(
@@ -62,12 +58,9 @@ fun LandingScreen(navController: NavController) {
                 )
             }
 
-            // # Spacer
             Spacer(modifier = Modifier.height(4.dp))
 
-            // # Outline + Fill Text for "Reality"
             Box(contentAlignment = Alignment.Center) {
-                // # Outline Text for "Reality"
                 Text(
                     text = "Reality",
                     style = TextStyle(
@@ -78,7 +71,6 @@ fun LandingScreen(navController: NavController) {
                         drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                     )
                 )
-                // # Fill Text for "Reality"
                 Text(
                     text = "Reality",
                     style = TextStyle(

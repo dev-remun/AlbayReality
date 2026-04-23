@@ -152,7 +152,6 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                             Log.d("register_screen3", "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}")
                             Log.d("register_screen3", "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}")
 
-                            // TODO: navigate to next step
                             navController.navigate("register4")
                         }
                     }
