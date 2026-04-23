@@ -24,13 +24,17 @@ import com.barabad.albayreality.frontend.components.PasswordInputField
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.R
 import com.barabad.albayreality.backend.FirebaseAuthManager
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import kotlinx.coroutines.delay
 
 @Composable
-fun LogInScreen(navController: NavController) {
+fun LogInScreen(
+    navController: NavController,
+    user_state: UserState
+) {
 
     // # firebase variable
     val authLogin = FirebaseAuthManager()

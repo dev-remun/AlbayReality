@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 val user_info_state: UserState = viewModel()
 
                 NavHost(navController, startDestination = "landing") {
-                    composable("login") { LogInScreen(navController) }
+                    composable("login") { LogInScreen(navController, user_info_state) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
                     composable("register3") { RegisterScreen3(navController, user_registration_info_object) }
