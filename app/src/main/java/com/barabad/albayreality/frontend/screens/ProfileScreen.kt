@@ -28,6 +28,10 @@ fun ProfileScreen(
     nav_controller: NavController,
     user_state: UserState = viewModel()
 ) {
+    // # fetch user data when the screen is loaded
+    LaunchedEffect(Unit) {
+        user_state.fetchUserData()
+    }
 
     // # extract current user data from viewmodel
     val user = user_state.user_data
