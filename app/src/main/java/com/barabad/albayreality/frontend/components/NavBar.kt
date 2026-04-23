@@ -86,10 +86,13 @@ fun NavBar(
                 )
             )
 
-            // # 3. albay reality tab (ignored size change)
+            // # 3. albay reality tab
             NavigationBarItem(
                 selected = active_tab == 2,
-                onClick = { on_tab_selected(2) },
+                onClick = {
+                    on_tab_selected(2)
+                    nav_controller.navigate("aboutus")
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = R.drawable.albayreality_icon),
