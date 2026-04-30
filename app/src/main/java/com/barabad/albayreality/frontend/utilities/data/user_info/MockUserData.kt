@@ -9,7 +9,7 @@ object MockUserData {
         lastname = "Dela Cruz",
         region = "REGION V (BICOL REGION)",
         province = "Albay",
-        city_mun = "Tabaco City",
+        city_municipality = "Tabaco City",
         birth_month = "04",
         birth_date = "21",
         birth_year = "2000",

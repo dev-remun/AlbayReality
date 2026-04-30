@@ -29,8 +29,8 @@ class UserState : ViewModel() {
         user_data.province = province
     }
 
-    fun setCityMun(city_mun: String) {
-        user_data.city_mun = city_mun
+    fun setCityMun(city_municipality: String) {
+        user_data.city_municipality = city_municipality
     }
 
     fun setEmail(email: String) {
@@ -96,7 +96,7 @@ class UserState : ViewModel() {
     }
 
     fun getCityMun(): String {
-        return user_data.city_mun
+        return user_data.city_municipality
     }
 
     fun getEmail(): String {

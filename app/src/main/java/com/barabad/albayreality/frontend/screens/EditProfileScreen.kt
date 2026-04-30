@@ -37,6 +37,8 @@ import com.barabad.albayreality.frontend.components.PasswordInputField
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.frontend.utilities.utils.loadJsonFile
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.barabad.albayreality.frontend.utilities.utils.mapRegProvCity
 import com.barabad.albayreality.frontend.utilities.utils.parseCities
 import com.barabad.albayreality.frontend.utilities.utils.parseProvinces
@@ -252,7 +254,7 @@ fun EditProfileScreen(
                     title = "City / Municipality",
                     value = selected_city_municipality,
                     options = city_options,
-                    placeholder = user.city_mun.ifEmpty { "select city / municipality" },
+                    placeholder = user.city_municipality.ifEmpty { "select city / municipality" },
                     isError = has_citymun_error,
                     errorMessage = citymun_error_message,
                     onValueChange = { new_city ->
@@ -382,7 +384,7 @@ fun EditProfileScreen(
                                     user_state.setLastName(input_lastname.ifBlank { user.lastname })
                                     user_state.setRegion(selected_region.ifBlank { user.region })
                                     user_state.setProvince(selected_province.ifBlank { user.province })
-                                    user_state.setCityMun(selected_city_municipality.ifBlank { user.city_mun })
+                                    user_state.setCityMun(selected_city_municipality.ifBlank { user.city_municipality })
                                     user_state.setEmail(input_email.ifBlank { user.email })
                                     user_state.setPassword(input_password.ifBlank { user.password })
 
