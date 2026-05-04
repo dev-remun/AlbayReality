@@ -64,6 +64,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
+                val current_user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+                val start_screen = if (current_user != null) "home" else "landing"
+
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
                 val quiz_state: QuizState = viewModel()

@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,9 +16,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
+import com.barabad.albayreality.backend.FirebaseAuthManager
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
@@ -29,6 +32,15 @@ fun ProfileScreen(
     nav_controller: NavController,
     user_state: UserState = viewModel()
 ) {
+
+    // # coroutine scope for the logout process
+    val coroutine_scope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        user_state.fetchUserData()
+    }
+
+    val authLogout = FirebaseAuthManager()
 
     // # extract current user data from viewmodel
     val user = user_state.user_data
@@ -48,6 +60,9 @@ fun ProfileScreen(
     // # state for bottom navigation bar
     var active_tab by remember { mutableStateOf(1) }
 
+    // # state for logout dialog visibility
+    var is_logging_out by remember { mutableStateOf(false) }
+
     Scaffold(
         bottomBar = {
             NavBar(
@@ -59,6 +74,40 @@ fun ProfileScreen(
             )
         }
     ) { inner_padding ->
+
+        // # brief loading screen pop up
+        if (is_logging_out) {
+            Dialog(onDismissRequest = {}) {
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White,
+                    shadowElevation = 8.dp
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = strokes,
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 3.dp
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = "Logging out...",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = strokes
+                            )
+                        )
+                    }
+                }
+            }
+        }
 
         Column(
             modifier = Modifier
