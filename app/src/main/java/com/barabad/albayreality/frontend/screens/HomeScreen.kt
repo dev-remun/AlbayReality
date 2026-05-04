@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold // # added scaffold import
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,11 +26,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.NavBar // # imported your new navbar
 import com.barabad.albayreality.R
 import com.barabad.albayreality.frontend.components.ButtonImageA
 import com.barabad.albayreality.frontend.components.ButtonImageB
+import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
@@ -39,6 +42,12 @@ import com.barabad.albayreality.ui.theme.strokes
 fun HomeScreen(navController: NavController) {
 
     var active_tab by remember { mutableStateOf(0) }
+
+    val userState: UserState = viewModel()
+
+    LaunchedEffect(Unit) {
+        userState.loadUserViewedSites()
+    }
 
     // # scaffold handles the layout for top bars, bottom bars, and floating action buttons
     Scaffold(

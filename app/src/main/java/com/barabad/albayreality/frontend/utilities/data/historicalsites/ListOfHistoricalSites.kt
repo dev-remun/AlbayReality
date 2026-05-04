@@ -9,7 +9,8 @@ import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
  *
  */
 
-fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> {
+fun getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> {
+
     return listOf(
         HistoricalSiteModel(
             site_id = "st_john_church",
@@ -23,7 +24,6 @@ fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> 
             images = listOf(R.drawable.churchext, R.drawable.churchint),
             latitude = 13.1820646,
             longitude = 123.6546855,
-            is_viewed = user_state.isLocationSiteViewed("st_john_church")
         ),
         HistoricalSiteModel(
             site_id = "cagsawa_church",
@@ -37,7 +37,6 @@ fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> 
             images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2),
             latitude = 13.16611,
             longitude = 123.70111,
-            is_viewed = user_state.isLocationSiteViewed("cagsawa_church")
         ),
         HistoricalSiteModel(
             site_id = "old_albay_hall",
@@ -51,7 +50,6 @@ fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> 
             images = listOf(R.drawable.hall1, R.drawable.hall2),
             latitude = 13.1383411,
             longitude = 123.734589,
-            is_viewed = user_state.isLocationSiteViewed("old_albay_hall")
         ),
         HistoricalSiteModel(
             site_id = "site_four",
@@ -65,7 +63,6 @@ fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> 
             images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
             latitude = 13.14402215,
             longitude = 123.722812561326,
-            is_viewed = user_state.isLocationSiteViewed("site_four")
         ),
         HistoricalSiteModel(
             site_id = "site_five",
@@ -79,7 +76,6 @@ fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> 
             images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
             latitude = 13.3585,
             longitude = 123.7320,
-            is_viewed = user_state.isLocationSiteViewed("site_five")
         ),
 
         HistoricalSiteModel(
@@ -94,7 +90,6 @@ fun  getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> 
             images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
             latitude = 13.2384,
             longitude = 123.5358,
-            is_viewed = user_state.isLocationSiteViewed("site_six")
         )
     )
 }
@@ -112,7 +107,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.churchext, R.drawable.churchint),
         latitude = 13.1820646,
         longitude = 123.6546855,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "cagsawa_church",
@@ -126,7 +120,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.cagsawa1, R.drawable.cagsawa2),
         latitude = 13.16611,
         longitude = 123.70111,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "old_albay_hall",
@@ -140,7 +133,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.hall1, R.drawable.hall2),
         latitude = 13.1383411,
         longitude = 123.734589,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem4",
@@ -154,7 +146,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.14402215,
         longitude = 123.722812561326,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem5",
@@ -168,7 +159,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.3585,
         longitude = 123.7320,
-        is_viewed = false
     ),
 
     HistoricalSiteModel(
@@ -183,7 +173,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.2384,
         longitude = 123.5358,
-        is_viewed = false
     ),
 
     HistoricalSiteModel(
@@ -198,7 +187,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.2045,
         longitude = 123.7667,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem8",
@@ -212,7 +200,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.4616,
         longitude = 123.6791,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem9",
@@ -226,7 +213,6 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.0645,
         longitude = 123.5975,
-        is_viewed = false
     ),
     HistoricalSiteModel(
         site_id = "lorem10",
@@ -240,6 +226,5 @@ val listOfHistoricalSites = listOf(
         images = listOf(R.drawable.placeholder_bgimage, R.drawable.placeholder_bgimage),
         latitude = 13.1887,
         longitude = 123.5956,
-        is_viewed = false
     ),
 )

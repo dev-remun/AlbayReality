@@ -40,6 +40,8 @@ import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListO
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
+import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -67,7 +69,14 @@ class MainActivity : ComponentActivity() {
                 val quiz_state: QuizState = viewModel()
                 val user_info_state: UserState = viewModel()
 
-                NavHost(navController, startDestination = "landing") {
+                // Auto Log-in skips landing and login page
+                val startDestination = if (FirebaseAuth.getInstance().currentUser != null) {
+                    "home"
+                } else {
+                    "landing"
+                }
+
+                NavHost(navController = navController, startDestination = startDestination) {
                     composable("login") { LogInScreen(navController, user_info_state) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -76,7 +85,9 @@ class MainActivity : ComponentActivity() {
                     composable("register5") { RegisterScreen5(navController, user_registration_info_object) }
                     composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
-
+                    composable("games") { ARGameScreen(navController, user_info_state) }
+                    composable("profile") { ProfileScreen(nav_controller = navController, user_state = user_info_state) }
+                    composable("aboutus") { AboutUsScreen(navController) }
                     composable("catalogs") { ARCatalogsScreen(navController, user_info_state) }
                     composable("view_catalog/{site_id}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id")
@@ -144,26 +155,17 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    composable("argame_summary/{site_id}") { back_stack_entry ->
-                        val site_id = back_stack_entry.arguments?.getString("site_id") ?: ""
-                        val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
+                    composable("argame_summary/{site_id}/{site_title}") { backStackEntry ->
+                        val siteId = backStackEntry.arguments?.getString("site_id") ?: ""
+                        val siteTitle = backStackEntry.arguments?.getString("site_title") ?: ""
 
-                        if (site_data != null) {
-                            ARGameSummaryScreen(
-                                navController = navController,
-                                site_title = site_data.title,
-                                quiz_state = quiz_state
-                            )
-                        }
-
+                        ARGameSummaryScreen(
+                            navController = navController,
+                            site_id = siteId,
+                            site_title = siteTitle,
+                            quiz_state = quiz_state
+                        )
                     }
-
-                    composable("edit_profile") { EditProfileScreen(navController, user_info_state) }
-
-                    composable("profile") { ProfileScreen(navController, user_info_state) }
-                    composable("games") { ARGameScreen(navController, user_info_state) }
-                    composable("map") { ARMapScreen(navController, user_info_state) }
-                    composable("aboutus") { AboutUsScreen(navController) }
                 }
             }
         }

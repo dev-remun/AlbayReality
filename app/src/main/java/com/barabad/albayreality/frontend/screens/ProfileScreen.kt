@@ -22,6 +22,7 @@ import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.strokes
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ProfileScreen(
@@ -70,14 +71,12 @@ fun ProfileScreen(
 
             Header(
                 nav_controller = nav_controller,
-                title = "Profile",
+                title = "Edit Profile",
                 show_logout = true,
                 onLogoutClick = {
-                    nav_controller.navigate("login") {
-                        popUpTo(nav_controller.graph.startDestinationId) {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
+                    FirebaseAuth.getInstance().signOut()
+                    nav_controller.navigate("landing") {
+                        popUpTo(0) { inclusive = true }
                     }
                 }
             )

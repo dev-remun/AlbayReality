@@ -98,3 +98,5 @@ val Quiz2 = listOf(
         correctAnswer = "choice1",
     ),
 )
+
+fun getQuiz2List(): List<QuizzesModel> = Quiz2

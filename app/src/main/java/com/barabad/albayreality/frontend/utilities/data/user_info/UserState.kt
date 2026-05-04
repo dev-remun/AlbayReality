@@ -1,12 +1,22 @@
 package com.barabad.albayreality.frontend.utilities.data.user_info
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class UserState : ViewModel() {
+    private val db = FirebaseFirestore.getInstance()
 
+    private fun getUserId(): String? {
+        return FirebaseAuth.getInstance().currentUser?.uid
+    }
+    var viewedSitesMap by mutableStateOf<Map<String, Boolean>>(emptyMap())
+        private set
     var user_data by mutableStateOf(MockUserData.current_user)
 
     fun setFirstName(firstname: String) {
@@ -41,38 +51,50 @@ class UserState : ViewModel() {
         user_data.password = password
     }
 
-    fun isLocationSiteViewed(site_id: String): Boolean {
-        if (site_id == "st_john_church") {
-            return user_data.is_st_john_church_viewed
-        } else if (site_id == "cagsawa_church") {
-            return user_data.is_cagsawa_church_viewed
-        } else if (site_id == "old_albay_hall") {
-            return user_data.is_old_albay_hall_viewed
-        } else if (site_id == "site_four") {
-            return user_data.is_site_four_viewed
-        } else if (site_id == "site_five") {
-            return user_data.is_site_five_viewed
-        } else if (site_id == "site_six") {
-            return user_data.is_site_six_viewed
-        } else {
-            return false
-        }
+    fun loadUserViewedSites() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) return
+
+        db.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+
+                Log.d("DEBUG", "Firestore data: ${document.data}")
+                val tempMap = mutableMapOf<String, Boolean>()
+
+                val data = document.data
+                if (data != null) {
+                    for (entry in data) {
+                        Log.d("DEBUG", "Key: ${entry.key}, Value: ${entry.value}")
+                        if (entry.key.startsWith("viewed_sites.")) {
+                            val siteId = entry.key.removePrefix("viewed_sites.")
+                            val value = entry.value as? Boolean ?: false
+                            tempMap[siteId] = value
+                        }
+                    }
+                }
+
+                viewedSitesMap = tempMap
+                Log.d("DEBUG", "Final viewedSitesMap: $tempMap")
+            }
     }
 
-    fun setLocationSiteViewed(site_id: String) {
-        if (site_id == "st_john_church") {
-            user_data.is_st_john_church_viewed = true
-        } else if (site_id == "cagsawa_church") {
-            user_data.is_cagsawa_church_viewed = true
-        } else if (site_id == "old_albay_hall") {
-            user_data.is_old_albay_hall_viewed = true
-        } else if (site_id == "site_four") {
-            user_data.is_site_four_viewed = true
-        } else if (site_id == "site_five") {
-            user_data.is_site_five_viewed = true
-        } else if (site_id == "site_six") {
-            user_data.is_site_six_viewed = true
-        }
+    fun isLocationSiteViewed(siteId: String): Boolean {
+        return viewedSitesMap[siteId] == true
+    }
+    fun setLocationSiteViewed(siteId: String) {
+        val userId = getUserId() ?: return
+
+        val data = hashMapOf(
+            "viewed_sites.$siteId" to true
+        )
+
+        db.collection("users")
+            .document(userId)
+            .set(data, SetOptions.merge())
+
+        viewedSitesMap = viewedSitesMap + (siteId to true)
     }
 
     fun getFirstName(): String {
@@ -107,3 +129,4 @@ class UserState : ViewModel() {
         return user_data.password
     }
 }
+

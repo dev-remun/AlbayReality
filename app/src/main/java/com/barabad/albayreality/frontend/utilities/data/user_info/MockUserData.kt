@@ -15,9 +15,9 @@ object MockUserData {
         birth_year = "2000",
         email = "jdelacruz@test.com",
         password = "password123",
-        is_st_john_church_viewed = false,
-        is_old_albay_hall_viewed = false,
-        is_cagsawa_church_viewed = false,
+        //is_st_john_church_viewed = false,
+        //is_old_albay_hall_viewed = false,
+        //is_cagsawa_church_viewed = false,
         is_site_four_viewed = false,
         is_site_five_viewed = false,
         is_site_six_viewed = false
