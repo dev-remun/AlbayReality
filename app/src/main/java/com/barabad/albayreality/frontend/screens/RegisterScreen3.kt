@@ -30,7 +30,12 @@ import com.barabad.albayreality.ui.theme.TitanOne
 fun RegisterScreen3(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
 
     // # Data sources for dropdown
-    val sex_options = listOf("Male", "Female")
+    val gender_options = listOf(
+        "Male",
+        "Female",
+        "Non-binary",
+        "Prefer not to say"
+    )
 
     // # State variables for inputs
     var sex by remember { mutableStateOf(user_registration_info_object.user_registration_info.sex) }
@@ -113,10 +118,10 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
 
                 // # Sex Dropdown
                 DropdownField(
-                    title = "Sex",
+                    title = "Gender",
                     value = sex,
-                    options = sex_options,
-                    placeholder = "Select Sex",
+                    options = gender_options,
+                    placeholder = "Select Gender",
                     isError = has_sex_error,
                     errorMessage = sex_error_message,
                     onValueChange = { selected_value ->
@@ -136,7 +141,7 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
 
                         if (sex.isBlank()) {
                             has_sex_error = true
-                            sex_error_message = "Please input your sex."
+                            sex_error_message = "Please input your gender."
                             has_error = true
                         }
 
@@ -147,7 +152,7 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                             Log.d("register_screen3", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
                             Log.d("register_screen3", "Middle Name: ${user_registration_info_object.user_registration_info.middlename}")
                             Log.d("register_screen3", "Last Name: ${user_registration_info_object.user_registration_info.lastname}")
-                            Log.d("register_screen3", "Sex: ${user_registration_info_object.user_registration_info.sex}")
+                            Log.d("register_screen3", "Gender: ${user_registration_info_object.user_registration_info.sex}")
                             Log.d("register_screen3", "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}")
                             Log.d("register_screen3", "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}")
                             Log.d("register_screen3", "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}")
