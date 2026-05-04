@@ -29,6 +29,10 @@ fun ProfileScreen(
     user_state: UserState = viewModel()
 ) {
 
+    LaunchedEffect(Unit) {
+        user_state.fetchUserData()
+    }
+
     // # extract current user data from viewmodel
     val user = user_state.user_data
 
