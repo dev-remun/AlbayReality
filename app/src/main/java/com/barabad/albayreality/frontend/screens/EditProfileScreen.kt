@@ -375,9 +375,6 @@ fun EditProfileScreen(
                             if (!has_validation_error) {
                                 is_loading = true
                                 coroutine_scope.launch {
-                                    delay(1500)
-                                    is_loading = false
-
                                     // # assign new states to user_state, keeping original if input was left blank
                                     user_state.setFirstName(input_firstname.ifBlank { user.firstname })
                                     user_state.setMiddleName(input_middlename.ifBlank { user.middlename })
@@ -388,16 +385,22 @@ fun EditProfileScreen(
                                     user_state.setEmail(input_email.ifBlank { user.email })
                                     user_state.setPassword(input_password.ifBlank { user.password })
 
-                                    println("Firstname: " + user_state.getFirstName())
-                                    println("Middlename: " + user_state.getMiddleName())
-                                    println("Lastname: " + user_state.getLastName())
-                                    println("Region: " + user_state.getRegion())
-                                    println("Province: " + user_state.getProvince())
-                                    println("City/Mun: " + user_state.getCityMun())
-                                    println("Email: " + user_state.getEmail())
-                                    println("Password: " + user_state.getPassword())
-
-                                    show_success_dialog = true
+                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                    if (uid != null) {
+                                        user_state.updateFirestoreData(uid) { success ->
+                                            is_loading = false
+                                            if (success) {
+                                                show_success_dialog = true
+                                            } else {
+                                                // Handle error - maybe show error dialog
+                                                println("Failed to update firestore data")
+                                            }
+                                        }
+                                    } else {
+                                        delay(1500)
+                                        is_loading = false
+                                        show_success_dialog = true
+                                    }
                                 }
                             }
                         },

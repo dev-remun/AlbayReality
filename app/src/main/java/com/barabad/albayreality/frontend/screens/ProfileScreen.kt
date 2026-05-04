@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -47,6 +48,17 @@ fun ProfileScreen(
     // # state for bottom navigation bar
     var active_tab by remember { mutableStateOf(1) }
 
+    // # fetch user data if not already loaded
+    LaunchedEffect(Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        // Only fetch if we have a valid authenticated UID
+        if (uid != null) {
+            user_state.fetchUserData(uid)
+
+        }
+    }
+
     Scaffold(
         bottomBar = {
             NavBar(
@@ -73,6 +85,7 @@ fun ProfileScreen(
                 title = "Profile",
                 show_logout = true,
                 onLogoutClick = {
+                    FirebaseAuth.getInstance().signOut()        //Records logout in database for analytics
                     nav_controller.navigate("login") {
                         popUpTo(nav_controller.graph.startDestinationId) {
                             inclusive = true

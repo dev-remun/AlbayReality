@@ -25,6 +25,7 @@ import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.R
 import com.barabad.albayreality.backend.FirebaseAuthManager
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
+import com.google.firebase.auth.FirebaseAuth
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
@@ -232,9 +233,16 @@ fun LogInScreen(
                             authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
 
                                 override fun onSuccess() {
-                                    // # reset loading state and show success popup
-                                    is_loading = false
-                                    display_successs_popup = true
+                                    val uid = FirebaseAuth.getInstance().currentUser?.uid
+                                    if (uid != null) {
+                                        user_state.fetchUserData(uid) {
+                                            is_loading = false
+                                            display_successs_popup = true
+                                        }
+                                    } else {
+                                        is_loading = false
+                                        display_successs_popup = true
+                                    }
                                 }
 
                                 override fun onFailure(errorMessage: String?) {
