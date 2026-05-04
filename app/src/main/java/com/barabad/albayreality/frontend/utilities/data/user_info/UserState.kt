@@ -124,4 +124,9 @@ class UserState : ViewModel() {
     fun getPassword(): String {
         return user_data.password
     }
+
+    // # for resetting the user state variable if the user logs out
+    fun clearUserData() {
+        user_data = UserModel()
+    }
 }

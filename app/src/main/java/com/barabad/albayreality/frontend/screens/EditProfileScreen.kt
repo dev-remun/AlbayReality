@@ -107,7 +107,7 @@ fun EditProfileScreen(
     var password_error_message by remember { mutableStateOf("") }
     var passwords_match_error by remember { mutableStateOf(false) }
 
-    // # state variables to detect errors in the location dropdown fields
+    // # state variables to detect errors in the dropdown fields
     var has_region_error by remember { mutableStateOf(false) }
     var has_province_error by remember { mutableStateOf(false) }
     var has_citymun_error by remember { mutableStateOf(false) }
