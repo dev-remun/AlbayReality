@@ -24,7 +24,7 @@ import com.barabad.albayreality.frontend.screens.ARGameScreen
 import com.barabad.albayreality.frontend.screens.ARGameSummaryScreen
 import com.barabad.albayreality.frontend.screens.ARMapScreen
 import com.barabad.albayreality.frontend.screens.ARModeScreen
-import com.barabad.albayreality.frontend.screens.ARViewCataglogContentScreen
+import com.barabad.albayreality.frontend.screens.ARViewCatalogContentScreen
 import com.barabad.albayreality.frontend.screens.AboutUsScreen
 import com.barabad.albayreality.frontend.screens.EditProfileScreen
 import com.barabad.albayreality.frontend.screens.HomeScreen
@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
                         val site_data = getListOfHistoricalSites(user_info_state).find { it.site_id == site_id }
 
                         if (site_data != null) {
-                            ARViewCataglogContentScreen(
+                            ARViewCatalogContentScreen(
                                 navController = navController,
                                 site_id = site_data.site_id,
                                 site_title = site_data.title,
