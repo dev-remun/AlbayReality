@@ -107,7 +107,7 @@ fun EditProfileScreen(
     var password_error_message by remember { mutableStateOf("") }
     var passwords_match_error by remember { mutableStateOf(false) }
 
-    // # state variables to detect errors in the dropdown fields
+    // # state variables to detect errors in the location dropdown fields
     var has_region_error by remember { mutableStateOf(false) }
     var has_province_error by remember { mutableStateOf(false) }
     var has_citymun_error by remember { mutableStateOf(false) }
@@ -375,29 +375,70 @@ fun EditProfileScreen(
                             if (!has_validation_error) {
                                 is_loading = true
                                 coroutine_scope.launch {
-                                    delay(1500)
-                                    is_loading = false
+                                    val firebase_user = FirebaseAuth.getInstance().currentUser
+                                    val uid = firebase_user?.uid
 
-                                    // # assign new states to user_state, keeping original if input was left blank
-                                    user_state.setFirstName(input_firstname.ifBlank { user.firstname })
-                                    user_state.setMiddleName(input_middlename.ifBlank { user.middlename })
-                                    user_state.setLastName(input_lastname.ifBlank { user.lastname })
-                                    user_state.setRegion(selected_region.ifBlank { user.region })
-                                    user_state.setProvince(selected_province.ifBlank { user.province })
-                                    user_state.setCityMun(selected_city_municipality.ifBlank { user.city_municipality })
-                                    user_state.setEmail(input_email.ifBlank { user.email })
-                                    user_state.setPassword(input_password.ifBlank { user.password })
+                                    // # local function to update firestore and local state after auth updates
+                                    fun finalizeChanges() {
+                                        user_state.setFirstName(input_firstname.ifBlank { user.firstname })
+                                        user_state.setMiddleName(input_middlename.ifBlank { user.middlename })
+                                        user_state.setLastName(input_lastname.ifBlank { user.lastname })
+                                        user_state.setRegion(selected_region.ifBlank { user.region })
+                                        user_state.setProvince(selected_province.ifBlank { user.province })
+                                        user_state.setCityMun(selected_city_municipality.ifBlank { user.city_municipality })
+                                        user_state.setEmail(input_email.ifBlank { user.email })
+                                        user_state.setPassword(input_password.ifBlank { user.password })
 
-                                    println("Firstname: " + user_state.getFirstName())
-                                    println("Middlename: " + user_state.getMiddleName())
-                                    println("Lastname: " + user_state.getLastName())
-                                    println("Region: " + user_state.getRegion())
-                                    println("Province: " + user_state.getProvince())
-                                    println("City/Mun: " + user_state.getCityMun())
-                                    println("Email: " + user_state.getEmail())
-                                    println("Password: " + user_state.getPassword())
+                                        if (uid != null) {
+                                            user_state.updateFirestoreData(uid) { success ->
+                                                is_loading = false
+                                                if (success) {
+                                                    show_success_dialog = true
+                                                } else {
+                                                    println("Failed to update firestore data")
+                                                }
+                                            }
+                                        } else {
+                                            is_loading = false
+                                            show_success_dialog = true
+                                        }
+                                    }
 
-                                    show_success_dialog = true
+                                    // # function to handle password update
+                                    fun updatePassword() {
+                                        if (input_password.isNotBlank() && input_password != user.password) {
+                                            firebase_user?.updatePassword(input_password)?.addOnCompleteListener { task ->
+                                                if (task.isSuccessful) finalizeChanges()
+                                                else {
+                                                    is_loading = false
+                                                    password_error = true
+                                                    password_error_message = task.exception?.message ?: "Password update failed."
+                                                }
+                                            }
+                                        } else finalizeChanges()
+                                    }
+
+                                    // # start sequential updates: Email -> Password -> Firestore
+                                    if (firebase_user != null && input_email.isNotBlank() && input_email != user.email) {
+                                        firebase_user.updateEmail(input_email).addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                updatePassword()
+                                            } else {
+                                                is_loading = false
+                                                email_error = true
+                                                val errorMsg = task.exception?.message ?: ""
+                                                email_error_message = when {
+                                                    errorMsg.contains("recent", ignoreCase = true) ->
+                                                        "For security, please log out and log back in to change your email."
+                                                    errorMsg.contains("not allowed", ignoreCase = true) ->
+                                                        "Operation not allowed."
+                                                    else -> errorMsg.ifEmpty { "Email update failed. The email might be invalid or already in use." }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        updatePassword()
+                                    }
                                 }
                             }
                         },

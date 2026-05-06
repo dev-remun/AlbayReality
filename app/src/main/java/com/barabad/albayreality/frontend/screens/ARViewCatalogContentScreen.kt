@@ -29,7 +29,7 @@ import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.strokes
 
 @Composable
-fun ARViewCataglogContentScreen(
+fun ARViewCatalogContentScreen(
     navController: NavController,
     site_id: String,
     site_title: String,

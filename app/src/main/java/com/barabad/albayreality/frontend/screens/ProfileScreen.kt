@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -36,6 +37,7 @@ fun ProfileScreen(
 
     // # coroutine scope for the logout process
     val coroutine_scope = rememberCoroutineScope()
+    var is_logging_out by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         user_state.fetchUserData()
@@ -61,8 +63,16 @@ fun ProfileScreen(
     // # state for bottom navigation bar
     var active_tab by remember { mutableStateOf(1) }
 
-    // # state for logout dialog visibility
-    var is_logging_out by remember { mutableStateOf(false) }
+    // # fetch user data if not already loaded
+    LaunchedEffect(Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        // Only fetch if we have a valid authenticated UID
+        if (uid != null) {
+            user_state.fetchUserData(uid)
+
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -124,27 +134,13 @@ fun ProfileScreen(
                 title = "Profile",
                 show_logout = true,
                 onLogoutClick = {
-                    if (!is_logging_out) {
+                    coroutine_scope.launch {
                         is_logging_out = true
-
-                        coroutine_scope.launch {
-                            delay(800)
-                            try {
-                                // sign out from Firebase backend
-                                authLogout.logoutUser()
-
-                                // clear user state variable
-                                user_state.clearUserData()
-
-                            } finally {
-                                // exact moment tasks finish, hide dialog and navigate
-                                is_logging_out = false
-                                nav_controller.navigate("login") {
-                                    popUpTo(nav_controller.graph.startDestinationId) {
-                                        inclusive = true
-                                    }
-                                    launchSingleTop = true
-                                }
+                        delay(1000)
+                        FirebaseAuth.getInstance().signOut()
+                        nav_controller.navigate("login") {
+                            popUpTo(nav_controller.graph.startDestinationId) {
+                                inclusive = true
                             }
                         }
                     }
