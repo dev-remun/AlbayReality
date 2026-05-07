@@ -210,7 +210,7 @@ fun ARGamePlaygroundScreen(
                     // # custom progress bar frame
                     Box(
                         modifier = Modifier
-                            .weight(1f) // # takes up remaining space gracefully
+                            .weight(1f)
                             .height(10.dp)
                             .clip(RoundedCornerShape(5.dp))
                             .background(Color(0xFFEEEEEE))
@@ -227,9 +227,8 @@ fun ARGamePlaygroundScreen(
 
                     Spacer(modifier = Modifier.width(16.dp))
 
-                    // # timer block with fixed width to prevent jitter
                     Row(
-                        modifier = Modifier.width(64.dp), // # fixed width locks the layout space
+                        modifier = Modifier.width(64.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.End
                     ) {

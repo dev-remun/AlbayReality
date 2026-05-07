@@ -64,6 +64,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore:26.1.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.core:core-splashscreen:1.0.1")
     implementation(libs.firebase.auth)
     implementation(libs.material)
     implementation(libs.androidx.activity)
