@@ -49,7 +49,7 @@ fun ARGamePlaygroundScreen(
     quiz_state: QuizState
 ) {
     var active_tab by remember { mutableStateOf(-1) }
-    var timer = 4
+    var timer = 12
 
     LaunchedEffect(site_id) {
         quiz_state.loadQuizForSite(site_id)
@@ -180,7 +180,8 @@ fun ARGamePlaygroundScreen(
         ) {
             Header(
                 nav_controller = navController,
-                title = site_title
+                title = site_title,
+                onBackClick = {}
             )
 
             Spacer(modifier = Modifier.height(16.dp))

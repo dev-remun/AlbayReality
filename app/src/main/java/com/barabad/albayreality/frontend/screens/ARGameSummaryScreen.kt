@@ -46,6 +46,8 @@ fun ARGameSummaryScreen(
     var active_tab by remember { mutableStateOf(-1) }
     val scope = rememberCoroutineScope()
 
+    var is_processing by remember { mutableStateOf(false) }
+
     // # pull scores from the state
     val correct = remember { quiz_state.correct_answered_items }
     val incorrect = remember { quiz_state.incorrect_answered_items }
@@ -110,7 +112,10 @@ fun ARGameSummaryScreen(
             Button(
                 text = "Continue",
                 isPrimary = true,
+                is_enabled = !is_processing,
                 onClick = {
+                    is_processing = true
+
                     val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
                     val totalTime = quiz_state.answerRecords.sumOf { it.timeTaken }
                     val answersSnapshot = quiz_state.answerRecords.toList()
@@ -135,9 +140,7 @@ fun ARGameSummaryScreen(
 
                     quiz_state.clearSiteId()
                     quiz_state.resetQuiz()
-                    navController.navigate("games") {
-                        popUpTo("games") { inclusive = false }
-                    }
+                    navController.popBackStack("games", inclusive = false)
                 },
                 modifier = Modifier.padding(bottom = 32.dp),
             )

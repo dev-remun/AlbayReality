@@ -46,9 +46,7 @@ fun ARGameShowScoreScreen(
     var is_loading by remember { mutableStateOf(true) }
 
     BackHandler {
-        navController.navigate("games") {
-            popUpTo("games") { inclusive = false }
-        }
+        navController.popBackStack("games", inclusive = false)
     }
 
     // # fetch the past scores when the screen loads
@@ -85,9 +83,7 @@ fun ARGameShowScoreScreen(
                 nav_controller = navController,
                 title = "$site_title Scores",
                 onBackClick = {
-                    navController.navigate("games") {
-                        popUpTo("games") { inclusive = false }
-                    }
+                    navController.popBackStack("games", inclusive = false)
                 }
             )
 
