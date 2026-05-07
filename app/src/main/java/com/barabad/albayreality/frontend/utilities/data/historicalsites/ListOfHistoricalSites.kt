@@ -50,7 +50,7 @@ fun getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> {
             longitude = 123.734589,
         ),
         HistoricalSiteModel(
-            site_id = "site_four",
+            site_id = "old_presidencia",
             title = "Legazpi Old Presidencia",
             location = "Old Albay, Legazpi City, Albay",
             description = "" +
@@ -133,7 +133,7 @@ val listOfHistoricalSites = listOf(
         longitude = 123.734589,
     ),
     HistoricalSiteModel(
-        site_id = "lorem4",
+        site_id = "old_presidencia",
         title = "Legazpi Old Presidencia",
         location = "Old Albay, Legazpi City, Albay",
         description = "" +

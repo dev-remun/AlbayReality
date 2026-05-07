@@ -17,7 +17,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.InputField
@@ -201,11 +200,6 @@ fun LogInScreen(
                 // # login button
                 Button(
                     text = if (is_loading) "Please wait" else "Login",
-                    is_enabled = if (!is_loading) {
-                        true
-                    } else {
-                        false
-                    },
                     isPrimary = true,
                     onClick = {
                         // # prevent multiple clicks while loading
@@ -250,7 +244,12 @@ fun LogInScreen(
                                 }
                             })
                         }
-                    }
+                    },
+                    is_enabled = if (!is_loading) {
+                        true
+                    } else {
+                        false
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

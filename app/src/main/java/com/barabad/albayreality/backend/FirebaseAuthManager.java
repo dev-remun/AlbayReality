@@ -2,6 +2,7 @@ package com.barabad.albayreality.backend;
 import static com.barabad.albayreality.frontend.utilities.data.quizzes.Quiz1Kt.getQuiz1List;
 import static com.barabad.albayreality.frontend.utilities.data.quizzes.Quiz2Kt.getQuiz2List;
 import static com.barabad.albayreality.frontend.utilities.data.quizzes.Quiz3Kt.getQuiz3List;
+import static com.barabad.albayreality.frontend.utilities.data.quizzes.Quiz4Kt.getQuiz4List;
 
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizzesModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -93,6 +94,7 @@ public class FirebaseAuthManager {
         seedQuiz(db, "cagsawa_church", "Cagsawa Ruins Quiz", 5, getQuiz1List());
         seedQuiz(db, "old_albay_hall", "Old Albay Hall Quiz", 5, getQuiz2List());
         seedQuiz(db, "st_john_church", "St. John the Baptist Church Quiz", 5, getQuiz3List());
+        seedQuiz(db, "old_presidencia", "Legazpi Old Presidencia", 5, getQuiz4List());
     }
 
     private void seedQuiz(FirebaseFirestore db, String siteId, String quizName, int timeLimit, List<QuizzesModel> items) {

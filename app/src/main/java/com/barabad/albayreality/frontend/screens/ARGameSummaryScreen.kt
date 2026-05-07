@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.barabad.albayreality.backend.FirebaseAuthManager
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
@@ -31,7 +30,6 @@ import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizRepository
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.green
-import com.barabad.albayreality.ui.theme.orange
 import com.barabad.albayreality.ui.theme.red
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.yellow
@@ -136,7 +134,7 @@ fun ARGameSummaryScreen(
                         popUpTo("games") { inclusive = true }
                     }
                 },
-                modifier = Modifier.padding(bottom = 32.dp)
+                modifier = Modifier.padding(bottom = 32.dp),
             )
         }
     }

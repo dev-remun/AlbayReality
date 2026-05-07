@@ -179,11 +179,6 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                 // # register button
                 Button(
                     text = if (is_loading) "Please wait" else "Register",
-                    is_enabled = if (!is_loading) {
-                        true
-                    } else {
-                        false
-                    },
                     isPrimary = true,
                     onClick = {
                         // # prevent multiple clicks while loading
@@ -299,7 +294,12 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                 }
                             })
                         }
-                    }
+                    },
+                    is_enabled = if (!is_loading) {
+                        true
+                    } else {
+                        false
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
