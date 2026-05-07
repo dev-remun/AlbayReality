@@ -83,7 +83,8 @@ fun ARGameSummaryScreen(
         ) {
             Header(
                 nav_controller = navController,
-                title = site_title
+                title = site_title,
+                onBackClick = {}
             )
 
             Spacer(modifier = Modifier.height(48.dp))

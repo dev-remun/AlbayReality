@@ -30,7 +30,7 @@ Indicates that this app requires Google Play Services for AR.
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AlbayReality">
+        android:theme="@style/Theme.App.Starting">
         <activity
             android:name=".backend.FirebaseAuthManager"
             tools:ignore="Instantiatable" />
