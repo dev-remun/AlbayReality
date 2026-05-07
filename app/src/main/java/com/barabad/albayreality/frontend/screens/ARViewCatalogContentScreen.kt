@@ -42,7 +42,7 @@ import com.barabad.albayreality.ui.theme.strokes
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun ARViewCataglogContentScreen(
+fun ARViewCatalogContentScreen(
     navController: NavController,
     site_id: String,
     site_title: String,
