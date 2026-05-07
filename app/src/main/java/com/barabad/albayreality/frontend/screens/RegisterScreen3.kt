@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -149,13 +148,34 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                             user_registration_info_object.updateUserRegistrationInformation("sex", sex)
                             Log.d("register_screen3", "Sex: $sex")
 
-                            Log.d("register_screen3", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
-                            Log.d("register_screen3", "Middle Name: ${user_registration_info_object.user_registration_info.middlename}")
-                            Log.d("register_screen3", "Last Name: ${user_registration_info_object.user_registration_info.lastname}")
-                            Log.d("register_screen3", "Gender: ${user_registration_info_object.user_registration_info.sex}")
-                            Log.d("register_screen3", "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}")
-                            Log.d("register_screen3", "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}")
-                            Log.d("register_screen3", "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}")
+                            Log.d(
+                                "register_screen3",
+                                "First Name: ${user_registration_info_object.user_registration_info.firstname}"
+                            )
+                            Log.d(
+                                "register_screen3",
+                                "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
+                            )
+                            Log.d(
+                                "register_screen3",
+                                "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
+                            )
+                            Log.d(
+                                "register_screen3",
+                                "Gender: ${user_registration_info_object.user_registration_info.sex}"
+                            )
+                            Log.d(
+                                "register_screen3",
+                                "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}"
+                            )
+                            Log.d(
+                                "register_screen3",
+                                "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}"
+                            )
+                            Log.d(
+                                "register_screen3",
+                                "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}"
+                            )
 
                             navController.navigate("register4")
                         }

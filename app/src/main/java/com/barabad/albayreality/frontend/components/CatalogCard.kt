@@ -44,6 +44,8 @@ fun CatalogCard(
     catalog_image: Int,
     is_enabled: Boolean = true,
     disabled_help_text: String = "Help text",
+    show_score_button: Boolean = false,
+    on_score_click: () -> Unit = {},
     onClick: () -> Unit
 ) {
     Surface(
@@ -143,6 +145,33 @@ fun CatalogCard(
                     ),
                     textAlign = TextAlign.Center
                 )
+            }
+            // # secondary show score button
+            if (show_score_button) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White)
+                        .border(
+                            BorderStroke(2.dp, strokes),
+                            RoundedCornerShape(8.dp)
+                        )
+                        .clickable { on_score_click() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Show Score",
+                        style = TextStyle(
+                            fontFamily = Inter,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = strokes
+                        )
+                    )
+                }
             }
         }
     }

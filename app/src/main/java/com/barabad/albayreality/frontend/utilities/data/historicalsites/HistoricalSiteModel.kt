@@ -9,5 +9,4 @@ data class HistoricalSiteModel(
     val images: List<Int>,
     val latitude: Double,
     val longitude: Double,
-    val is_viewed: Boolean
 )
