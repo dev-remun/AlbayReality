@@ -26,7 +26,8 @@ fun Header(
     nav_controller: NavController,
     title: String,
     show_logout: Boolean = false,
-    onLogoutClick: () -> Unit = {}
+    onLogoutClick: () -> Unit = {},
+    onBackClick: () -> Unit = { nav_controller.popBackStack() }
 ) {
     Box(
         modifier = modifier
@@ -36,7 +37,7 @@ fun Header(
 
         // # back button aligned to the left
         IconButton(
-            onClick = { nav_controller.popBackStack() },
+            onClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterStart)
         ) {
             Icon(

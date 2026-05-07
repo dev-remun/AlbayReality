@@ -1,5 +1,6 @@
 package com.barabad.albayreality.frontend.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -40,9 +41,8 @@ fun ARGameResultScreen(
     result_status: String,
     quiz_state: QuizState
 ) {
-
-    val current_item = quiz_state.getCurrentItem()
-    val has_no_remaining_item = quiz_state.hasNoRemainingItem()
+    val current_item = remember { quiz_state.getCurrentItem() }
+    val has_no_remaining_item = remember { quiz_state.hasNoRemainingItem() }
 
     var feedback_message : String
     var feedback_picture : Int
@@ -56,6 +56,24 @@ fun ARGameResultScreen(
     } else {
         feedback_message = "Times up. You did not answer."
         feedback_picture = R.drawable.timesup_feedback
+    }
+
+    val advance_to_next = {
+        if (has_no_remaining_item) {
+            // # summary screen dito
+            quiz_state.clearSiteId()
+            navController.navigate("argame_summary/$site_id/$site_title") {
+                // # prevents user from pressing back on summary to return to the last question
+                popUpTo("argame_playground/${site_id}") { inclusive = true }
+            }
+        } else {
+            // # update the quiz state to point sa next item niya
+            quiz_state.nextItem()
+            navController.popBackStack() // # navigate back sa playground screen but this time nasa next item na siya ng quoiz
+        }
+    }
+
+    BackHandler {
     }
 
     Scaffold { inner_padding ->
@@ -72,7 +90,8 @@ fun ARGameResultScreen(
 
             Header(
                 nav_controller = navController,
-                title = site_title
+                title = site_title,
+                onBackClick = {}
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -166,7 +185,7 @@ fun ARGameResultScreen(
                         if (has_no_remaining_item) {
                             // # summary screen dito
                             quiz_state.clearSiteId()
-                            navController.navigate("argame_summary/${site_id}")
+                            navController.navigate("argame_summary/$site_id/$site_title")
                         } else {
                             // # update the quiz state to point sa next item niya
                             quiz_state.nextItem()

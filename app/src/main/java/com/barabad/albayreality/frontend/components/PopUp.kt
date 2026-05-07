@@ -86,7 +86,7 @@ fun PopUp(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // # Action Button
-                Button(
+                com.barabad.albayreality.frontend.components.Button(
                     text = button_text,
                     isPrimary = true,
                     onClick = onButtonClick,

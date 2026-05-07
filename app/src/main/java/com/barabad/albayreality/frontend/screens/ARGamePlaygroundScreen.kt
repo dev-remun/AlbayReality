@@ -1,5 +1,6 @@
 package com.barabad.albayreality.frontend.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,16 +21,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.barabad.albayreality.R
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
-import com.barabad.albayreality.frontend.utilities.data.quizzes.Quiz1
+import com.barabad.albayreality.frontend.utilities.data.quizzes.AnswerRecord
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.blue
@@ -56,7 +59,12 @@ fun ARGamePlaygroundScreen(
     val current_item = quiz_state.getCurrentItem()
     val has_no_remaining_item = quiz_state.hasNoRemainingItem()
 
-    // # quiz state variables, para tos sa UI
+    // # extract progress details
+    val current_index = quiz_state.current_item_number
+    val total_items = quiz_state.active_quiz.size
+    val progress_fraction = if (total_items > 0) (current_index + 1).toFloat() / total_items.toFloat() else 0f
+
+    // # quiz state variables, para tos sa ui
     val quiz_question = current_item.question
     val correct_answer = current_item.correctAnswer
     var quiz_choices = listOf(
@@ -80,6 +88,9 @@ fun ARGamePlaygroundScreen(
         selected_option = ""
     }
 
+    BackHandler {
+    }
+
     // # timer logic
     LaunchedEffect(timer_value, is_answered) {
         if (!is_answered && timer_value > 0) {
@@ -92,6 +103,18 @@ fun ARGamePlaygroundScreen(
             val status = "times_up_status"
             quiz_state.recordScore(status)
             // # display the feedback to the user and move
+
+            // # store attempt in firestore when time is up
+            val time_taken = timer
+            quiz_state.addAnswerRecord(
+                AnswerRecord(
+                    questionIndex = quiz_state.current_item_number,
+                    choiceText = "",
+                    timeTaken = time_taken,
+                    isCorrect = false
+                )
+            )
+
             navController.navigate("argame_result/${site_id}/${status}")
             println("Times up")
         }
@@ -117,7 +140,19 @@ fun ARGamePlaygroundScreen(
 
             // # record the score in the quiz state
             quiz_state.recordScore(status)
-            // # dis[lay the feedback sa user
+
+            // # store attempt in firestore
+            val time_taken = timer - timer_value
+            val is_choice_correct = selected_option == correct_answer
+            quiz_state.addAnswerRecord(
+                AnswerRecord(
+                    questionIndex = quiz_state.current_item_number,
+                    choiceText = selected_option,
+                    timeTaken = time_taken,
+                    isCorrect = is_choice_correct
+                )
+            )
+            // # display the feedback sa user
             navController.navigate("argame_result/${site_id}/${status}")
         }
     }
@@ -150,6 +185,76 @@ fun ARGamePlaygroundScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // # progress bar and timer ui section
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+            ) {
+                Text(
+                    text = "Question ${current_index + 1} of $total_items",
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        color = strokes
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // # custom progress bar frame
+                    Box(
+                        modifier = Modifier
+                            .weight(1f) // # takes up remaining space gracefully
+                            .height(10.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color(0xFFEEEEEE))
+                    ) {
+                        // # active progress fill
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(fraction = progress_fraction)
+                                .fillMaxHeight()
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(orange)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // # timer block with fixed width to prevent jitter
+                    Row(
+                        modifier = Modifier.width(64.dp), // # fixed width locks the layout space
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.timer),
+                            contentDescription = "Timer Icon",
+                            tint = Color(0xFFFDB067),
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = timer_value.toString(),
+                            style = TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 16.sp,
+                                color = Color(0xFFFDB067)
+                            )
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
             // # question text
             Text(
                 text = quiz_question,
@@ -162,49 +267,7 @@ fun ARGamePlaygroundScreen(
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .height(220.dp)
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(12.dp))
-                    .background(Color(0xFFEEEEEE), RoundedCornerShape(12.dp))
-                    .border(1.dp, Color(0xFF6B4226), RoundedCornerShape(12.dp))
-            ) {
-
-                Text(
-                    text = "Picture",
-                    style = TextStyle(
-                        fontFamily = Inter,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = strokes
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(12.dp)
-                ) {
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = timer_value.toString(),
-                        style = TextStyle(
-                            fontFamily = Inter,
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 16.sp,
-                            color = Color(0xFFFDB067)
-                        )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             // # choices list
             Column(

@@ -26,6 +26,7 @@ import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.strokes
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -38,10 +39,6 @@ fun ProfileScreen(
     // # coroutine scope for the logout process
     val coroutine_scope = rememberCoroutineScope()
     var is_logging_out by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        user_state.fetchUserData()
-    }
 
     val authLogout = FirebaseAuthManager()
 
@@ -131,20 +128,37 @@ fun ProfileScreen(
 
             Header(
                 nav_controller = nav_controller,
-                title = "Profile",
+                title = "Edit Profile",
                 show_logout = true,
                 onLogoutClick = {
-                    coroutine_scope.launch {
-                        is_logging_out = true
-                        delay(1000)
-                        FirebaseAuth.getInstance().signOut()
-                        nav_controller.navigate("login") {
-                            popUpTo(nav_controller.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
+        // Prevent spam-clicking the logout button
+        if (!is_logging_out) {
+            is_logging_out = true
+
+            coroutine_scope.launch {
+                try {
+                    // 1. Sign out from Firebase using your manager
+                    authLogout.logoutUser()
+
+                    // 2. Clear local user state variables
+                    user_state.clearUserData()
+                    
+                    // 3. Keep your delay if you have a loading spinner showing!
+                    delay(800) 
+
+                } finally {
+                    is_logging_out = false
+                    
+                    // 4. Navigate ONCE to your final destination (I used "login" here)
+                    // popUpTo(0) is a bulletproof way to clear the entire backstack
+                    nav_controller.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
                     }
                 }
+            }
+        }
+    }
             )
 
             Spacer(modifier = Modifier.height(48.dp))

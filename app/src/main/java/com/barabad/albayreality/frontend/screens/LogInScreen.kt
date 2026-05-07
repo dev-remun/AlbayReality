@@ -38,6 +38,7 @@ fun LogInScreen(
 
     // # firebase variable
     val authLogin = FirebaseAuthManager()
+    val firebaseManager = FirebaseAuthManager()
 
     // # state variables for inputs
     var email_input by remember { mutableStateOf("") }
@@ -199,11 +200,6 @@ fun LogInScreen(
                 // # login button
                 Button(
                     text = if (is_loading) "Please wait" else "Login",
-                    is_enabled = if (!is_loading) {
-                        true
-                    } else {
-                        false
-                    },
                     isPrimary = true,
                     onClick = {
                         // # prevent multiple clicks while loading
@@ -233,8 +229,11 @@ fun LogInScreen(
 
                                 override fun onSuccess() {
                                     // # reset loading state and show success popup
+                                    user_state.loadUserViewedSites()
+                                    firebaseManager.seedAllQuizzes()
                                     is_loading = false
                                     display_successs_popup = true
+                                    navController.navigate("home")
                                 }
 
                                 override fun onFailure(errorMessage: String?) {
@@ -245,7 +244,12 @@ fun LogInScreen(
                                 }
                             })
                         }
-                    }
+                    },
+                    is_enabled = if (!is_loading) {
+                        true
+                    } else {
+                        false
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

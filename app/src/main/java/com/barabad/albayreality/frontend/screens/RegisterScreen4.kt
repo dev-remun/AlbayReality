@@ -2,9 +2,7 @@ package com.barabad.albayreality.frontend.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -221,25 +219,64 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
 
                         if (!has_error) {
 
-                            user_registration_info_object.updateUserRegistrationInformation("region", selected_region)
-                            user_registration_info_object.updateUserRegistrationInformation("province", selected_province)
-                            user_registration_info_object.updateUserRegistrationInformation("city_municipality", selected_city_municipality)
+                            user_registration_info_object.updateUserRegistrationInformation(
+                                "region",
+                                selected_region
+                            )
+                            user_registration_info_object.updateUserRegistrationInformation(
+                                "province",
+                                selected_province
+                            )
+                            user_registration_info_object.updateUserRegistrationInformation(
+                                "city_municipality",
+                                selected_city_municipality
+                            )
 
                             // # log selection for debugging
                             Log.d("register_screen4", "Region: $selected_region")
                             Log.d("register_screen4", "Province: $selected_province")
                             Log.d("register_screen4", "City/Muni: $selected_city_municipality")
 
-                            Log.d("register_screen4", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
-                            Log.d("register_screen4", "Middle Name: ${user_registration_info_object.user_registration_info.middlename}")
-                            Log.d("register_screen4", "Last Name: ${user_registration_info_object.user_registration_info.lastname}")
-                            Log.d("register_screen4", "Sex: ${user_registration_info_object.user_registration_info.sex}")
-                            Log.d("register_screen4", "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}")
-                            Log.d("register_screen4", "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}")
-                            Log.d("register_screen4", "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}")
-                            Log.d("register_screen4", "Region: ${user_registration_info_object.user_registration_info.region}")
-                            Log.d("register_screen4", "Province: ${user_registration_info_object.user_registration_info.province}")
-                            Log.d("register_screen4", "City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}")
+                            Log.d(
+                                "register_screen4",
+                                "First Name: ${user_registration_info_object.user_registration_info.firstname}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Sex: ${user_registration_info_object.user_registration_info.sex}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Region: ${user_registration_info_object.user_registration_info.region}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "Province: ${user_registration_info_object.user_registration_info.province}"
+                            )
+                            Log.d(
+                                "register_screen4",
+                                "City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}"
+                            )
 
                             navController.navigate("register5")
                         }
