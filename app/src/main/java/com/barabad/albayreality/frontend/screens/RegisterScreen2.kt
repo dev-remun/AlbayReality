@@ -2,10 +2,8 @@ package com.barabad.albayreality.frontend.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,13 +20,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
-import com.barabad.albayreality.ui.theme.inputfield_bg
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
-import com.barabad.albayreality.frontend.components.InputField
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.ui.theme.TitanOne
-import com.barabad.albayreality.ui.theme.error_message_color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -200,17 +195,35 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
 
                         if (!has_error) {
 
-                            user_registration_info_object.updateUserRegistrationInformation("birth_month", birth_month)
-                            user_registration_info_object.updateUserRegistrationInformation("birth_date", birthdate)
-                            user_registration_info_object.updateUserRegistrationInformation("birth_year", birth_year)
+                            user_registration_info_object.updateUserRegistrationInformation(
+                                "birth_month",
+                                birth_month
+                            )
+                            user_registration_info_object.updateUserRegistrationInformation(
+                                "birth_date",
+                                birthdate
+                            )
+                            user_registration_info_object.updateUserRegistrationInformation(
+                                "birth_year",
+                                birth_year
+                            )
 
                             Log.d("register_screen2", "Birth Month: $birth_month")
                             Log.d("register_screen2", "Birthdate: $birthdate")
                             Log.d("register_screen2", "Birth Year: $birth_year")
 
-                            Log.d("register_screen2", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
-                            Log.d("register_screen2", "Middle Name: ${user_registration_info_object.user_registration_info.middlename}")
-                            Log.d("register_screen2", "Last Name: ${user_registration_info_object.user_registration_info.lastname}")
+                            Log.d(
+                                "register_screen2",
+                                "First Name: ${user_registration_info_object.user_registration_info.firstname}"
+                            )
+                            Log.d(
+                                "register_screen2",
+                                "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
+                            )
+                            Log.d(
+                                "register_screen2",
+                                "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
+                            )
 
                             // # navigate to the next form
                             navController.navigate("register3")
