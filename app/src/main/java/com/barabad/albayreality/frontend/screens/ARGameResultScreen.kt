@@ -12,6 +12,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,10 +23,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
+import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.ui.theme.Inter
@@ -44,6 +48,8 @@ fun ARGameResultScreen(
     val current_item = remember { quiz_state.getCurrentItem() }
     val has_no_remaining_item = remember { quiz_state.hasNoRemainingItem() }
 
+    var is_processing by remember { mutableStateOf(false) }
+
     var feedback_message : String
     var feedback_picture : Int
 
@@ -51,7 +57,7 @@ fun ARGameResultScreen(
         feedback_message = "Your answer is correct!"
         feedback_picture = R.drawable.correct_feedback
     } else if (result_status.lowercase() == "incorrect_status") {
-        feedback_message = "Your answer is incorrect. Try again :>"
+        feedback_message = "Your answer is incorrect. Try again."
         feedback_picture = R.drawable.incorrect_feedback
     } else {
         feedback_message = "Times up. You did not answer."
@@ -174,37 +180,29 @@ fun ARGameResultScreen(
             // # next / finish button
             val button_text = if (has_no_remaining_item) "Finish" else "Next"
 
-            Box(
+            Button(
+                text = button_text,
+                isPrimary = true,
+                is_enabled = !is_processing,
+                onClick = {
+                    is_processing = true
+
+                    if (has_no_remaining_item) {
+                        // # summary screen dito
+                        quiz_state.clearSiteId()
+                        navController.navigate("argame_summary/$site_id/$site_title") {
+                            popUpTo("argame_playground/${site_id}") { inclusive = true }
+                        }
+                    } else {
+                        // # update the quiz state to point sa next item niya
+                        quiz_state.nextItem()
+                        navController.popBackStack() // # navigate back sa playground screen but this time nasa next item na siya ng quoiz
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(primary)
-                    .border(2.dp, strokes, RoundedCornerShape(8.dp))
-                    .clickable {
-                        if (has_no_remaining_item) {
-                            // # summary screen dito
-                            quiz_state.clearSiteId()
-                            navController.navigate("argame_summary/$site_id/$site_title")
-                        } else {
-                            // # update the quiz state to point sa next item niya
-                            quiz_state.nextItem()
-                            navController.popBackStack() // # navigate back sa playground screen but this time nasa next item na siya ng quoiz
-                        }
-                    }
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = button_text,
-                    style = TextStyle(
-                        fontFamily = Inter,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        color = strokes
-                    )
-                )
-            }
+            )
         }
     }
 }

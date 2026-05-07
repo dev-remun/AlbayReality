@@ -25,6 +25,7 @@ fun Header(
     modifier: Modifier = Modifier,
     nav_controller: NavController,
     title: String,
+    show_back: Boolean = true,
     show_logout: Boolean = false,
     onLogoutClick: () -> Unit = {},
     onBackClick: () -> Unit = {
@@ -40,16 +41,19 @@ fun Header(
     ) {
 
         // # back button aligned to the left
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier.align(Alignment.CenterStart)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.back_icon),
-                contentDescription = "back",
-                tint = strokes,
-                modifier = Modifier.size(26.dp)
-            )
+        if (show_back) {
+            // # back button aligned to the left
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.back_icon),
+                    contentDescription = "back",
+                    tint = strokes,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
         }
 
         // # title centered with stroke effect
@@ -63,7 +67,7 @@ fun Header(
                 text = title,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    fontSize = 32.sp,
+                    fontSize = 28.sp,
                     fontFamily = TitanOne,
                     fontWeight = FontWeight.Black,
                     color = strokes,
@@ -74,7 +78,7 @@ fun Header(
                 text = title,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    fontSize = 32.sp,
+                    fontSize = 28.sp,
                     fontFamily = TitanOne,
                     fontWeight = FontWeight.Black,
                     color = primary
