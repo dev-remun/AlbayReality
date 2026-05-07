@@ -128,6 +128,7 @@ fun ProfileScreen(
                     FirebaseAuth.getInstance().signOut()
                     nav_controller.navigate("landing") {
                         popUpTo(0) { inclusive = true }
+                    }
                     if (!is_logging_out) {
                         is_logging_out = true
 

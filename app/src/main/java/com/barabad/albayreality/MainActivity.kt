@@ -42,6 +42,8 @@ import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.google.firebase.auth.FirebaseAuth
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.barabad.albayreality.frontend.screens.ARGameShowScoreScreen
+import com.barabad.albayreality.frontend.screens.MapScreen
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -80,7 +82,6 @@ class MainActivity : ComponentActivity() {
                 }
 
                 NavHost(navController = navController, startDestination = startDestination) {
-                NavHost(navController, startDestination = start_screen) {
                     composable("login") { LogInScreen(navController, user_info_state) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -95,6 +96,16 @@ class MainActivity : ComponentActivity() {
                     composable("edit_profile") { EditProfileScreen(nav_controller = navController, user_state = user_info_state) }
                     composable("aboutus") { AboutUsScreen(navController) }
                     composable("catalogs") { ARCatalogsScreen(navController, user_info_state) }
+                    composable("argame_show_score/{site_id}/{site_title}") { back_stack_entry ->
+                        val site_id = back_stack_entry.arguments?.getString("site_id") ?: ""
+                        val site_title = back_stack_entry.arguments?.getString("site_title") ?: ""
+
+                        ARGameShowScoreScreen(
+                            navController = navController,
+                            site_id = site_id,
+                            site_title = site_title
+                        )
+                    }
                     composable("view_catalog/{site_id}") { back_stack_entry ->
                         val site_id = back_stack_entry.arguments?.getString("site_id")
 

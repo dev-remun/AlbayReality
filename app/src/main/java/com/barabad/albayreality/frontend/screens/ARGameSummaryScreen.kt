@@ -48,9 +48,9 @@ fun ARGameSummaryScreen(
     val scope = rememberCoroutineScope()
 
     // # pull scores from the state
-    val correct = quiz_state.correct_answered_items
-    val incorrect = quiz_state.incorrect_answered_items
-    val missed = quiz_state.missed_items
+    val correct = remember { quiz_state.correct_answered_items }
+    val incorrect = remember { quiz_state.incorrect_answered_items }
+    val missed = remember { quiz_state.missed_items }
     val total = correct + incorrect + missed
 
     // # calculate percentages

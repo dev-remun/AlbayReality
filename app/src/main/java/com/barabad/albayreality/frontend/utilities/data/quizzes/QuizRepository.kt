@@ -91,3 +91,33 @@ class QuizRepository {
         return query.size()
     }
 }
+
+data class QuizAttempt(
+    val correct_count: Int = 0,
+    val incorrect_count: Int = 0,
+    val missed_count: Int = 0,
+    val total_time_taken: Int = 0
+)
+
+suspend fun getPastAttempts(user_id: String, site_id: String): List<QuizAttempt> {
+    val db = FirebaseFirestore.getInstance()
+    return try {
+        val snapshot = db.collection("users")
+            .document(user_id)
+            .collection("attempts")
+            .whereEqualTo("quizId", site_id)
+            .get()
+            .await()
+
+        snapshot.documents.mapNotNull { doc ->
+            val correct = doc.getLong("correct")?.toInt() ?: 0
+            val incorrect = doc.getLong("incorrect")?.toInt() ?: 0
+            val missed = doc.getLong("missed")?.toInt() ?: 0
+            val time = doc.getLong("totalTimeTaken")?.toInt() ?: 0
+            QuizAttempt(correct, incorrect, missed, time)
+        }
+    } catch (e: Exception) {
+        Log.e("QuizRepo", "error fetching attempts", e)
+        emptyList()
+    }
+}
