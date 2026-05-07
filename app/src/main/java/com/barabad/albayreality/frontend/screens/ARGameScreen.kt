@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.components.CatalogCard
 import com.barabad.albayreality.frontend.components.Header
@@ -46,10 +45,7 @@ fun ARGameScreen(
         user_state.loadUserViewedSites()
     }
     var active_tab by remember { mutableStateOf(-1) }
-    // can the value be passed here kung anong site id ang tig press? para ma build a quiz nalang ako on one screen and not multiple
-    // # Eto ung landing ng kahoot game, andito ung different quizzes for each sites
-    // # ung need ng site_id is ung sa may actual kahoot na, ung PlayGroundScreen
-    // also
+
     // # scaffold handles the layout for top bars, bottom bars, and floating action buttons
     Scaffold(
         bottomBar = {
