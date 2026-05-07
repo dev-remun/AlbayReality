@@ -122,6 +122,11 @@ public class FirebaseAuthManager {
     }
 
 
+
+    // # logout function
+    public void logoutUser() {
+        mAuth.signOut();
+    }
     // Callback interface
     public interface AuthCallback {
         void onSuccess();

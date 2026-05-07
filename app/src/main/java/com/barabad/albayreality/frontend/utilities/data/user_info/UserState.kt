@@ -18,6 +18,23 @@ class UserState : ViewModel() {
     var viewedSitesMap by mutableStateOf<Map<String, Boolean>>(emptyMap())
         private set
     var user_data by mutableStateOf(MockUserData.current_user)
+    var user_data by mutableStateOf(UserModel())
+
+    fun fetchUserData() {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        if (uid != null) {
+            FirebaseFirestore.getInstance().collection("users").document(uid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val fetchedUser = document.toObject(UserModel::class.java)
+                        if (fetchedUser != null) {
+                            user_data = fetchedUser
+                        }
+                    }
+                }
+        }
+    }
 
     fun setFirstName(firstname: String) {
         user_data.firstname = firstname
@@ -130,3 +147,9 @@ class UserState : ViewModel() {
     }
 }
 
+
+    // # for resetting the user state variable if the user logs out
+    fun clearUserData() {
+        user_data = UserModel()
+    }
+}
