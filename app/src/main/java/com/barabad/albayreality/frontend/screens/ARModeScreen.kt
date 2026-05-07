@@ -1,6 +1,9 @@
 package com.barabad.albayreality.frontend.screens
 
+import android.app.Activity
+import android.content.ContentValues.TAG
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
@@ -20,9 +23,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.Header
+import com.google.ar.core.ArCoreApk
+import com.google.ar.core.ArCoreApk.Availability
 import com.google.ar.core.Config
 import com.google.ar.core.Frame
 import com.google.ar.core.TrackingFailureReason
+import com.google.ar.core.exceptions.UnavailableException
 import io.github.sceneview.ar.ARScene
 import io.github.sceneview.ar.arcore.isValid
 import io.github.sceneview.ar.node.AnchorNode
@@ -38,6 +44,7 @@ import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 
+
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ARModeScreen(
@@ -45,7 +52,7 @@ fun ARModeScreen(
     site_id: String,
     site_title: String
 ) {
-
+    val context = LocalContext.current
     Scaffold(
         containerColor = Color.Black
     ) { inner_padding ->
@@ -54,13 +61,15 @@ fun ARModeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            // # halo jj, dito na lang ata sa baba neto ung sa pag-display ng AR, glgl.
-            // # i-full screen mo na lang ung camera niya. dont worry sa Header() na nasa baba neto kasi floating na yan hahahah
-            // # tsaaka gamitin mo na lang ung site_id sa pag-display ng 3d model kasi ung site_id is the same sa file name ng 3d model ni ely.
-            // # please refer sa frontend/utilities/data/historicalsites/ListOfHistoricalSites na folder para sa site_id
-            // # please refer sa assets/models para sa names ng 3d models ni ely
-            // # tyty
-            ModelDisplay(site_id)
+            val compat = isARCoreSupportedAndUpToDate()
+            if (compat){
+                ModelDisplay(site_id)
+            }
+            else{
+                Toast.makeText(context, "Device does not support AR Mode!", Toast.LENGTH_LONG).show()
+                //for now just added a toast to show na hindi supported, we can add a locking of the button/ backing out afterwards
+            }
+
 
             // # Floating Header
             Header(
@@ -163,4 +172,42 @@ fun ModelDisplay(modelName: String?) {
             }
         )
     )
+}
+
+@Composable
+private fun isARCoreSupportedAndUpToDate(): Boolean {
+    //AR compatibility check, main part is courtesy of ARCore website
+    //returns true if ARCore is supported and updated, false if otherwise, defaults to false
+    val context = LocalContext.current
+    val availability = ArCoreApk.getInstance().checkAvailability(context)
+    var result = false
+    when (availability) {
+        Availability.SUPPORTED_INSTALLED -> result = true
+
+        Availability.SUPPORTED_APK_TOO_OLD, Availability.SUPPORTED_NOT_INSTALLED -> {
+            try {
+                // Request ARCore installation or update if needed.
+                val installStatus = ArCoreApk.getInstance().requestInstall(context as Activity?, true)
+                when (installStatus) {
+                    ArCoreApk.InstallStatus.INSTALL_REQUESTED -> {
+                        Log.i(TAG, "ARCore installation requested.")
+                        return false
+                    }
+
+                    ArCoreApk.InstallStatus.INSTALLED -> return true
+                }
+            } catch (e: UnavailableException) {
+                Log.e(TAG, "ARCore not installed", e)
+            }
+            result = false
+        }
+
+        Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE ->       // This device is not supported for AR.
+            result =  false
+
+        Availability.UNKNOWN_CHECKING, Availability.UNKNOWN_ERROR, Availability.UNKNOWN_TIMED_OUT -> {
+            result = false
+        }
+    }
+    return result
 }
