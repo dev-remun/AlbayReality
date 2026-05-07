@@ -154,9 +154,8 @@ fun AttemptScoreCard(attempt_number: Int, attempt: QuizAttempt) {
 
 @Composable
 fun ScoreStatBox(label: String, percentage: Float, bg_color: Color) {
-    // # format percentage to drop .00 if it's a whole number
     val formatted_pct = if (percentage % 1.0 == 0.0) {
-        "${percentage.toInt()}%"
+        String.format("%.2f%%", percentage)
     } else {
         String.format("%.2f%%", percentage)
     }
