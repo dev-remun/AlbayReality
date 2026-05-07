@@ -31,7 +31,7 @@ fun ARGameScreen(
     user_state: UserState
 ) {
     var attemptCounts by remember { mutableStateOf(mapOf<String, Int>()) }
-    var is_loading by remember { mutableStateOf(true) } // # added loading state
+    var is_loading by remember { mutableStateOf(true) } //
 
     LaunchedEffect(Unit) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
