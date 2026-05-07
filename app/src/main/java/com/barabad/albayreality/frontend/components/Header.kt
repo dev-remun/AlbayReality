@@ -27,7 +27,11 @@ fun Header(
     title: String,
     show_logout: Boolean = false,
     onLogoutClick: () -> Unit = {},
-    onBackClick: () -> Unit = { nav_controller.popBackStack() }
+    onBackClick: () -> Unit = {
+        if (nav_controller.previousBackStackEntry != null) {
+        nav_controller.popBackStack()
+        }
+    }
 ) {
     Box(
         modifier = modifier
