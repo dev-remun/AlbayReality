@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.components.CatalogCard
 import com.barabad.albayreality.frontend.components.Header
@@ -23,7 +22,8 @@ import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListO
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizRepository
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.google.firebase.auth.FirebaseAuth
-
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 @Composable
 fun ARGameScreen(
@@ -31,25 +31,32 @@ fun ARGameScreen(
     user_state: UserState
 ) {
     var attemptCounts by remember { mutableStateOf(mapOf<String, Int>()) }
+    var is_loading by remember { mutableStateOf(true) } // # added loading state
 
     LaunchedEffect(Unit) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@LaunchedEffect
-        val sites = getListOfHistoricalSites(user_state).map { it.site_id }
-        val counts = mutableMapOf<String, Int>()
-        for (siteId in sites) {
-            counts[siteId] = QuizRepository().getAttemptCount(userId, siteId)
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId != null) {
+            val sites = getListOfHistoricalSites(user_state).map { it.site_id }
+
+            // # fetch all attempt counts simultaneously instead of one by one
+            val deferredCounts = sites.map { siteId ->
+                async {
+                    siteId to QuizRepository().getAttemptCount(userId, siteId)
+                }
+            }
+
+            // # wait for all of them to finish at once
+            attemptCounts = deferredCounts.awaitAll().toMap()
         }
-        attemptCounts = counts
+        is_loading = false
     }
 
     LaunchedEffect(Unit) {
         user_state.loadUserViewedSites()
     }
+
     var active_tab by remember { mutableStateOf(-1) }
-    // can the value be passed here kung anong site id ang tig press? para ma build a quiz nalang ako on one screen and not multiple
-    // # Eto ung landing ng kahoot game, andito ung different quizzes for each sites
-    // # ung need ng site_id is ung sa may actual kahoot na, ung PlayGroundScreen
-    // also
+
     // # scaffold handles the layout for top bars, bottom bars, and floating action buttons
     Scaffold(
         bottomBar = {
@@ -57,10 +64,6 @@ fun ARGameScreen(
                 active_tab = active_tab,
                 on_tab_selected = { selected_index ->
                     active_tab = selected_index
-                    // # 0 - the active is home
-                    // # 1 - the active is profile
-                    // # 2 - the active is about us
-                    // # -1 - there is no active in the nav bar
                 },
                 nav_controller = navController
             )
@@ -93,14 +96,18 @@ fun ARGameScreen(
                     CatalogCard(
                         title = historical_site.title,
                         catalog_image = historical_site.images[0],
-                        button_text = "Play",
-                        is_enabled = user_state.isLocationSiteViewed(historical_site.site_id)
-                                && (attemptCounts[historical_site.site_id] ?: 0) < 3,
+                        button_text = if (is_loading) "Loading..." else "Play",
+
+                        is_enabled = !is_loading
+                                && user_state.isLocationSiteViewed(historical_site.site_id)
+                                && past_attempts < 3,
+
                         disabled_help_text = when {
+                            is_loading -> "Fetching your data. Please wait..."
                             !user_state.isLocationSiteViewed(historical_site.site_id) -> "View site information first"
                             else -> "You have reached the maximum 3 attempts"
                         },
-                        show_score_button = past_attempts > 0, // # controls visibility
+                        show_score_button = past_attempts > 0,
                         on_score_click = {
                             navController.navigate("argame_show_score/${historical_site.site_id}/${historical_site.title}")
                         },
@@ -112,7 +119,6 @@ fun ARGameScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
             }
-
         }
     }
 }
