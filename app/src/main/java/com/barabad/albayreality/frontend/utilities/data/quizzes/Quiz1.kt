@@ -84,3 +84,5 @@ val Quiz1 = listOf(
         correctAnswer = "Its location along a tectonic plate boundary",
     ),
 )
+
+fun getQuiz1List(): List<QuizzesModel> = Quiz1

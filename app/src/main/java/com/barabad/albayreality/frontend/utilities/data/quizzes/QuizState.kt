@@ -5,10 +5,28 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
+data class AnswerRecord(
+    val questionIndex: Int,
+    val choiceText: String,
+    val timeTaken: Int,   // seconds spent on this question
+    val isCorrect: Boolean
+)
 // # global state model to hold the info on how the user is navigating on the quiz
 class QuizState : ViewModel() {
 
+
+    // Quiz Backend Repository
+    private val repository = QuizRepository()
+
+    private val _answerRecords = mutableListOf<AnswerRecord>()
+    val answerRecords: List<AnswerRecord> get() = _answerRecords
+
+    fun addAnswerRecord(record: AnswerRecord) {
+        _answerRecords.add(record)
+    }
     // # 'private set' MEANS THE UI CAN READ THIS NUMBER, BUT ONLY THIS VIEWMODEL CAN MODIFY IT
     var current_item_number by mutableIntStateOf(0)
         private set
@@ -29,14 +47,10 @@ class QuizState : ViewModel() {
     fun loadQuizForSite(incoming_site_id: String) {
         if (site_id != incoming_site_id) {
             site_id = incoming_site_id
-
-            active_quiz = when (incoming_site_id) {
-                "cagsawa_church" -> Quiz1
-                "old_albay_hall" -> Quiz2
-                "st_john_church" -> Quiz3
-                else -> Quiz1 // # fall back? note: create a fallback quiz para di masira ung UI
+            viewModelScope.launch {
+                active_quiz = repository.fetchQuiz(incoming_site_id)
+                resetQuiz()
             }
-            resetQuiz()
         }
     }
 
@@ -71,6 +85,7 @@ class QuizState : ViewModel() {
         correct_answered_items = 0
         incorrect_answered_items = 0
         missed_items = 0
+        _answerRecords.clear()
     }
 
     fun clearSiteId() {

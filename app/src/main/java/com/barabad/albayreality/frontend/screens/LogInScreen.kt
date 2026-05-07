@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.InputField
@@ -38,6 +39,7 @@ fun LogInScreen(
 
     // # firebase variable
     val authLogin = FirebaseAuthManager()
+    val firebaseManager = FirebaseAuthManager()
 
     // # state variables for inputs
     var email_input by remember { mutableStateOf("") }
@@ -233,8 +235,11 @@ fun LogInScreen(
 
                                 override fun onSuccess() {
                                     // # reset loading state and show success popup
+                                    user_state.loadUserViewedSites()
+                                    firebaseManager.seedAllQuizzes()
                                     is_loading = false
                                     display_successs_popup = true
+                                    navController.navigate("home")
                                 }
 
                                 override fun onFailure(errorMessage: String?) {

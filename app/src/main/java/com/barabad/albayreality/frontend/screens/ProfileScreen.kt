@@ -25,6 +25,7 @@ import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.strokes
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -121,9 +122,12 @@ fun ProfileScreen(
 
             Header(
                 nav_controller = nav_controller,
-                title = "Profile",
+                title = "Edit Profile",
                 show_logout = true,
                 onLogoutClick = {
+                    FirebaseAuth.getInstance().signOut()
+                    nav_controller.navigate("landing") {
+                        popUpTo(0) { inclusive = true }
                     if (!is_logging_out) {
                         is_logging_out = true
 

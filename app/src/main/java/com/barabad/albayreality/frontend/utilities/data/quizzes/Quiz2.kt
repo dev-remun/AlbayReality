@@ -82,3 +82,5 @@ val Quiz2 = listOf(
         correctAnswer = "Act No. 82 (Municipal Code of 1901)",
     ),
 )
+
+fun getQuiz2List(): List<QuizzesModel> = Quiz2
