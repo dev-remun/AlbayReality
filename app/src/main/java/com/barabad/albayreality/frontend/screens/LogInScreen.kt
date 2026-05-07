@@ -61,24 +61,17 @@ fun LogInScreen(
     // # state variable to manage loading status
     var is_loading by remember { mutableStateOf(false) }
 
-    // # handle the 2-second delay and navigation for success
     if (display_successs_popup) {
-        // # launched effect runs when display_popup becomes true
-        LaunchedEffect(Unit) {
-            delay(2000) // # 2 seconds delay
-            display_successs_popup = false
-            navController.navigate("home") {
-                // # pop up to the login screen to prevent user from going back to log in
-                popUpTo("login") { inclusive = true }
-            }
-        }
-
         PopUp(
             icon = R.drawable.check_icon,
             message = "Login Successful!",
-            button_text = "Proceeding...",
+            button_text = "Continue",
             onButtonClick = {
-                navController.navigate("home")
+                display_successs_popup = false
+
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                }
             },
             onDismiss = { display_successs_popup = true }
         )
@@ -233,7 +226,6 @@ fun LogInScreen(
                                     firebaseManager.seedAllQuizzes()
                                     is_loading = false
                                     display_successs_popup = true
-                                    navController.navigate("home")
                                 }
 
                                 override fun onFailure(errorMessage: String?) {

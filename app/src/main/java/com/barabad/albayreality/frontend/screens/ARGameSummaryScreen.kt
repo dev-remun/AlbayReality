@@ -1,6 +1,7 @@
 package com.barabad.albayreality.frontend.screens
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -55,6 +56,9 @@ fun ARGameSummaryScreen(
     val correct_percentage = if (total > 0) (correct.toFloat() / total) * 100 else 0f
     val incorrect_percentage = if (total > 0) (incorrect.toFloat() / total) * 100 else 0f
     val missed_percentage = if (total > 0) (missed.toFloat() / total) * 100 else 0f
+
+    BackHandler {
+    }
 
     Scaffold(
         bottomBar = {
@@ -131,7 +135,7 @@ fun ARGameSummaryScreen(
                     quiz_state.clearSiteId()
                     quiz_state.resetQuiz()
                     navController.navigate("games") {
-                        popUpTo("games") { inclusive = true }
+                        popUpTo("games") { inclusive = false }
                     }
                 },
                 modifier = Modifier.padding(bottom = 32.dp),

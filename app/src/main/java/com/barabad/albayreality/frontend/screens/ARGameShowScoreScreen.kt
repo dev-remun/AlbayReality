@@ -1,5 +1,6 @@
 package com.barabad.albayreality.frontend.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.Header
+import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizAttempt
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizRepository
 import com.barabad.albayreality.frontend.utilities.data.quizzes.getPastAttempts
@@ -39,8 +41,15 @@ fun ARGameShowScoreScreen(
     site_id: String,
     site_title: String
 ) {
+    var active_tab by remember { mutableStateOf(-1) }
     var attempt_list by remember { mutableStateOf<List<QuizAttempt>>(emptyList()) }
     var is_loading by remember { mutableStateOf(true) }
+
+    BackHandler {
+        navController.navigate("games") {
+            popUpTo("games") { inclusive = false }
+        }
+    }
 
     // # fetch the past scores when the screen loads
     LaunchedEffect(site_id) {
@@ -52,7 +61,17 @@ fun ARGameShowScoreScreen(
         is_loading = false
     }
 
-    Scaffold { inner_padding ->
+    Scaffold (
+        bottomBar = {
+            NavBar(
+                active_tab = active_tab,
+                on_tab_selected = { selected_index ->
+                    active_tab = selected_index
+                },
+                nav_controller = navController
+            )
+        }
+    ) { inner_padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,7 +83,12 @@ fun ARGameShowScoreScreen(
         ) {
             Header(
                 nav_controller = navController,
-                title = "$site_title Scores"
+                title = "$site_title Scores",
+                onBackClick = {
+                    navController.navigate("games") {
+                        popUpTo("games") { inclusive = false }
+                    }
+                }
             )
 
             Spacer(modifier = Modifier.height(48.dp))

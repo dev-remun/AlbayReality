@@ -41,9 +41,7 @@ import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRe
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.google.firebase.auth.FirebaseAuth
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.barabad.albayreality.frontend.screens.ARGameShowScoreScreen
-import com.barabad.albayreality.frontend.screens.MapScreen
 import java.util.Objects
 
 class MainActivity : ComponentActivity() {
@@ -90,7 +88,7 @@ class MainActivity : ComponentActivity() {
                     composable("register5") { RegisterScreen5(navController, user_registration_info_object) }
                     composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
-                    composable("map") { MapScreen(navController) }
+                    composable("map") { ARMapScreen(navController, user_info_state) }
                     composable("games") { ARGameScreen(navController, user_info_state) }
                     composable("profile") { ProfileScreen(nav_controller = navController, user_state = user_info_state) }
                     composable("edit_profile") { EditProfileScreen(nav_controller = navController, user_state = user_info_state) }

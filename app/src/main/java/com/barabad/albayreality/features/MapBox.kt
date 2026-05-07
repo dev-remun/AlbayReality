@@ -52,10 +52,10 @@ fun MapBox(
 
                     setMultiTouchControls(is_zoomable)
 
-                    controller.setZoom(10.6)
+                    controller.setZoom(12.2)
 
                     // # set center roughly around albay
-                    controller.setCenter(GeoPoint(13.25667, 123.68500))
+                    controller.setCenter(GeoPoint(13.20000, 123.68500))
 
                     // # loop through the provided sites and plot them dynamically
                     sites.forEach { site ->
