@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -37,10 +38,7 @@ fun ProfileScreen(
 
     // # coroutine scope for the logout process
     val coroutine_scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        user_state.fetchUserData()
-    }
+    var is_logging_out by remember { mutableStateOf(false) }
 
     val authLogout = FirebaseAuthManager()
 
@@ -62,8 +60,16 @@ fun ProfileScreen(
     // # state for bottom navigation bar
     var active_tab by remember { mutableStateOf(1) }
 
-    // # state for logout dialog visibility
-    var is_logging_out by remember { mutableStateOf(false) }
+    // # fetch user data if not already loaded
+    LaunchedEffect(Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        // Only fetch if we have a valid authenticated UID
+        if (uid != null) {
+            user_state.fetchUserData(uid)
+
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -125,35 +131,34 @@ fun ProfileScreen(
                 title = "Edit Profile",
                 show_logout = true,
                 onLogoutClick = {
-                    FirebaseAuth.getInstance().signOut()
-                    nav_controller.navigate("landing") {
+        // Prevent spam-clicking the logout button
+        if (!is_logging_out) {
+            is_logging_out = true
+
+            coroutine_scope.launch {
+                try {
+                    // 1. Sign out from Firebase using your manager
+                    authLogout.logoutUser()
+
+                    // 2. Clear local user state variables
+                    user_state.clearUserData()
+                    
+                    // 3. Keep your delay if you have a loading spinner showing!
+                    delay(800) 
+
+                } finally {
+                    is_logging_out = false
+                    
+                    // 4. Navigate ONCE to your final destination (I used "login" here)
+                    // popUpTo(0) is a bulletproof way to clear the entire backstack
+                    nav_controller.navigate("login") {
                         popUpTo(0) { inclusive = true }
-                    }
-                    if (!is_logging_out) {
-                        is_logging_out = true
-
-                        coroutine_scope.launch {
-                            delay(800)
-                            try {
-                                // sign out from Firebase backend
-                                authLogout.logoutUser()
-
-                                // clear user state variable
-                                user_state.clearUserData()
-
-                            } finally {
-                                // exact moment tasks finish, hide dialog and navigate
-                                is_logging_out = false
-                                nav_controller.navigate("login") {
-                                    popUpTo(nav_controller.graph.startDestinationId) {
-                                        inclusive = true
-                                    }
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
+                        launchSingleTop = true
                     }
                 }
+            }
+        }
+    }
             )
 
             Spacer(modifier = Modifier.height(48.dp))
