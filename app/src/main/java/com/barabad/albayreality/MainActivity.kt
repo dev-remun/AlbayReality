@@ -64,6 +64,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
+                val current_user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+                val start_screen = if (current_user != null) "home" else "landing"
+
                 val navController = rememberNavController()
                 val user_registration_info_object = remember { UserRegistrationInformations() }
                 val quiz_state: QuizState = viewModel()
@@ -77,6 +80,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 NavHost(navController = navController, startDestination = startDestination) {
+                NavHost(navController, startDestination = start_screen) {
                     composable("login") { LogInScreen(navController, user_info_state) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
@@ -85,8 +89,10 @@ class MainActivity : ComponentActivity() {
                     composable("register5") { RegisterScreen5(navController, user_registration_info_object) }
                     composable("landing") { LandingScreen(navController) }
                     composable("home") { HomeScreen(navController) }
+                    composable("map") { MapScreen(navController) }
                     composable("games") { ARGameScreen(navController, user_info_state) }
                     composable("profile") { ProfileScreen(nav_controller = navController, user_state = user_info_state) }
+                    composable("edit_profile") { EditProfileScreen(nav_controller = navController, user_state = user_info_state) }
                     composable("aboutus") { AboutUsScreen(navController) }
                     composable("catalogs") { ARCatalogsScreen(navController, user_info_state) }
                     composable("view_catalog/{site_id}") { back_stack_entry ->
