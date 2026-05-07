@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.components.CatalogCard
 import com.barabad.albayreality.frontend.components.Header
@@ -88,6 +89,7 @@ fun ARGameScreen(
 
                 // # generate catalog buttons from data list
                 getListOfHistoricalSites(user_state).forEach { historical_site ->
+                    val past_attempts = attemptCounts[historical_site.site_id] ?: 0
                     CatalogCard(
                         title = historical_site.title,
                         catalog_image = historical_site.images[0],
@@ -97,6 +99,10 @@ fun ARGameScreen(
                         disabled_help_text = when {
                             !user_state.isLocationSiteViewed(historical_site.site_id) -> "View site information first"
                             else -> "You have reached the maximum 3 attempts"
+                        },
+                        show_score_button = past_attempts > 0, // # controls visibility
+                        on_score_click = {
+                            navController.navigate("argame_show_score/${historical_site.site_id}/${historical_site.title}")
                         },
                         onClick = { navController.navigate("argame_playground/${historical_site.site_id}") }
                     )

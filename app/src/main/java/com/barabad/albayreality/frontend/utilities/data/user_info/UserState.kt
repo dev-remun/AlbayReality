@@ -17,7 +17,6 @@ class UserState : ViewModel() {
     }
     var viewedSitesMap by mutableStateOf<Map<String, Boolean>>(emptyMap())
         private set
-    var user_data by mutableStateOf(MockUserData.current_user)
     var user_data by mutableStateOf(UserModel())
 
     fun fetchUserData() {
@@ -145,11 +144,9 @@ class UserState : ViewModel() {
     fun getPassword(): String {
         return user_data.password
     }
-}
-
-
     // # for resetting the user state variable if the user logs out
     fun clearUserData() {
         user_data = UserModel()
     }
 }
+
