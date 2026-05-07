@@ -26,7 +26,6 @@ import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
 import com.barabad.albayreality.ui.theme.strokes
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

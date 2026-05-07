@@ -37,6 +37,7 @@ import com.barabad.albayreality.frontend.utilities.utils.parseCities
 import com.barabad.albayreality.frontend.utilities.utils.parseProvinces
 import com.barabad.albayreality.frontend.utilities.utils.parseRegions
 import com.barabad.albayreality.ui.theme.strokes
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
