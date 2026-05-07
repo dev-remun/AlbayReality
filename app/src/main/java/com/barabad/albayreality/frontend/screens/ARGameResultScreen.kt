@@ -166,7 +166,7 @@ fun ARGameResultScreen(
                         if (has_no_remaining_item) {
                             // # summary screen dito
                             quiz_state.clearSiteId()
-                            navController.navigate("argame_summary/${site_id}")
+                            navController.navigate("argame_summary/$site_id/$site_title")
                         } else {
                             // # update the quiz state to point sa next item niya
                             quiz_state.nextItem()

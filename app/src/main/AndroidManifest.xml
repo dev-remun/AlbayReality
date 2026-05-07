@@ -32,7 +32,7 @@ Indicates that this app requires Google Play Services for AR.
         android:supportsRtl="true"
         android:theme="@style/Theme.AlbayReality">
         <activity
-            android:name=".backend.FirebaseAuthRegister"
+            android:name=".backend.FirebaseAuthManager"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".MainActivity"

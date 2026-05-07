@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
+import com.barabad.albayreality.frontend.utilities.data.quizzes.AnswerRecord
 import com.barabad.albayreality.frontend.utilities.data.quizzes.Quiz1
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.ui.theme.Inter
@@ -92,6 +93,18 @@ fun ARGamePlaygroundScreen(
             val status = "times_up_status"
             quiz_state.recordScore(status)
             // # display the feedback to the user and move
+
+            // Store attempt in firestore when time is up
+            val timeTaken = timer
+            quiz_state.addAnswerRecord(
+                AnswerRecord(
+                    questionIndex = quiz_state.current_item_number,
+                    choiceText = "",
+                    timeTaken = timeTaken,
+                    isCorrect = false
+                )
+            )
+
             navController.navigate("argame_result/${site_id}/${status}")
             println("Times up")
         }
@@ -117,7 +130,19 @@ fun ARGamePlaygroundScreen(
 
             // # record the score in the quiz state
             quiz_state.recordScore(status)
-            // # dis[lay the feedback sa user
+
+            // Store attempt in firestore
+            val timeTaken = timer - timer_value
+            val isCorrect = selected_option == correct_answer
+            quiz_state.addAnswerRecord(
+                AnswerRecord(
+                    questionIndex = quiz_state.current_item_number,
+                    choiceText = selected_option,
+                    timeTaken = timeTaken,
+                    isCorrect = isCorrect
+                )
+            )
+            // # display the feedback sa user
             navController.navigate("argame_result/${site_id}/${status}")
         }
     }

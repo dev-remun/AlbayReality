@@ -82,3 +82,5 @@ val Quiz3 = listOf(
         correctAnswer = "Level II Historic Structure",
     ),
 )
+
+fun getQuiz3List(): List<QuizzesModel> = Quiz3

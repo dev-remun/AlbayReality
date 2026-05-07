@@ -1,5 +1,6 @@
 package com.barabad.albayreality.frontend.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,9 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.barabad.albayreality.backend.FirebaseAuthManager
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
+import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizRepository
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.green
@@ -31,14 +35,17 @@ import com.barabad.albayreality.ui.theme.orange
 import com.barabad.albayreality.ui.theme.red
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.yellow
-
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 @Composable
 fun ARGameSummaryScreen(
     navController: NavController,
+    site_id: String,
     site_title: String,
     quiz_state: QuizState
 ) {
     var active_tab by remember { mutableStateOf(-1) }
+    val scope = rememberCoroutineScope()
 
     // # pull scores from the state
     val correct = quiz_state.correct_answered_items
@@ -101,16 +108,30 @@ fun ARGameSummaryScreen(
                 text = "Continue",
                 isPrimary = true,
                 onClick = {
-                    println("Score: " + quiz_state.correct_answered_items)
-                    println("Incorrect items: " + quiz_state.incorrect_answered_items)
-                    println("Missed items: " + quiz_state.missed_items)
-                    println("Total items: " + quiz_state.active_quiz.size)
+                    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
+                    val totalTime = quiz_state.answerRecords.sumOf { it.timeTaken }
+                    val answersSnapshot = quiz_state.answerRecords.toList()
+                    val siteId = site_id
 
-                    // # clear the site ID so the user can replay the same quiz later if they want
+                    scope.launch {
+                        try {
+                            val repo = QuizRepository()
+                            repo.saveAttempt(
+                                userId = userId,
+                                siteId = siteId,
+                                totalTimeTaken = totalTime,
+                                answerRecords = answersSnapshot,
+                                correctCount = correct,
+                                incorrectCount = incorrect,
+                                missedCount = missed
+                            )
+                        } catch (e: Exception) {
+                            Log.e("Summary", "Failed to save attempt", e)
+                        }
+                    }
+
                     quiz_state.clearSiteId()
                     quiz_state.resetQuiz()
-
-                    // # navigate back to the main games catalog
                     navController.navigate("games") {
                         popUpTo("games") { inclusive = true }
                     }
