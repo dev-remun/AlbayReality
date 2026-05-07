@@ -127,32 +127,31 @@ fun ProfileScreen(
 
             Header(
                 nav_controller = nav_controller,
-                title = "Edit Profile",
+                title = "User Profile",
                 show_logout = true,
                 onLogoutClick = {
-        // Prevent spam-clicking the logout button
+        // prevent spam-clicking the logout button
         if (!is_logging_out) {
             is_logging_out = true
 
             coroutine_scope.launch {
                 try {
-                    // 1. Sign out from Firebase using your manager
+                    // # sign out from firebase
                     authLogout.logoutUser()
-
-                    // 2. Clear local user state variables
-                    user_state.clearUserData()
-                    
-                    // 3. Keep your delay if you have a loading spinner showing!
+                    // # delay for loading
                     delay(800) 
 
                 } finally {
                     is_logging_out = false
-                    
-                    // 4. Navigate ONCE to your final destination (I used "login" here)
-                    // popUpTo(0) is a bulletproof way to clear the entire backstack
+
                     nav_controller.navigate("login") {
                         popUpTo(0) { inclusive = true }
                         launchSingleTop = true
+                    }
+
+                    coroutine_scope.launch {
+                        delay(500)
+                        user_state.clearUserData()
                     }
                 }
             }

@@ -49,7 +49,13 @@ fun NavBar(
                 selected = active_tab == 0,
                 onClick = {
                     on_tab_selected(0)
-                    nav_controller.navigate("home")
+                    nav_controller.navigate("home") {
+                        popUpTo(nav_controller.graph.startDestinationId) {
+                            saveState = false
+                        }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
                 },
                 icon = {
                     Icon(
@@ -70,7 +76,13 @@ fun NavBar(
                 selected = active_tab == 1,
                 onClick = {
                     on_tab_selected(1)
-                    nav_controller.navigate("profile")
+                    nav_controller.navigate("profile") {
+                        popUpTo(nav_controller.graph.startDestinationId) {
+                            saveState = false
+                        }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
                 },
                 icon = {
                     Icon(
@@ -91,7 +103,13 @@ fun NavBar(
                 selected = active_tab == 2,
                 onClick = {
                     on_tab_selected(2)
-                    nav_controller.navigate("aboutus")
+                    nav_controller.navigate("aboutus") {
+                        popUpTo(nav_controller.graph.startDestinationId) {
+                            saveState = false
+                        }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
                 },
                 icon = {
                     Icon(
