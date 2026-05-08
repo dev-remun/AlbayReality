@@ -47,7 +47,7 @@ fun ProfileScreen(
     // # format the name strings
     val firstname = user.firstname.ifEmpty { "User" }
     val lastname = user.lastname.ifEmpty { "Name" }
-    val middle_initial = if (user.middlename.isNotEmpty()) "${user.middlename.first()}." else ""
+    val middle_initial = if (user.middlename == "NA") ""  else if (user.middlename.isNotEmpty()) {"${user.middlename.first()}."} else ""
 
     val full_name = "$firstname $middle_initial $lastname".replace("  ", " ").trim()
 
