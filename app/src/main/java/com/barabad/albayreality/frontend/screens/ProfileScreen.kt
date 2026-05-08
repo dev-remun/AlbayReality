@@ -129,6 +129,9 @@ fun ProfileScreen(
                 nav_controller = nav_controller,
                 title = "User Profile",
                 show_logout = true,
+                onBackClick = {
+                    nav_controller.popBackStack()
+                },
                 onLogoutClick = {
         // prevent spam-clicking the logout button
         if (!is_logging_out) {
