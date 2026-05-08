@@ -116,7 +116,8 @@ fun EditProfileScreen(
     val display_middle = input_middlename.ifBlank { user.middlename }
 
     val initials = "${display_first.firstOrNull() ?: ""}${display_last.firstOrNull() ?: ""}".uppercase()
-    val full_name = "$display_first ${display_middle.firstOrNull()?.plus(".") ?: ""} $display_last".replace("  ", " ").trim()
+    val middle_initial = if (user.middlename == "NA") ""  else if (user.middlename.isNotEmpty()) {"${user.middlename.first()}."} else ""
+    val full_name = "$display_first ${middle_initial} $display_last".replace("  ", " ").trim()
 
     Scaffold(
         bottomBar = {
