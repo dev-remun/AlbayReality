@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -100,12 +101,25 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                     .fillMaxSize()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
-                Text(
-                    text = "Register",
-                    color = strokes,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "Register",
+                        color = strokes,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Page 3 of 5",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
                 Text(
                     text = "Please input your personal information",
                     color = strokes.copy(alpha = 0.80f),
@@ -146,36 +160,6 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
 
                         if (!has_error) {
                             user_registration_info_object.updateUserRegistrationInformation("sex", sex)
-                            Log.d("register_screen3", "Sex: $sex")
-
-                            Log.d(
-                                "register_screen3",
-                                "First Name: ${user_registration_info_object.user_registration_info.firstname}"
-                            )
-                            Log.d(
-                                "register_screen3",
-                                "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
-                            )
-                            Log.d(
-                                "register_screen3",
-                                "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
-                            )
-                            Log.d(
-                                "register_screen3",
-                                "Gender: ${user_registration_info_object.user_registration_info.sex}"
-                            )
-                            Log.d(
-                                "register_screen3",
-                                "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}"
-                            )
-                            Log.d(
-                                "register_screen3",
-                                "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}"
-                            )
-                            Log.d(
-                                "register_screen3",
-                                "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}"
-                            )
 
                             navController.navigate("register4")
                         }

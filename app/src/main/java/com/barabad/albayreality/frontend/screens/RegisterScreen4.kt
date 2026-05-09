@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.navigation.NavController
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
@@ -128,12 +129,25 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
                     .fillMaxSize()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
-                Text(
-                    text = "Register",
-                    color = strokes,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "Register",
+                        color = strokes,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Page 4 of 5",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
                 Text(
                     text = "Please select your location",
                     color = strokes.copy(alpha = 0.80f),
@@ -230,52 +244,6 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
                             user_registration_info_object.updateUserRegistrationInformation(
                                 "city_municipality",
                                 selected_city_municipality
-                            )
-
-                            // # log selection for debugging
-                            Log.d("register_screen4", "Region: $selected_region")
-                            Log.d("register_screen4", "Province: $selected_province")
-                            Log.d("register_screen4", "City/Muni: $selected_city_municipality")
-
-                            Log.d(
-                                "register_screen4",
-                                "First Name: ${user_registration_info_object.user_registration_info.firstname}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Sex: ${user_registration_info_object.user_registration_info.sex}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Region: ${user_registration_info_object.user_registration_info.region}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "Province: ${user_registration_info_object.user_registration_info.province}"
-                            )
-                            Log.d(
-                                "register_screen4",
-                                "City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}"
                             )
 
                             navController.navigate("register5")
