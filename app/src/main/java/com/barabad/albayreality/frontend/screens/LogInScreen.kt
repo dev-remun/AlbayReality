@@ -223,7 +223,7 @@ fun LogInScreen(
                                 override fun onSuccess() {
                                     // # reset loading state and show success popup
                                     user_state.loadUserViewedSites()
-                                    firebaseManager.seedAllQuizzes()
+                                    // firebaseManager.seedAllQuizzes()
                                     is_loading = false
                                     display_successs_popup = true
                                 }

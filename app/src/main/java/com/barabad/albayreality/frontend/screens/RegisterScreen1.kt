@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -101,12 +102,25 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
                     .fillMaxSize()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
-                Text(
-                    text = "Register",
-                    color = strokes,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "Register",
+                        color = strokes,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Page 1 of 5",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
                 Text(
                     text = "Please input your personal information",
                     color = strokes.copy(alpha = 0.80f),
@@ -213,12 +227,6 @@ fun RegisterScreen1(navController: NavController, user_registration_info_object:
                                 "lastname",
                                 lastname
                             )
-
-                            Log.d("register_screen", "Firstname: $firstname")
-                            Log.d("register_screen", "Middlename: $middlename")
-                            Log.d("register_screen", "Lastname: $lastname")
-
-                            // TODO: navigate to next step
                             navController.navigate("register2")
                         }
                     }

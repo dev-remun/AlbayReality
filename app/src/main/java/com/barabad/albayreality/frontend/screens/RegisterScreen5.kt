@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -116,12 +117,25 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                     .fillMaxSize()
                     .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
-                Text(
-                    text = "Register",
-                    color = strokes,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = "Register",
+                        color = strokes,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Page 5 of 5",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
                 Text(
                     text = "Please input your account information",
                     color = strokes.copy(alpha = 0.80f),
@@ -218,22 +232,6 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                             user_registration_info_object.updateUserRegistrationInformation("email", email)
                             user_registration_info_object.updateUserRegistrationInformation("password", password)
 
-                            Log.d("register_screen5", "Username: $email")
-                            Log.d("register_screen5", "Password: $password")
-
-                            Log.d("register_screen5", "First Name: ${user_registration_info_object.user_registration_info.firstname}")
-                            Log.d("register_screen5", "Middle Name: ${user_registration_info_object.user_registration_info.middlename}")
-                            Log.d("register_screen5", "Last Name: ${user_registration_info_object.user_registration_info.lastname}")
-                            Log.d("register_screen5", "Sex: ${user_registration_info_object.user_registration_info.sex}")
-                            Log.d("register_screen5", "Birth Month: ${user_registration_info_object.user_registration_info.birth_month}")
-                            Log.d("register_screen5", "Birth Date: ${user_registration_info_object.user_registration_info.birth_date}")
-                            Log.d("register_screen5", "Birth Year: ${user_registration_info_object.user_registration_info.birth_year}")
-                            Log.d("register_screen5", "Region: ${user_registration_info_object.user_registration_info.region}")
-                            Log.d("register_screen5", "Province: ${user_registration_info_object.user_registration_info.province}")
-                            Log.d("register_screen5", "City/Muni: ${user_registration_info_object.user_registration_info.city_municipality}")
-                            Log.d("register_screen5", "Username: ${user_registration_info_object.user_registration_info.email}")
-                            Log.d("register_screen5", "Password: ${user_registration_info_object.user_registration_info.password}")
-
                             // # registers the user
                             auth_register.registerUser(email, password, object : FirebaseAuthManager.AuthCallback {
                                 override fun onSuccess() {
@@ -267,7 +265,6 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                             // # reset loading state and show error if firestore fails
                                             is_loading = false
                                             display_error_popup = true
-                                            Log.e("register_screen5", "firestore error: ${e.message}")
                                         }
                                 }
 
@@ -290,7 +287,6 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                                         password_error_message = "Password should be at least 6 characters."
                                     }
 
-                                    Log.e("register_screen5", "registration error: $errorMessage")
                                 }
                             })
                         }
