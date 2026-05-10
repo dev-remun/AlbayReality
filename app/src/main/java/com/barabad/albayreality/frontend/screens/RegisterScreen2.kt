@@ -235,6 +235,7 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
                             // # check network connection first
                             if (!is_connected) {
                                 display_network_popup = true
+                                return@Button
                             }
 
                             var has_error = false
