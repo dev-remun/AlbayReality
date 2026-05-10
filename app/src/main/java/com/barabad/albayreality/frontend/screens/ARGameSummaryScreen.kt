@@ -78,7 +78,7 @@ fun ARGameSummaryScreen(
                 display_network_popup = false
             },
             onDismiss = {
-                display_network_popup = false
+                display_network_popup = true
             }
         )
     }
@@ -167,13 +167,7 @@ fun ARGameSummaryScreen(
 
                         quiz_state.clearSiteId()
                         quiz_state.resetQuiz()
-                        navController.navigate("games") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = false
-                            }
-                            launchSingleTop = true
-                            restoreState = false
-                        }
+                        navController.popBackStack()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
