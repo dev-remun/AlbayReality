@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import com.barabad.albayreality.frontend.utilities.utils.mapRegProvCity
 import com.barabad.albayreality.frontend.utilities.utils.parseCities
 import com.barabad.albayreality.frontend.utilities.utils.parseProvinces
 import com.barabad.albayreality.frontend.utilities.utils.parseRegions
+import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 import com.barabad.albayreality.ui.theme.strokes
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
@@ -116,8 +118,46 @@ fun EditProfileScreen(
     val display_middle = input_middlename.ifBlank { user.middlename }
 
     val initials = "${display_first.firstOrNull() ?: ""}${display_last.firstOrNull() ?: ""}".uppercase()
-    val middle_initial = if (user.middlename == "NA") ""  else if (user.middlename.isNotEmpty()) {"${user.middlename.first()}."} else ""
+    // middle initial
+    val middle_initial = if (
+        display_middle.isBlank() ||
+        display_middle == "NA"
+    ) {
+        ""
+    } else {
+        "${display_middle.first()}.".uppercase()
+    }
+
     val full_name = "$display_first ${middle_initial} $display_last".replace("  ", " ").trim()
+
+    // # network checking
+    val is_connected by rememberNetworkStatus()
+    var display_network_popup by remember { mutableStateOf(false) }
+
+    // # automatically show the popup whenever the connection is lost
+    LaunchedEffect(is_connected) {
+        if (!is_connected) {
+            display_network_popup = true
+        } else {
+            // # automatically hide it if the connection comes back
+            display_network_popup = false
+        }
+    }
+
+    // # display popup
+    if (display_network_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Please connect to Wi-Fi or mobile data to edit your profile.",
+            button_text = "Okay",
+            onButtonClick = {
+                display_network_popup = false
+            },
+            onDismiss = {
+                display_network_popup = true
+            }
+        )
+    }
 
     Scaffold(
         bottomBar = {
@@ -129,328 +169,343 @@ fun EditProfileScreen(
         }
     ) { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(inner_padding)
-                .padding(top = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .imePadding(),
+            contentAlignment = Alignment.TopCenter
         ) {
-
-            // # header
-            Header(
-                nav_controller = nav_controller,
-                title = "Edit Profile",
-                show_logout = false
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // # avatar
-            Box(
+            Column(
                 modifier = Modifier
-                    .size(90.dp)
-                    .border(width = 2.dp, color = strokes, shape = CircleShape)
-                    .background(Color.White, shape = CircleShape),
-                contentAlignment = Alignment.Center
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(top = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                // # header
+                Header(
+                    nav_controller = nav_controller,
+                    title = "Edit Profile",
+                    show_logout = false
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // # avatar
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .border(width = 2.dp, color = strokes, shape = CircleShape)
+                        .background(Color.White, shape = CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = initials,
+                        style = TextStyle(
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = strokes
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // # full name display
                 Text(
-                    text = initials,
+                    text = full_name,
                     style = TextStyle(
-                        fontSize = 28.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = strokes
                     )
                 )
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(60.dp))
 
-            // # full name display
-            Text(
-                text = full_name,
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = strokes
-                )
-            )
-
-            Spacer(modifier = Modifier.height(60.dp))
-
-            // # form fields container
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            ) {
-                // # personal information section header
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Outlined.AccountCircle, contentDescription = null, tint = strokes, modifier = Modifier.size(20.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Personal Information", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = strokes)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                InputField(
-                    title = "First Name",
-                    value = input_firstname,
-                    placeholder = user.firstname.ifEmpty { "enter first name" },
-                    onValueChange = { input_firstname = it }
-                )
-
-                InputField(
-                    title = "Middle Name",
-                    value = input_middlename,
-                    placeholder = user.middlename.ifEmpty { "enter middle name" },
-                    onValueChange = { input_middlename = it }
-                )
-
-                InputField(
-                    title = "Last Name",
-                    value = input_lastname,
-                    placeholder = user.lastname.ifEmpty { "enter last name" },
-                    onValueChange = { input_lastname = it }
-                )
-
-                DropdownField(
-                    title = "Region",
-                    value = selected_region,
-                    options = region_options,
-                    placeholder = user.region.ifEmpty { "select region" },
-                    isError = has_region_error,
-                    errorMessage = region_error_message,
-                    onValueChange = { new_region ->
-                        selected_region = new_region
-                        selected_province = ""
-                        selected_city_municipality = ""
-                        if (has_region_error) has_region_error = false
+                // # form fields container
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    // # personal information section header
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = Icons.Outlined.AccountCircle, contentDescription = null, tint = strokes, modifier = Modifier.size(20.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "Personal Information", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = strokes)
                     }
-                )
 
-                DropdownField(
-                    title = "Province",
-                    value = selected_province,
-                    options = province_options,
-                    placeholder = user.province.ifEmpty { "select province" },
-                    isError = has_province_error,
-                    errorMessage = province_error_message,
-                    onValueChange = { new_province ->
-                        selected_province = new_province
-                        selected_city_municipality = ""
-                        if (has_province_error) has_province_error = false
-                    }
-                )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                DropdownField(
-                    title = "City / Municipality",
-                    value = selected_city_municipality,
-                    options = city_options,
-                    placeholder = user.city_municipality.ifEmpty { "select city / municipality" },
-                    isError = has_citymun_error,
-                    errorMessage = citymun_error_message,
-                    onValueChange = { new_city ->
-                        selected_city_municipality = new_city
-                        if (has_citymun_error) has_citymun_error = false
-                    }
-                )
-
-                // # spacing to match the error height space in inputfield
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // # account information section header
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(imageVector = Icons.Outlined.Lock, contentDescription = null, tint = strokes, modifier = Modifier.size(20.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Account Information", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = strokes)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                InputField(
-                    title = "Email",
-                    value = input_email,
-                    placeholder = user.email.ifEmpty { "enter email address" },
-                    has_error = email_error,
-                    error_message = email_error_message,
-                    onValueChange = {
-                        input_email = it
-                        if (email_error) email_error = false
-                    }
-                )
-
-                PasswordInputField(
-                    title = "Password",
-                    value = input_password,
-                    placeholder = if (user.password.isNotEmpty()) "*".repeat(user.password.length) else "********",
-                    has_error = password_error,
-                    error_message = password_error_message,
-                    onValueChange = {
-                        input_password = it
-                        if (password_error) password_error = false
-                        if (passwords_match_error) passwords_match_error = input_password != input_confirm_password
-                    }
-                )
-
-                PasswordInputField(
-                    title = "Confirm Password",
-                    value = input_confirm_password,
-                    placeholder = if (user.password.isNotEmpty()) "*".repeat(user.password.length) else "********",
-                    has_error = passwords_match_error,
-                    error_message = "Passwords do not match.",
-                    onValueChange = {
-                        input_confirm_password = it
-                        if (passwords_match_error) passwords_match_error = input_password != input_confirm_password
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // # action buttons
-                if (is_loading) {
-                    Button(
-                        text = "Please wait",
-                        isPrimary = false,
-                        onClick = { },
-                        is_enabled = false,
-                        modifier = Modifier.fillMaxWidth(),
+                    InputField(
+                        title = "First Name",
+                        value = input_firstname,
+                        placeholder = user.firstname.ifEmpty { "enter first name" },
+                        onValueChange = { input_firstname = it }
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        text = "Cancel Changes",
-                        isPrimary = false,
-                        onClick = { },
-                        is_enabled = false,
-                        modifier = Modifier.fillMaxWidth(),
+
+                    InputField(
+                        title = "Middle Name",
+                        value = input_middlename,
+                        placeholder = user.middlename.ifEmpty { "enter middle name" },
+                        onValueChange = { input_middlename = it }
                     )
-                } else {
-                    Button(
-                        text = "Save Changes",
-                        isPrimary = true,
-                        onClick = {
-                            var has_validation_error = false
 
-                            // # basic email format validation if the user entered a new email
-                            if (input_email.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(input_email).matches()) {
-                                email_error = true
-                                email_error_message = "Invalid email format."
-                                has_validation_error = true
-                            }
+                    InputField(
+                        title = "Last Name",
+                        value = input_lastname,
+                        placeholder = user.lastname.ifEmpty { "enter last name" },
+                        onValueChange = { input_lastname = it }
+                    )
 
-                            // # password length validation (only if they are attempting to change it)
-                            if (input_password.isNotBlank() && input_password.length < 6) {
-                                password_error = true
-                                password_error_message = "Password should be at least 6 characters."
-                                has_validation_error = true
-                            }
+                    DropdownField(
+                        title = "Region",
+                        value = selected_region,
+                        options = region_options,
+                        placeholder = user.region.ifEmpty { "select region" },
+                        isError = has_region_error,
+                        errorMessage = region_error_message,
+                        onValueChange = { new_region ->
+                            selected_region = new_region
+                            selected_province = ""
+                            selected_city_municipality = ""
+                            if (has_region_error) has_region_error = false
+                        }
+                    )
 
-                            // # password match validation
-                            if (input_password != input_confirm_password) {
-                                passwords_match_error = true
-                                has_validation_error = true
-                            }
+                    DropdownField(
+                        title = "Province",
+                        value = selected_province,
+                        options = province_options,
+                        placeholder = user.province.ifEmpty { "select province" },
+                        isError = has_province_error,
+                        errorMessage = province_error_message,
+                        onValueChange = { new_province ->
+                            selected_province = new_province
+                            selected_city_municipality = ""
+                            if (has_province_error) has_province_error = false
+                        }
+                    )
 
-                            // # if the user updated the region but left province blank
-                            if (selected_region.isNotBlank() && selected_province.isBlank()) {
-                                has_province_error = true
-                                province_error_message = "Please update your province."
-                                has_validation_error = true
-                            }
+                    DropdownField(
+                        title = "City / Municipality",
+                        value = selected_city_municipality,
+                        options = city_options,
+                        placeholder = user.city_municipality.ifEmpty { "select city / municipality" },
+                        isError = has_citymun_error,
+                        errorMessage = citymun_error_message,
+                        onValueChange = { new_city ->
+                            selected_city_municipality = new_city
+                            if (has_citymun_error) has_citymun_error = false
+                        }
+                    )
 
-                            // # if the user updated region/province but left city blank
-                            if ((selected_region.isNotBlank() || selected_province.isNotBlank()) && selected_city_municipality.isBlank()) {
-                                has_citymun_error = true
-                                citymun_error_message = "Please update your city / municipality."
-                                has_validation_error = true
-                            }
+                    // # spacing to match the error height space in inputfield
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                            if (!has_validation_error) {
-                                is_loading = true
-                                coroutine_scope.launch {
-                                    val firebase_user = FirebaseAuth.getInstance().currentUser
-                                    val uid = firebase_user?.uid
+                    // # account information section header
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = Icons.Outlined.Lock, contentDescription = null, tint = strokes, modifier = Modifier.size(20.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "Account Information", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = strokes)
+                    }
 
-                                    // # local function to update firestore and local state after auth updates
-                                    fun finalizeChanges() {
-                                        user_state.setFirstName(input_firstname.ifBlank { user.firstname })
-                                        user_state.setMiddleName(input_middlename.ifBlank { user.middlename })
-                                        user_state.setLastName(input_lastname.ifBlank { user.lastname })
-                                        user_state.setRegion(selected_region.ifBlank { user.region })
-                                        user_state.setProvince(selected_province.ifBlank { user.province })
-                                        user_state.setCityMun(selected_city_municipality.ifBlank { user.city_municipality })
-                                        user_state.setEmail(input_email.ifBlank { user.email })
-                                        user_state.setPassword(input_password.ifBlank { user.password })
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                                        if (uid != null) {
-                                            user_state.updateFirestoreData(uid) { success ->
+                    InputField(
+                        title = "Email",
+                        value = input_email,
+                        placeholder = user.email.ifEmpty { "enter email address" },
+                        has_error = email_error,
+                        error_message = email_error_message,
+                        onValueChange = {
+                            input_email = it
+                            if (email_error) email_error = false
+                        }
+                    )
+
+                    PasswordInputField(
+                        title = "Password",
+                        value = input_password,
+                        placeholder = if (user.password.isNotEmpty()) "*".repeat(user.password.length) else "********",
+                        has_error = password_error,
+                        error_message = password_error_message,
+                        onValueChange = {
+                            input_password = it
+                            if (password_error) password_error = false
+                            if (passwords_match_error) passwords_match_error = input_password != input_confirm_password
+                        }
+                    )
+
+                    PasswordInputField(
+                        title = "Confirm Password",
+                        value = input_confirm_password,
+                        placeholder = if (user.password.isNotEmpty()) "*".repeat(user.password.length) else "********",
+                        has_error = passwords_match_error,
+                        error_message = "Passwords do not match.",
+                        onValueChange = {
+                            input_confirm_password = it
+                            if (passwords_match_error) passwords_match_error = input_password != input_confirm_password
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // # action buttons
+                    if (is_loading) {
+                        Button(
+                            text = "Please wait",
+                            isPrimary = false,
+                            onClick = { },
+                            is_enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            text = "Cancel Changes",
+                            isPrimary = false,
+                            onClick = { },
+                            is_enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    } else {
+                        Button(
+                            text = "Save Changes",
+                            isPrimary = true,
+                            onClick = {
+
+                                // # check network connection first
+                                if (!is_connected) {
+                                    display_network_popup = true
+                                    return@Button
+                                }
+
+                                var has_validation_error = false
+
+                                // # basic email format validation if the user entered a new email
+                                if (input_email.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(input_email).matches()) {
+                                    email_error = true
+                                    email_error_message = "Invalid email format."
+                                    has_validation_error = true
+                                }
+
+                                // # password length validation (only if they are attempting to change it)
+                                if (input_password.isNotBlank() && input_password.length < 6) {
+                                    password_error = true
+                                    password_error_message = "Password should be at least 6 characters."
+                                    has_validation_error = true
+                                }
+
+                                // # password match validation
+                                if (input_password != input_confirm_password) {
+                                    passwords_match_error = true
+                                    has_validation_error = true
+                                }
+
+                                // # if the user updated the region but left province blank
+                                if (selected_region.isNotBlank() && selected_province.isBlank()) {
+                                    has_province_error = true
+                                    province_error_message = "Please update your province."
+                                    has_validation_error = true
+                                }
+
+                                // # if the user updated region/province but left city blank
+                                if ((selected_region.isNotBlank() || selected_province.isNotBlank()) && selected_city_municipality.isBlank()) {
+                                    has_citymun_error = true
+                                    citymun_error_message = "Please update your city / municipality."
+                                    has_validation_error = true
+                                }
+
+                                if (!has_validation_error) {
+                                    is_loading = true
+                                    coroutine_scope.launch {
+                                        val firebase_user = FirebaseAuth.getInstance().currentUser
+                                        val uid = firebase_user?.uid
+
+                                        // # local function to update firestore and local state after auth updates
+                                        fun finalizeChanges() {
+                                            user_state.setFirstName(input_firstname.ifBlank { user.firstname })
+                                            user_state.setMiddleName(input_middlename.ifBlank { user.middlename })
+                                            user_state.setLastName(input_lastname.ifBlank { user.lastname })
+                                            user_state.setRegion(selected_region.ifBlank { user.region })
+                                            user_state.setProvince(selected_province.ifBlank { user.province })
+                                            user_state.setCityMun(selected_city_municipality.ifBlank { user.city_municipality })
+                                            user_state.setEmail(input_email.ifBlank { user.email })
+                                            user_state.setPassword(input_password.ifBlank { user.password })
+
+                                            if (uid != null) {
+                                                user_state.updateFirestoreData(uid) { success ->
+                                                    is_loading = false
+                                                    if (success) {
+                                                        show_success_dialog = true
+                                                    } else {
+                                                        println("Failed to update firestore data")
+                                                    }
+                                                }
+                                            } else {
                                                 is_loading = false
-                                                if (success) {
-                                                    show_success_dialog = true
+                                                show_success_dialog = true
+                                            }
+                                        }
+
+                                        // # function to handle password update
+                                        fun updatePassword() {
+                                            if (input_password.isNotBlank() && input_password != user.password) {
+                                                firebase_user?.updatePassword(input_password)?.addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) finalizeChanges()
+                                                    else {
+                                                        is_loading = false
+                                                        password_error = true
+                                                        password_error_message = task.exception?.message ?: "Password update failed."
+                                                    }
+                                                }
+                                            } else finalizeChanges()
+                                        }
+
+                                        // # start sequential updates: Email -> Password -> Firestore
+                                        if (firebase_user != null && input_email.isNotBlank() && input_email != user.email) {
+                                            firebase_user.updateEmail(input_email).addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    updatePassword()
                                                 } else {
-                                                    println("Failed to update firestore data")
+                                                    is_loading = false
+                                                    email_error = true
+                                                    val errorMsg = task.exception?.message ?: ""
+                                                    email_error_message = when {
+                                                        errorMsg.contains("recent", ignoreCase = true) ->
+                                                            "For security, please log out and log back in to change your email."
+                                                        errorMsg.contains("not allowed", ignoreCase = true) ->
+                                                            "Operation not allowed."
+                                                        else -> errorMsg.ifEmpty { "Email update failed. The email might be invalid or already in use." }
+                                                    }
                                                 }
                                             }
                                         } else {
-                                            is_loading = false
-                                            show_success_dialog = true
+                                            updatePassword()
                                         }
-                                    }
-
-                                    // # function to handle password update
-                                    fun updatePassword() {
-                                        if (input_password.isNotBlank() && input_password != user.password) {
-                                            firebase_user?.updatePassword(input_password)?.addOnCompleteListener { task ->
-                                                if (task.isSuccessful) finalizeChanges()
-                                                else {
-                                                    is_loading = false
-                                                    password_error = true
-                                                    password_error_message = task.exception?.message ?: "Password update failed."
-                                                }
-                                            }
-                                        } else finalizeChanges()
-                                    }
-
-                                    // # start sequential updates: Email -> Password -> Firestore
-                                    if (firebase_user != null && input_email.isNotBlank() && input_email != user.email) {
-                                        firebase_user.updateEmail(input_email).addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                updatePassword()
-                                            } else {
-                                                is_loading = false
-                                                email_error = true
-                                                val errorMsg = task.exception?.message ?: ""
-                                                email_error_message = when {
-                                                    errorMsg.contains("recent", ignoreCase = true) ->
-                                                        "For security, please log out and log back in to change your email."
-                                                    errorMsg.contains("not allowed", ignoreCase = true) ->
-                                                        "Operation not allowed."
-                                                    else -> errorMsg.ifEmpty { "Email update failed. The email might be invalid or already in use." }
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        updatePassword()
                                     }
                                 }
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        text = "Cancel Changes",
-                        isPrimary = false,
-                        onClick = {
-                            show_error_dialog = true
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            text = "Cancel Changes",
+                            isPrimary = false,
+                            onClick = {
+                                show_error_dialog = true
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
 
-                Spacer(modifier = Modifier.height(48.dp))
+                    Spacer(modifier = Modifier.height(48.dp))
+                }
             }
         }
     }

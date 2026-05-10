@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -157,161 +158,159 @@ fun ARGamePlaygroundScreen(
         }
     }
 
-    Scaffold(
-        bottomBar = {
-            NavBar(
-                active_tab = active_tab,
-                on_tab_selected = { selected_index ->
-                    active_tab = selected_index
-                },
-                nav_controller = navController
-            )
-        }
-    ) { inner_padding ->
+    Scaffold() { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding(top = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Header(
-                nav_controller = navController,
-                title = site_title,
-                onBackClick = {}
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // # progress bar and timer ui section
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(top = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Question ${current_index + 1} of $total_items",
-                    style = TextStyle(
-                        fontFamily = Inter,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp,
-                        color = strokes
-                    )
+                Header(
+                    nav_controller = navController,
+                    title = site_title,
+                    onBackClick = {},
+                    show_back = false
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                // # progress bar and timer ui section
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
                 ) {
-                    // # custom progress bar frame
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(10.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Color(0xFFEEEEEE))
-                    ) {
-                        // # active progress fill
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(fraction = progress_fraction)
-                                .fillMaxHeight()
-                                .clip(RoundedCornerShape(5.dp))
-                                .background(orange)
+                    Text(
+                        text = "Question ${current_index + 1} of $total_items",
+                        style = TextStyle(
+                            fontFamily = Inter,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp,
+                            color = strokes
                         )
-                    }
+                    )
 
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Row(
-                        modifier = Modifier.width(64.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.End
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.timer),
-                            contentDescription = "Timer Icon",
-                            tint = Color(0xFFFDB067),
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = timer_value.toString(),
-                            style = TextStyle(
-                                fontFamily = Inter,
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 16.sp,
-                                color = Color(0xFFFDB067)
+                        // # custom progress bar frame
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(10.dp)
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(Color(0xFFEEEEEE))
+                        ) {
+                            // # active progress fill
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth(fraction = progress_fraction)
+                                    .fillMaxHeight()
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .background(orange)
                             )
-                        )
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Row(
+                            modifier = Modifier.width(64.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.timer),
+                                contentDescription = "Timer Icon",
+                                tint = Color(0xFFFDB067),
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = timer_value.toString(),
+                                style = TextStyle(
+                                    fontFamily = Inter,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 16.sp,
+                                    color = Color(0xFFFDB067)
+                                )
+                            )
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            // # question text
-            Text(
-                text = quiz_question,
-                style = TextStyle(
-                    fontFamily = Inter,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = strokes
-                ),
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
+                // # question text
+                Text(
+                    text = quiz_question,
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = strokes
+                    ),
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            // # choices list
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            ) {
-                quiz_choices.forEachIndexed { index, option ->
+                // # choices list
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    quiz_choices.forEachIndexed { index, option ->
 
-                    val is_selected = selected_option == option
+                        val is_selected = selected_option == option
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 12.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(choice_colors[index])
-                            .border(
-                                width = if (is_selected) 2.dp else 0.dp,
-                                color = if (is_selected) strokes else Color.Transparent,
-                                shape = RoundedCornerShape(8.dp)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 12.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(choice_colors[index])
+                                .border(
+                                    width = if (is_selected) 2.dp else 0.dp,
+                                    color = if (is_selected) strokes else Color.Transparent,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .clickable(enabled = !is_answered) {
+                                    is_answered = true
+                                    selected_option = option
+                                }
+                                .padding(16.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(
+                                text = option,
+                                style = TextStyle(
+                                    fontFamily = Inter,
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                    color = strokes,
+                                    lineHeight = 20.sp
+                                )
                             )
-                            .clickable(enabled = !is_answered) {
-                                is_answered = true
-                                selected_option = option
-                            }
-                            .padding(16.dp),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(
-                            text = option,
-                            style = TextStyle(
-                                fontFamily = Inter,
-                                fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp,
-                                color = strokes,
-                                lineHeight = 20.sp
-                            )
-                        )
+                        }
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
+            }
         }
     }
 }

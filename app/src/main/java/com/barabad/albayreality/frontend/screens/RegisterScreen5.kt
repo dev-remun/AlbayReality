@@ -1,11 +1,13 @@
 package com.barabad.albayreality.frontend.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -31,6 +33,7 @@ import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.R
+import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 
 @Composable
 fun RegisterScreen5(navController: NavController, user_registration_info_object: UserRegistrationInformations) {
@@ -61,6 +64,35 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
 
     // # state variable to control the error popup
     var display_error_popup by remember { mutableStateOf(false) }
+
+    // # network checking
+    val is_connected by rememberNetworkStatus()
+    var display_network_popup by remember { mutableStateOf(false) }
+
+    // # automatically show the popup whenever the connection is lost
+    LaunchedEffect(is_connected) {
+        if (!is_connected) {
+            display_network_popup = true
+        } else {
+            // # automatically hide it if the connection comes back
+            display_network_popup = false
+        }
+    }
+
+    // # display popup
+    if (display_network_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Please connect to Wi-Fi or mobile data to register.",
+            button_text = "Okay",
+            onButtonClick = {
+                display_network_popup = false
+            },
+            onDismiss = {
+                display_network_popup = true
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -112,245 +144,261 @@ fun RegisterScreen5(navController: NavController, user_registration_info_object:
                 },
             color = Color.White
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 500.dp)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
                 ) {
-                    Text(
-                        text = "Register",
-                        color = strokes,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    Text(
-                        text = "Page 5 of 5",
-                        color = strokes.copy(alpha = 0.80f),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
-                Text(
-                    text = "Please input your account information",
-                    color = strokes.copy(alpha = 0.80f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // # email field
-                InputField(
-                    title = "Email",
-                    value = email,
-                    onValueChange = {
-                        email = it
-                        if (email_error) email_error = false
-                    },
-                    placeholder = "Enter your email",
-                    has_error = email_error,
-                    error_message = email_error_message
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // # password field
-                PasswordInputField(
-                    title = "Password",
-                    value = password,
-                    onValueChange = {
-                        password = it
-                        if (password_error) password_error = false
-                    },
-                    placeholder = "Enter your password",
-                    has_error = password_error,
-                    error_message = password_error_message
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // # confirm password field
-                PasswordInputField(
-                    title = "Confirm Password",
-                    value = confirm_password,
-                    onValueChange = {
-                        confirm_password = it
-                        if (confirm_password_error) confirm_password_error = false
-                    },
-                    placeholder = "Re-enter your password",
-                    has_error = confirm_password_error,
-                    error_message = confirm_password_error_message
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // # register button
-                Button(
-                    text = if (is_loading) "Please wait" else "Register",
-                    isPrimary = true,
-                    onClick = {
-                        // # prevent multiple clicks while loading
-                        if (is_loading) return@Button
-
-                        var has_error = false
-
-                        if (email.isBlank()) {
-                            email_error_message = "Please input your email."
-                            email_error = true
-                            has_error = true
-                        }
-                        if (password.isBlank()) {
-                            password_error_message = "Please input your password."
-                            password_error = true
-                            has_error = true
-                        }
-
-                        if (confirm_password.isBlank()) {
-                            confirm_password_error_message = "Please re-enter your password."
-                            confirm_password_error = true
-                            has_error = true
-                        }
-
-                        if (confirm_password != password) {
-                            confirm_password_error_message = "Passwords does not match."
-                            confirm_password_error = true
-                            has_error = true
-                        }
-
-
-                        if (!has_error) {
-
-                            // # trigger loading state
-                            is_loading = true
-
-                            user_registration_info_object.updateUserRegistrationInformation("email", email)
-                            user_registration_info_object.updateUserRegistrationInformation("password", password)
-
-                            // # registers the user
-                            auth_register.registerUser(email, password, object : FirebaseAuthManager.AuthCallback {
-                                override fun onSuccess() {
-                                    println("Registration success")
-
-                                    // Initializes the user's register data
-                                    val userId = FirebaseAuth.getInstance().currentUser?.uid
-                                    val userMap = hashMapOf(
-                                        "firstname" to user_registration_info_object.user_registration_info.firstname,
-                                        "lastname" to user_registration_info_object.user_registration_info.lastname,
-                                        "middlename" to user_registration_info_object.user_registration_info.middlename,
-                                        "sex" to user_registration_info_object.user_registration_info.sex,
-                                        "birthdate" to "${user_registration_info_object.user_registration_info.birth_year}-${user_registration_info_object.user_registration_info.birth_month}-${user_registration_info_object.user_registration_info.birth_date}",
-                                        "region" to user_registration_info_object.user_registration_info.region,
-                                        "province" to user_registration_info_object.user_registration_info.province,
-                                        "city_municipality" to user_registration_info_object.user_registration_info.city_municipality,
-                                        "email" to user_registration_info_object.user_registration_info.email
-                                    )
-
-                                    // Register the user's data into firestore
-                                    FirebaseFirestore.getInstance()
-                                        .collection("users")
-                                        .document(userId!!)
-                                        .set(userMap)
-                                        .addOnSuccessListener {
-                                            // # reset loading state and show success popup
-                                            is_loading = false
-                                            display_success_popup = true
-                                        }
-                                        .addOnFailureListener { e ->
-                                            // # reset loading state and show error if firestore fails
-                                            is_loading = false
-                                            display_error_popup = true
-                                        }
-                                }
-
-                                override fun onFailure(errorMessage: String?) {
-                                    is_loading = false
-
-                                    val error_message_firebase = errorMessage ?: "An unknown error occured."
-                                    display_error_popup = true
-
-                                    val check_error_message_firebase = error_message_firebase.lowercase()
-                                    if (check_error_message_firebase.contains("email") ||
-                                        check_error_message_firebase.contains("address") ||
-                                        check_error_message_firebase.contains("taken") ||
-                                        check_error_message_firebase.contains("format")) {
-                                        email_error = true
-                                        email_error_message = error_message_firebase
-                                    }
-                                    if (check_error_message_firebase.contains("password")) {
-                                        password_error = true
-                                        password_error_message = "Password should be at least 6 characters."
-                                    }
-
-                                }
-                            })
-                        }
-                    },
-                    is_enabled = if (!is_loading) {
-                        true
-                    } else {
-                        false
-                    },
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // # login link
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Row {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
                         Text(
-                            text = "Already have an account? ",
+                            text = "Register",
                             color = strokes,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold
                         )
-
                         Text(
-                            text = "Login",
-                            color = primary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            modifier = Modifier.clickable {
-                                navController.navigate("login")
-                            }
+                            text = "Page 5 of 5",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textDecoration = TextDecoration.Underline
                         )
+                    }
+                    Text(
+                        text = "Please input your account information",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // # email field
+                    InputField(
+                        title = "Email",
+                        value = email,
+                        onValueChange = {
+                            email = it
+                            if (email_error) email_error = false
+                        },
+                        placeholder = "Enter your email",
+                        has_error = email_error,
+                        error_message = email_error_message
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    // # password field
+                    PasswordInputField(
+                        title = "Password",
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            if (password_error) password_error = false
+                        },
+                        placeholder = "Enter your password",
+                        has_error = password_error,
+                        error_message = password_error_message
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    // # confirm password field
+                    PasswordInputField(
+                        title = "Confirm Password",
+                        value = confirm_password,
+                        onValueChange = {
+                            confirm_password = it
+                            if (confirm_password_error) confirm_password_error = false
+                        },
+                        placeholder = "Re-enter your password",
+                        has_error = confirm_password_error,
+                        error_message = confirm_password_error_message
+                    )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // # register button
+                    Button(
+                        text = if (is_loading) "Please wait" else "Register",
+                        isPrimary = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+
+                            // # check network connection first
+                            if (!is_connected) {
+                                display_network_popup = true
+                                return@Button
+                            }
+
+                            // # prevent multiple clicks while loading
+                            if (is_loading) return@Button
+
+                            var has_error = false
+
+                            if (email.isBlank()) {
+                                email_error_message = "Please input your email."
+                                email_error = true
+                                has_error = true
+                            }
+                            if (password.isBlank()) {
+                                password_error_message = "Please input your password."
+                                password_error = true
+                                has_error = true
+                            }
+
+                            if (confirm_password.isBlank()) {
+                                confirm_password_error_message = "Please re-enter your password."
+                                confirm_password_error = true
+                                has_error = true
+                            }
+
+                            if (confirm_password != password) {
+                                confirm_password_error_message = "Passwords does not match."
+                                confirm_password_error = true
+                                has_error = true
+                            }
+
+
+                            if (!has_error) {
+
+                                // # trigger loading state
+                                is_loading = true
+
+                                user_registration_info_object.updateUserRegistrationInformation("email", email)
+                                user_registration_info_object.updateUserRegistrationInformation("password", password)
+
+                                // # registers the user
+                                auth_register.registerUser(email, password, object : FirebaseAuthManager.AuthCallback {
+                                    override fun onSuccess() {
+                                        println("Registration success")
+
+                                        // Initializes the user's register data
+                                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                                        val userMap = hashMapOf(
+                                            "firstname" to user_registration_info_object.user_registration_info.firstname,
+                                            "lastname" to user_registration_info_object.user_registration_info.lastname,
+                                            "middlename" to user_registration_info_object.user_registration_info.middlename,
+                                            "sex" to user_registration_info_object.user_registration_info.sex,
+                                            "birthdate" to "${user_registration_info_object.user_registration_info.birth_year}-${user_registration_info_object.user_registration_info.birth_month}-${user_registration_info_object.user_registration_info.birth_date}",
+                                            "region" to user_registration_info_object.user_registration_info.region,
+                                            "province" to user_registration_info_object.user_registration_info.province,
+                                            "city_municipality" to user_registration_info_object.user_registration_info.city_municipality,
+                                            "email" to user_registration_info_object.user_registration_info.email
+                                        )
+
+                                        // Register the user's data into firestore
+                                        FirebaseFirestore.getInstance()
+                                            .collection("users")
+                                            .document(userId!!)
+                                            .set(userMap)
+                                            .addOnSuccessListener {
+                                                // # reset loading state and show success popup
+                                                is_loading = false
+                                                display_success_popup = true
+                                            }
+                                            .addOnFailureListener { e ->
+                                                // # reset loading state and show error if firestore fails
+                                                is_loading = false
+                                                display_error_popup = true
+                                            }
+                                    }
+
+                                    override fun onFailure(errorMessage: String?) {
+                                        is_loading = false
+
+                                        val error_message_firebase = errorMessage ?: "An unknown error occured."
+                                        display_error_popup = true
+
+                                        val check_error_message_firebase = error_message_firebase.lowercase()
+                                        if (check_error_message_firebase.contains("email") ||
+                                            check_error_message_firebase.contains("address") ||
+                                            check_error_message_firebase.contains("taken") ||
+                                            check_error_message_firebase.contains("format")) {
+                                            email_error = true
+                                            email_error_message = error_message_firebase
+                                        }
+                                        if (check_error_message_firebase.contains("password")) {
+                                            password_error = true
+                                            password_error_message = "Password should be at least 6 characters."
+                                        }
+
+                                    }
+                                })
+                            }
+                        },
+                        is_enabled = if (!is_loading) {
+                            true
+                        } else {
+                            false
+                        },
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // # login link
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Row {
+                            Text(
+                                text = "Already have an account? ",
+                                color = strokes,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+
+                            Text(
+                                text = "Login",
+                                color = primary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                modifier = Modifier.clickable {
+                                    navController.navigate("login")
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
-    // # handle the error popup display
-    if (display_error_popup) {
-        PopUp(
-            icon = R.drawable.xmark_icon,
-            message = "Registration Failed. Please try again.",
-            button_text = "Try again",
-            onButtonClick = {
-                display_error_popup = false
-            },
-            onDismiss = { display_error_popup = false }
-        )
-    }
+        // # handle the error popup display
+        if (display_error_popup) {
+            PopUp(
+                icon = R.drawable.xmark_icon,
+                message = "Registration Failed. Please try again.",
+                button_text = "Try again",
+                onButtonClick = {
+                    display_error_popup = false
+                },
+                onDismiss = { display_error_popup = false }
+            )
+        }
 
-    // # display popup on success
-    if (display_success_popup) {
-        PopUp(
-            icon = R.drawable.check_icon,
-            message = "Account registered successfully!",
-            button_text = "Go to Log In",
-            onButtonClick = {
-                display_success_popup = false
-                navController.navigate("login")
-            },
-            onDismiss = {
-                display_success_popup = true
-            }
-        )
+        // # display popup on success
+        if (display_success_popup) {
+            PopUp(
+                icon = R.drawable.check_icon,
+                message = "Account registered successfully!",
+                button_text = "Go to Log In",
+                onButtonClick = {
+                    display_success_popup = false
+                    navController.navigate("login")
+                },
+                onDismiss = {
+                    display_success_popup = true
+                }
+            )
+        }
     }
 }

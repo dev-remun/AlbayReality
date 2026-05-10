@@ -3,7 +3,9 @@ package com.barabad.albayreality.frontend.utilities.data.quizzes
 import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
+import java.util.Date
 
 class QuizRepository {
     private val db = FirebaseFirestore.getInstance()
@@ -96,7 +98,8 @@ data class QuizAttempt(
     val correct_count: Int = 0,
     val incorrect_count: Int = 0,
     val missed_count: Int = 0,
-    val total_time_taken: Int = 0
+    val total_time_taken: Int = 0,
+    val date_taken: Date? = null
 )
 
 suspend fun getPastAttempts(user_id: String, site_id: String): List<QuizAttempt> {
@@ -114,7 +117,8 @@ suspend fun getPastAttempts(user_id: String, site_id: String): List<QuizAttempt>
             val incorrect = doc.getLong("incorrect")?.toInt() ?: 0
             val missed = doc.getLong("missed")?.toInt() ?: 0
             val time = doc.getLong("totalTimeTaken")?.toInt() ?: 0
-            QuizAttempt(correct, incorrect, missed, time)
+            val date = doc.getTimestamp("dateTaken")?.toDate()
+            QuizAttempt(correct, incorrect, missed, time, date)
         }
     } catch (e: Exception) {
         Log.e("QuizRepo", "error fetching attempts", e)

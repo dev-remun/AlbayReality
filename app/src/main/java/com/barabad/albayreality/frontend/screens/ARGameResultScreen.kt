@@ -3,9 +3,8 @@ package com.barabad.albayreality.frontend.screens
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,7 +33,6 @@ import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.green
 import com.barabad.albayreality.ui.theme.orange
-import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 
 @Composable
@@ -84,125 +82,133 @@ fun ARGameResultScreen(
 
     Scaffold { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding(top = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-
-            Header(
-                nav_controller = navController,
-                title = site_title,
-                onBackClick = {}
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // # question holder
-            Text(
-                text = current_item.question,
-                style = TextStyle(
-                    fontFamily = Inter,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = strokes
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Image(
-                painter = painterResource(id = feedback_picture),
-                contentDescription = "Result Image",
-                modifier = Modifier.size(150.dp)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // # feedback text
-            Text(
-                text = feedback_message,
-                style = TextStyle(
-                    fontFamily = Inter,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    color = strokes
-                )
-            )
-
-            Spacer(modifier = Modifier.height(48.dp))
-
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(top = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                Header(
+                    nav_controller = navController,
+                    title = site_title,
+                    onBackClick = {},
+                    show_back = false
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // # question holder
                 Text(
-                    text = "Correct Answer",
+                    text = current_item.question,
                     style = TextStyle(
                         fontFamily = Inter,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        color = orange
+                        fontSize = 16.sp,
+                        color = strokes
+                    ),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Image(
+                    painter = painterResource(id = feedback_picture),
+                    contentDescription = "Result Image",
+                    modifier = Modifier.size(150.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // # feedback text
+                Text(
+                    text = feedback_message,
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        color = strokes
                     )
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(green)
-                        .padding(16.dp),
-                    contentAlignment = Alignment.CenterStart
+                        .padding(horizontal = 24.dp)
                 ) {
                     Text(
-                        text = current_item.correctAnswer,
+                        text = "Correct Answer",
                         style = TextStyle(
                             fontFamily = Inter,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp,
-                            color = strokes
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            color = orange
                         )
                     )
-                }
-            }
 
-            Spacer(modifier = Modifier.height(80.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-            // # next / finish button
-            val button_text = if (has_no_remaining_item) "Finish" else "Next"
-
-            Button(
-                text = button_text,
-                isPrimary = true,
-                is_enabled = !is_processing,
-                onClick = {
-                    is_processing = true
-
-                    if (has_no_remaining_item) {
-                        // # summary screen dito
-                        quiz_state.clearSiteId()
-                        navController.navigate("argame_summary/$site_id/$site_title") {
-                            popUpTo("argame_playground/${site_id}") { inclusive = true }
-                        }
-                    } else {
-                        // # update the quiz state to point sa next item niya
-                        quiz_state.nextItem()
-                        navController.popBackStack() // # navigate back sa playground screen but this time nasa next item na siya ng quoiz
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(green)
+                            .padding(16.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Text(
+                            text = current_item.correctAnswer,
+                            style = TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                                color = strokes
+                            )
+                        )
                     }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
-            )
+                }
+
+                Spacer(modifier = Modifier.height(80.dp))
+
+                // # next / finish button
+                val button_text = if (has_no_remaining_item) "Finish" else "Next"
+
+                Button(
+                    text = button_text,
+                    isPrimary = true,
+                    is_enabled = !is_processing,
+                    onClick = {
+                        is_processing = true
+
+                        if (has_no_remaining_item) {
+                            // # summary screen dito
+                            quiz_state.clearSiteId()
+                            navController.navigate("argame_summary/$site_id/$site_title") {
+                                popUpTo("argame_playground/${site_id}") { inclusive = true }
+                            }
+                        } else {
+                            // # update the quiz state to point sa next item niya
+                            quiz_state.nextItem()
+                            navController.popBackStack() // # navigate back sa playground screen but this time nasa next item na siya ng quoiz
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
+                )
+            }
         }
     }
 }

@@ -39,7 +39,7 @@ val Quiz4 = listOf(
         option2 = "Trade negotiations only",
         option3 = "Administrative and governance duties",
         option4 = "Religious ceremonies",
-        correctAnswer = "choice1",
+        correctAnswer = "Administrative and governance duties",
     ),
     QuizzesModel(
         question = "What major political shift occurred during the American period?",

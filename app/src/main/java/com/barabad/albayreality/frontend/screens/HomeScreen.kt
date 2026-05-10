@@ -60,114 +60,121 @@ fun HomeScreen(navController: NavController) {
         }
     ) { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding(start = 24.dp, end = 24.dp, top = 60.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.Start
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                /*Icon(
-                    painter = painterResource(id = R.drawable.albayreality_icon),
-                    contentDescription = "albay reality logo",
-                    tint = primary,
-                    modifier = Modifier
-                        .size(40.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))*/
-                Box() {
-                    // # Outline Text
-                    Text(
-                        text = "Albay Reality",
-                        style = TextStyle(
-                            fontSize = 28.sp,
-                            fontFamily = TitanOne,
-                            fontWeight = FontWeight.Black,
-                            color = strokes,
-                            drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                        )
-                    )
-                    // # Fill Text
-                    Text(
-                        text = "Albay Reality",
-                        style = TextStyle(
-                            fontSize = 28.sp,
-                            fontFamily = TitanOne,
-                            fontWeight = FontWeight.Black,
-                            color = primary
-                        )
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(40.dp))
-
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(start = 24.dp, end = 24.dp, top = 60.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = "Explore",
-                    color = strokes,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Text(
-                    text = "Choose your experience",
-                    color = strokes.copy(alpha = 0.80f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    /*Icon(
+                        painter = painterResource(id = R.drawable.albayreality_icon),
+                        contentDescription = "albay reality logo",
+                        tint = primary,
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))*/
+                    Box() {
+                        // # Outline Text
+                        Text(
+                            text = "Albay Reality",
+                            style = TextStyle(
+                                fontSize = 28.sp,
+                                fontFamily = TitanOne,
+                                fontWeight = FontWeight.Black,
+                                color = strokes,
+                                drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
+                            )
+                        )
+                        // # Fill Text
+                        Text(
+                            text = "Albay Reality",
+                            style = TextStyle(
+                                fontSize = 28.sp,
+                                fontFamily = TitanOne,
+                                fontWeight = FontWeight.Black,
+                                color = primary
+                            )
+                        )
+                    }
+                }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
-            // # ar scanner button
-            ButtonImageA(
-                image_res = R.drawable.ar_catalogs_btn_bgimage,
-                title = "AR Catalogs",
-                on_click = { navController.navigate("catalogs") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // # ar game button
-                ButtonImageB(
-                    image_res = R.drawable.ar_game_btn_bgimage,
-                    title = "Game",
-                    on_click = { navController.navigate("games") },
+                Column(
                     modifier = Modifier
-                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp)
+                ) {
+                    Text(
+                        text = "Explore",
+                        color = strokes,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Choose your experience",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // # ar scanner button
+                ButtonImageA(
+                    image_res = R.drawable.ar_catalogs_btn_bgimage,
+                    title = "AR Catalogs",
+                    on_click = { navController.navigate("catalogs") },
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .height(200.dp)
                 )
 
-                // # interactive map button
-                ButtonImageB(
-                    image_res = R.drawable.ar_map_btn_bgimage,
-                    title = "AR Map",
-                    on_click = { navController.navigate("map") },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(200.dp)
-                )
-            }
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // # ar game button
+                    ButtonImageB(
+                        image_res = R.drawable.ar_game_btn_bgimage,
+                        title = "Game",
+                        on_click = { navController.navigate("games") },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(200.dp)
+                    )
+
+                    // # interactive map button
+                    ButtonImageB(
+                        image_res = R.drawable.ar_map_btn_bgimage,
+                        title = "AR Map",
+                        on_click = { navController.navigate("map") },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(200.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
         }
     }
 }
