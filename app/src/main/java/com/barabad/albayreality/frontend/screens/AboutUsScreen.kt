@@ -49,84 +49,92 @@ fun AboutUsScreen(navController: NavController) {
         }
     ) { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding(top = 24.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-
-            Header(
-                nav_controller = navController,
-                title = "About Us"
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(top = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // # albay reality description card
-                AboutCard(
-                    header_text = "Albay Reality",
-                    body_text = "Albay Reality is your pocket-sized gateway to Albay’s rich cultural heritage. Using Augmented Reality and QR code scanning, the app turns ordinary places and objects into interactive learning experiences. Simply scan a marker to bring detailed 3D models of landmarks and festivals to life, complete with stories, and fact that reveal their historical and cultural significance."
+                Header(
+                    nav_controller = navController,
+                    title = "About Us"
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // # developers description card
-                AboutCard(
-                    header_text = "Developers",
-                    body_text = "We are a five-man team of third-year Computer Science students from Bicol University – College of Science. Our mission is to promote and preserve the rich cultural heritage of Albay by leveraging the power of Augmented Reality (AR) technology. Through our application, we aim to educate and inspire others by bringing historical and cultural sites to life in an interactive and engaging way."
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
 
-                Spacer(modifier = Modifier.height(32.dp))
+                    // # albay reality description card
+                    AboutCard(
+                        header_text = "Albay Reality",
+                        body_text = "Albay Reality is your pocket-sized gateway to Albay’s rich cultural heritage. Using Augmented Reality, the app turns ordinary places into interactive learning experiences. Detailed 3D models of landmarks and festivals are brought to life right before your eyes, complete with stories and facts that reveal their historical and cultural significance."
+                    )
 
-                // # developer profile cards
-                DeveloperProfileCard(
-                    initials = "GJ",
-                    name = "Abion, Gerik Jed L.",
-                    role = "Database & Backend Developer"
-                )
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    // # developers description card
+                    AboutCard(
+                        header_text = "Developers",
+                        body_text = "We are a five-man team of third-year Computer Science students from Bicol University – College of Science. Our mission is to promote and preserve the rich cultural heritage of Albay by leveraging the power of Augmented Reality (AR). Through our application, we aim to educate and inspire others by bringing historical and cultural sites to life in an interactive and engaging way."
+                    )
 
-                DeveloperProfileCard(
-                    initials = "AJ",
-                    name = "Acuña, Angelo James M.",
-                    role = "Database & Backend Developer"
-                )
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    // # developer profile cards
+                    DeveloperProfileCard(
+                        initials = "GJ",
+                        name = "Abion, Gerik Jed L.",
+                        role = "Database & Backend Developer"
+                    )
 
-                DeveloperProfileCard(
-                    initials = "R",
-                    name = "Balingbing, Raymond C.",
-                    role = "UI/UX Designer & Frontend Developer"
-                )
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    DeveloperProfileCard(
+                        initials = "AJ",
+                        name = "Acuña, Angelo James M.",
+                        role = "Database & Backend Developer"
+                    )
 
-                DeveloperProfileCard(
-                    initials = "JJ",
-                    name = "Balquin, John Jacob",
-                    role = "Quality Assurance Engineer"
-                )
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    DeveloperProfileCard(
+                        initials = "R",
+                        name = "Balingbing, Raymond C.",
+                        role = "UI/UX Designer & Frontend Developer"
+                    )
 
-                DeveloperProfileCard(
-                    initials = "EJ",
-                    name = "Rivera, Elyzel Jade P.",
-                    role = "Project Manager & 3D Modeler"
-                )
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                Spacer(modifier = Modifier.height(48.dp))
+                    DeveloperProfileCard(
+                        initials = "JJ",
+                        name = "Balquin, John Jacob",
+                        role = "Quality Assurance Engineer"
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    DeveloperProfileCard(
+                        initials = "EJ",
+                        name = "Rivera, Elyzel Jade P.",
+                        role = "Project Manager & 3D Modeler"
+                    )
+
+                    Spacer(modifier = Modifier.height(48.dp))
+                }
             }
         }
     }

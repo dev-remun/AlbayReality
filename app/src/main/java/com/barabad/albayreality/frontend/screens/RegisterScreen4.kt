@@ -1,10 +1,13 @@
 package com.barabad.albayreality.frontend.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -19,17 +22,20 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.navigation.NavController
+import com.barabad.albayreality.R
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
+import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.utils.loadJsonFile
 import com.barabad.albayreality.frontend.utilities.utils.mapRegProvCity
 import com.barabad.albayreality.frontend.utilities.utils.parseCities
 import com.barabad.albayreality.frontend.utilities.utils.parseProvinces
 import com.barabad.albayreality.frontend.utilities.utils.parseRegions
+import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,6 +79,35 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
     var region_error_message by remember { mutableStateOf("") }
     var province_error_message by remember { mutableStateOf("") }
     var citymun_error_message by remember { mutableStateOf("") }
+
+    // # network checking
+    val is_connected by rememberNetworkStatus()
+    var display_network_popup by remember { mutableStateOf(false) }
+
+    // # automatically show the popup whenever the connection is lost
+    LaunchedEffect(is_connected) {
+        if (!is_connected) {
+            display_network_popup = true
+        } else {
+            // # automatically hide it if the connection comes back
+            display_network_popup = false
+        }
+    }
+
+    // # display popup
+    if (display_network_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Please connect to Wi-Fi or mobile data to register.",
+            button_text = "Okay",
+            onButtonClick = {
+                display_network_popup = false
+            },
+            onDismiss = {
+                display_network_popup = true
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -124,134 +159,171 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
                 },
             color = Color.White
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 500.dp)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
                 ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        Text(
+                            text = "Register",
+                            color = strokes,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Text(
+                            text = "Page 4 of 5",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    }
                     Text(
-                        text = "Register",
-                        color = strokes,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    Text(
-                        text = "Page 4 of 5",
+                        text = "Please select your location",
                         color = strokes.copy(alpha = 0.80f),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textDecoration = TextDecoration.Underline
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // # region dropdown
+                    DropdownField(
+                        title = "Region",
+                        value = selected_region,
+                        options = region_options,
+                        placeholder = "Select Region",
+                        isError = has_region_error,
+                        errorMessage = region_error_message,
+                        onValueChange = { new_region ->
+                            selected_region = new_region
+                            selected_province = ""              // # reset province
+                            selected_city_municipality = ""     // # reset city
+                            if (has_region_error) has_region_error = false
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // # province dropdown
+                    DropdownField(
+                        title = "Province",
+                        value = selected_province,
+                        options = province_options,
+                        placeholder = "Select Province",
+                        isError = has_province_error,
+                        errorMessage = province_error_message,
+                        onValueChange = { new_province ->
+                            selected_province = new_province       // # update selected province
+                            selected_city_municipality = ""        // # reset city when province changes
+                            if (has_province_error) has_province_error = false
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // # city / municipality dropdown
+                    DropdownField(
+                        title = "City / Municipality",
+                        value = selected_city_municipality,
+                        options = city_options,
+                        placeholder = "Select City / Municipality",
+                        isError = has_citymun_error,
+                        errorMessage = citymun_error_message,
+                        onValueChange = { new_city ->
+                            selected_city_municipality = new_city   // # update selected city / municipality
+                            if (has_citymun_error) has_citymun_error = false
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(40.dp))
+
+                    // # next button
+                    Button(
+                        text = "Next",
+                        isPrimary = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+
+                            // # check network connection first
+                            if (!is_connected) {
+                                display_network_popup = true
+                            }
+
+                            var has_error = false
+
+                            if (selected_region.isBlank()) {
+                                has_region_error = true
+                                region_error_message = "Please input your region."
+                                has_error = true
+                            }
+                            if (selected_province.isBlank()) {
+                                has_province_error = true
+                                province_error_message = "Please input your province."
+                                has_error = true
+                            }
+                            if (selected_city_municipality.isBlank()) {
+                                has_citymun_error = true
+                                citymun_error_message = "Please input your city / municipality."
+                                has_error = true
+                            }
+
+                            if (!has_error) {
+
+                                user_registration_info_object.updateUserRegistrationInformation(
+                                    "region",
+                                    selected_region
+                                )
+                                user_registration_info_object.updateUserRegistrationInformation(
+                                    "province",
+                                    selected_province
+                                )
+                                user_registration_info_object.updateUserRegistrationInformation(
+                                    "city_municipality",
+                                    selected_city_municipality
+                                )
+
+                                navController.navigate("register5")
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // # Login Link
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Row {
+                            Text(
+                                text = "Already have an account? ",
+                                color = strokes,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+
+                            Text(
+                                text = "Login",
+                                color = primary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                modifier = Modifier.clickable {
+                                    navController.navigate("login")
+                                }
+                            )
+                        }
+                    }
                 }
-                Text(
-                    text = "Please select your location",
-                    color = strokes.copy(alpha = 0.80f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // # region dropdown
-                DropdownField(
-                    title = "Region",
-                    value = selected_region,
-                    options = region_options,
-                    placeholder = "Select Region",
-                    isError = has_region_error,
-                    errorMessage = region_error_message,
-                    onValueChange = { new_region ->
-                        selected_region = new_region
-                        selected_province = ""              // # reset province
-                        selected_city_municipality = ""     // # reset city
-                        if (has_region_error) has_region_error = false
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // # province dropdown
-                DropdownField(
-                    title = "Province",
-                    value = selected_province,
-                    options = province_options,
-                    placeholder = "Select Province",
-                    isError = has_province_error,
-                    errorMessage = province_error_message,
-                    onValueChange = { new_province ->
-                        selected_province = new_province       // # update selected province
-                        selected_city_municipality = ""        // # reset city when province changes
-                        if (has_province_error) has_province_error = false
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // # city / municipality dropdown
-                DropdownField(
-                    title = "City / Municipality",
-                    value = selected_city_municipality,
-                    options = city_options,
-                    placeholder = "Select City / Municipality",
-                    isError = has_citymun_error,
-                    errorMessage = citymun_error_message,
-                    onValueChange = { new_city ->
-                        selected_city_municipality = new_city   // # update selected city / municipality
-                        if (has_citymun_error) has_citymun_error = false
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                // # next button
-                Button(
-                    text = "Next",
-                    isPrimary = true,
-                    onClick = {
-                        var has_error = false
-
-                        if (selected_region.isBlank()) {
-                            has_region_error = true
-                            region_error_message = "Please input your region."
-                            has_error = true
-                        }
-                        if (selected_province.isBlank()) {
-                            has_province_error = true
-                            province_error_message = "Please input your province."
-                            has_error = true
-                        }
-                        if (selected_city_municipality.isBlank()) {
-                            has_citymun_error = true
-                            citymun_error_message = "Please input your city / municipality."
-                            has_error = true
-                        }
-
-                        if (!has_error) {
-
-                            user_registration_info_object.updateUserRegistrationInformation(
-                                "region",
-                                selected_region
-                            )
-                            user_registration_info_object.updateUserRegistrationInformation(
-                                "province",
-                                selected_province
-                            )
-                            user_registration_info_object.updateUserRegistrationInformation(
-                                "city_municipality",
-                                selected_city_municipality
-                            )
-
-                            navController.navigate("register5")
-                        }
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }

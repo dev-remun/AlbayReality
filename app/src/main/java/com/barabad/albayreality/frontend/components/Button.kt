@@ -30,7 +30,6 @@ fun Button(
         onClick = onClick,
         enabled = is_enabled,
         modifier = modifier
-            .width(310.dp)
             .height(60.dp),
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(

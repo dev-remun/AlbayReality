@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,11 +25,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.barabad.albayreality.R
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
+import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizRepository
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
+import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.green
 import com.barabad.albayreality.ui.theme.red
@@ -36,6 +40,7 @@ import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.yellow
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
+
 @Composable
 fun ARGameSummaryScreen(
     navController: NavController,
@@ -59,91 +64,122 @@ fun ARGameSummaryScreen(
     val incorrect_percentage = if (total > 0) (incorrect.toFloat() / total) * 100 else 0f
     val missed_percentage = if (total > 0) (missed.toFloat() / total) * 100 else 0f
 
+    // # network checking
+    val is_connected by rememberNetworkStatus()
+    var display_network_popup by remember { mutableStateOf(false) }
+
+    // # display network popup
+    if (display_network_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Please connect to Wi-Fi or mobile data to save your score.",
+            button_text = "Okay",
+            onButtonClick = {
+                display_network_popup = false
+            },
+            onDismiss = {
+                display_network_popup = false
+            }
+        )
+    }
+
     BackHandler {
     }
 
-    Scaffold(
-        bottomBar = {
-            NavBar(
-                active_tab = active_tab,
-                on_tab_selected = { selected_index ->
-                    active_tab = selected_index
-                },
-                nav_controller = navController
-            )
-        }
-    ) { inner_padding ->
+    Scaffold() { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding(top = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Header(
-                nav_controller = navController,
-                title = site_title,
-                onBackClick = {}
-            )
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            // # list of score boxes
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(top = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                StatBox(label = "Correct Items: $correct", percentage = correct_percentage, bgColor = green)
-                Spacer(modifier = Modifier.height(16.dp))
+                Header(
+                    nav_controller = navController,
+                    title = site_title,
+                    onBackClick = {},
+                    show_back = false
+                )
 
-                StatBox(label = "Incorrect Items: $incorrect", percentage = incorrect_percentage, bgColor = red)
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
-                StatBox(label = "Missed Items: $missed", percentage = missed_percentage, bgColor = yellow)
-            }
+                // # list of score boxes
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    StatBox(label = "Correct Items: $correct", percentage = correct_percentage, bgColor = green)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            Spacer(modifier = Modifier.weight(1f))
-            Spacer(modifier = Modifier.height(48.dp))
+                    StatBox(label = "Incorrect Items: $incorrect", percentage = incorrect_percentage, bgColor = red)
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                text = "Continue",
-                isPrimary = true,
-                is_enabled = !is_processing,
-                onClick = {
-                    is_processing = true
+                    StatBox(label = "Missed Items: $missed", percentage = missed_percentage, bgColor = yellow)
+                }
 
-                    val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
-                    val totalTime = quiz_state.answerRecords.sumOf { it.timeTaken }
-                    val answersSnapshot = quiz_state.answerRecords.toList()
-                    val siteId = site_id
+                // Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(48.dp))
 
-                    scope.launch {
-                        try {
-                            val repo = QuizRepository()
-                            repo.saveAttempt(
-                                userId = userId,
-                                siteId = siteId,
-                                totalTimeTaken = totalTime,
-                                answerRecords = answersSnapshot,
-                                correctCount = correct,
-                                incorrectCount = incorrect,
-                                missedCount = missed
-                            )
-                        } catch (e: Exception) {
-                            Log.e("Summary", "Failed to save attempt", e)
+                Button(
+                    text = "Continue",
+                    isPrimary = true,
+                    is_enabled = !is_processing,
+                    onClick = {
+                        // # check network connection first before attempting to save
+                        if (!is_connected) {
+                            display_network_popup = true
+                            return@Button
                         }
-                    }
 
-                    quiz_state.clearSiteId()
-                    quiz_state.resetQuiz()
-                    navController.popBackStack("games", inclusive = false)
-                },
-                modifier = Modifier.padding(bottom = 32.dp),
-            )
+                        is_processing = true
+
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@Button
+                        val totalTime = quiz_state.answerRecords.sumOf { it.timeTaken }
+                        val answersSnapshot = quiz_state.answerRecords.toList()
+                        val siteId = site_id
+
+                        scope.launch {
+                            try {
+                                val repo = QuizRepository()
+                                repo.saveAttempt(
+                                    userId = userId,
+                                    siteId = siteId,
+                                    totalTimeTaken = totalTime,
+                                    answerRecords = answersSnapshot,
+                                    correctCount = correct,
+                                    incorrectCount = incorrect,
+                                    missedCount = missed
+                                )
+                            } catch (e: Exception) {
+                                Log.e("Summary", "Failed to save attempt", e)
+                            }
+                        }
+
+                        quiz_state.clearSiteId()
+                        quiz_state.resetQuiz()
+                        navController.navigate("games") {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = false
+                            }
+                            launchSingleTop = true
+                            restoreState = false
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 32.dp),
+                )
+            }
         }
     }
 }
@@ -152,7 +188,7 @@ fun ARGameSummaryScreen(
 fun StatBox(label: String, percentage: Float, bgColor: Color) {
     // # format percentage to drop .00 if it's a whole number, otherwise show 2 decimal places
     val formatted_pct = if (percentage % 1.0 == 0.0) {
-        "${percentage.toInt()}%"
+        String.format("%.2f%%", percentage)
     } else {
         String.format("%.2f%%", percentage)
     }

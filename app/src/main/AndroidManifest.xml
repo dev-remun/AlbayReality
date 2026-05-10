@@ -6,6 +6,7 @@
         android:name="android.hardware.camera"
         android:required="false" /> <!-- This permits the user to access Camera -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--
 This helps to check a specific feature in the phone's hardware,
         here it is OpenGlES version. Sceneform needs OpenGLES Version 3.0 or later

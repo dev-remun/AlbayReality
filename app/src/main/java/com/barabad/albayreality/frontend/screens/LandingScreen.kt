@@ -32,9 +32,9 @@ fun LandingScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.height(160.dp))
+        Spacer(modifier = Modifier.weight(0.4f))
 
-        // # Title
+        // # title
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
@@ -85,7 +85,7 @@ fun LandingScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // # Subtitle
+        // # subtitle
         Text(
             text = "Exploring Albay, One scan at a time",
             fontFamily = Inter,
@@ -97,22 +97,29 @@ fun LandingScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.weight(0.6f))
 
-        // # Login Button
-        Button(
-            text = "Login",
-            isPrimary = true,
-            onClick = { navController.navigate("login") }
-        )
+        Column(
+            modifier = Modifier.widthIn(max = 350.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // # login button
+            Button(
+                text = "Login",
+                isPrimary = true,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate("login") }
+            )
 
-        Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
-        // # Register Button
-        Button(
-            text = "Register",
-            isPrimary = false,
-            onClick = { navController.navigate("register1") }
-        )
+            // # register button
+            Button(
+                text = "Register",
+                isPrimary = false,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { navController.navigate("register1") }
+            )
+        }
 
-        Spacer(modifier = Modifier.weight(0.3f))
+        Spacer(modifier = Modifier.weight(0.2f))
     }
 }

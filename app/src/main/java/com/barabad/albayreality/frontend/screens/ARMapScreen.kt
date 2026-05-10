@@ -3,11 +3,13 @@ package com.barabad.albayreality.frontend.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -51,94 +53,102 @@ fun ARMapScreen(
             )
         }
     ) { inner_padding ->
-        Column(
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding( top = 24.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            // # top header section
-            Header(
-                nav_controller = nav_controller,
-                title = "Albay Map"
-            )
-
-            // # map and dynamic content container
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding( top = 24.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = "Tap a pin location",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = strokes
+                // # top header section
+                Header(
+                    nav_controller = nav_controller,
+                    title = "Albay Map"
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // # map container passing the list of sites so it can map out all pins simultaneously
-                // # enabled zoom and scroll parameters for map interactivity
-                MapBox(
+                // # map and dynamic content container
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(350.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    sites = getListOfHistoricalSites(user_state),
-                    is_zoomable = true,
-                    is_scrollable = true,
-                    on_pin_selected = { id -> selected_pin = id }
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // # dynamically displays address, title, description, and image if a pin is clicked
-                selected_site?.let { site ->
+                        .padding(horizontal = 24.dp)
+                ) {
                     Text(
-                        text = site.title,
-                        fontSize = 20.sp,
+                        text = "Tap a pin location",
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         color = strokes
                     )
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Text(
-                        text = site.location,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = strokes.copy(alpha = 0.7f)
+                    // # map container passing the list of sites so it can map out all pins simultaneously
+                    // # enabled zoom and scroll parameters for map interactivity
+                    MapBox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(350.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        sites = getListOfHistoricalSites(user_state),
+                        is_zoomable = true,
+                        is_scrollable = true,
+                        on_pin_selected = { id -> selected_pin = id }
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    Text(
-                        text = site.description,
-                        fontSize = 14.sp,
-                        lineHeight = 22.sp,
-                        color = strokes,
-                        textAlign = TextAlign.Justify
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // # display the first image in the list if available
-                    if (site.images.isNotEmpty()) {
-                        Image(
-                            painter = painterResource(id = site.images.first()),
-                            contentDescription = site.title,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
+                    // # dynamically displays address, title, description, and image if a pin is clicked
+                    selected_site?.let { site ->
+                        Text(
+                            text = site.title,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = strokes
                         )
-                    }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = site.location,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = strokes.copy(alpha = 0.7f)
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = site.description,
+                            fontSize = 14.sp,
+                            lineHeight = 22.sp,
+                            color = strokes,
+                            textAlign = TextAlign.Justify
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // # display the first image in the list if available
+                        if (site.images.isNotEmpty()) {
+                            Image(
+                                painter = painterResource(id = site.images.first()),
+                                contentDescription = site.title,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .aspectRatio(16f / 9f)
+                                    .clip(RoundedCornerShape(12.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
                 }
             }
         }

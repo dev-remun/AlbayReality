@@ -1,11 +1,13 @@
 package com.barabad.albayreality.frontend.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -19,11 +21,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.barabad.albayreality.R
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
+import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
+import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 import com.barabad.albayreality.ui.theme.TitanOne
 
 @Composable
@@ -45,6 +50,35 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
 
     // # state variables for custome error message
     var sex_error_message by remember { mutableStateOf("") }
+
+    // # network checking
+    val is_connected by rememberNetworkStatus()
+    var display_network_popup by remember { mutableStateOf(false) }
+
+    // # automatically show the popup whenever the connection is lost
+    LaunchedEffect(is_connected) {
+        if (!is_connected) {
+            display_network_popup = true
+        } else {
+            // # automatically hide it if the connection comes back
+            display_network_popup = false
+        }
+    }
+
+    // # display popup
+    if (display_network_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Please connect to Wi-Fi or mobile data to register.",
+            button_text = "Okay",
+            onButtonClick = {
+                display_network_popup = false
+            },
+            onDismiss = {
+                display_network_popup = true
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -96,97 +130,112 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
                 },
             color = Color.White
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
+
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 500.dp)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
                 ) {
-                    Text(
-                        text = "Register",
-                        color = strokes,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                    Text(
-                        text = "Page 3 of 5",
-                        color = strokes.copy(alpha = 0.80f),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
-                Text(
-                    text = "Please input your personal information",
-                    color = strokes.copy(alpha = 0.80f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // # Sex Dropdown
-                DropdownField(
-                    title = "Gender",
-                    value = sex,
-                    options = gender_options,
-                    placeholder = "Select Gender",
-                    isError = has_sex_error,
-                    errorMessage = sex_error_message,
-                    onValueChange = { selected_value ->
-                        sex = selected_value
-                        if (has_sex_error) has_sex_error = false
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(240.dp))
-
-                // # Register Button
-                Button(
-                    text = "Next",
-                    isPrimary = true,
-                    onClick = {
-                        var has_error = false
-
-                        if (sex.isBlank()) {
-                            has_sex_error = true
-                            sex_error_message = "Please input your gender."
-                            has_error = true
-                        }
-
-                        if (!has_error) {
-                            user_registration_info_object.updateUserRegistrationInformation("sex", sex)
-
-                            navController.navigate("register4")
-                        }
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // # Login Link
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Row {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
                         Text(
-                            text = "Already have an account? ",
+                            text = "Register",
                             color = strokes,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold
                         )
-
                         Text(
-                            text = "Login",
-                            color = primary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            modifier = Modifier.clickable {
-                                navController.navigate("login")
-                            }
+                            text = "Page 3 of 5",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textDecoration = TextDecoration.Underline
                         )
+                    }
+                    Text(
+                        text = "Please input your personal information",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    // # Sex Dropdown
+                    DropdownField(
+                        title = "Gender",
+                        value = sex,
+                        options = gender_options,
+                        placeholder = "Select Gender",
+                        isError = has_sex_error,
+                        errorMessage = sex_error_message,
+                        onValueChange = { selected_value ->
+                            sex = selected_value
+                            if (has_sex_error) has_sex_error = false
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(240.dp))
+
+                    // # Register Button
+                    Button(
+                        text = "Next",
+                        isPrimary = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+
+                            // # check network connection first
+                            if (!is_connected) {
+                                display_network_popup = true
+                            }
+
+                            var has_error = false
+
+                            if (sex.isBlank()) {
+                                has_sex_error = true
+                                sex_error_message = "Please input your gender."
+                                has_error = true
+                            }
+
+                            if (!has_error) {
+                                user_registration_info_object.updateUserRegistrationInformation("sex", sex)
+
+                                navController.navigate("register4")
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // # Login Link
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Row {
+                            Text(
+                                text = "Already have an account? ",
+                                color = strokes,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+
+                            Text(
+                                text = "Login",
+                                color = primary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                modifier = Modifier.clickable {
+                                    navController.navigate("login")
+                                }
+                            )
+                        }
                     }
                 }
             }

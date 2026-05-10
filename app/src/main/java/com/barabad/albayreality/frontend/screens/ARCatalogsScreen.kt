@@ -11,10 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.barabad.albayreality.frontend.components.CatalogCard
 import com.barabad.albayreality.frontend.components.Header
@@ -46,42 +46,48 @@ fun ARCatalogsScreen(
         }
     ) { inner_padding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding( top = 24.dp)
-                .verticalScroll(rememberScrollState())
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-
-            Header(
-                nav_controller = navController,
-                title = "Catalogs"
-            )
-
-            // # list of catalogs
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding( top = 24.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
 
-                // # generate catalog buttons from data list
-                getListOfHistoricalSites(user_state).forEach { historical_site ->
-                    CatalogCard(
-                        title = historical_site.title,
-                        catalog_image = historical_site.images[0],
-                        button_text = "Learn",
-                        onClick = { navController.navigate("view_catalog/${historical_site.site_id}") }
-                    )
+                Header(
+                    nav_controller = navController,
+                    title = "Catalogs"
+                )
+
+                // # list of catalogs
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                ) {
+
+                    // # generate catalog buttons from data list
+                    getListOfHistoricalSites(user_state).forEach { historical_site ->
+                        CatalogCard(
+                            title = historical_site.title,
+                            catalog_image = historical_site.images[0],
+                            button_text = "Learn",
+                            onClick = { navController.navigate("view_catalog/${historical_site.site_id}") }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
-

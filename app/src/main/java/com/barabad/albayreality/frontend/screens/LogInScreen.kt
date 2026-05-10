@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,10 +27,10 @@ import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.R
 import com.barabad.albayreality.backend.FirebaseAuthManager
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
+import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
-import kotlinx.coroutines.delay
 
 @Composable
 fun LogInScreen(
@@ -60,6 +62,35 @@ fun LogInScreen(
 
     // # state variable to manage loading status
     var is_loading by remember { mutableStateOf(false) }
+
+    // # network checking
+    val is_connected by rememberNetworkStatus()
+    var display_network_popup by remember { mutableStateOf(false) }
+
+    // # automatically show the popup whenever the connection is lost
+    LaunchedEffect(is_connected) {
+        if (!is_connected) {
+            display_network_popup = true
+        } else {
+            // # automatically hide it if the connection comes back
+            display_network_popup = false
+        }
+    }
+
+    // # display popup
+    if (display_network_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = "Please connect to Wi-Fi or mobile data to login.",
+            button_text = "Okay",
+            onButtonClick = {
+                display_network_popup = false
+            },
+            onDismiss = {
+                display_network_popup = true
+            }
+        )
+    }
 
     if (display_successs_popup) {
         PopUp(
@@ -140,131 +171,142 @@ fun LogInScreen(
                 },
             color = Color.White
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 32.dp)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Text(
-                    text = "Login",
-                    color = strokes,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Text(
-                    text = "Please input your credentials",
-                    color = strokes.copy(alpha = 0.80f),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Column(
+                    modifier = Modifier
+                        .widthIn(max = 500.dp)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
+                ) {
+                    Text(
+                        text = "Login",
+                        color = strokes,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Text(
+                        text = "Please input your credentials",
+                        color = strokes.copy(alpha = 0.80f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(32.dp))
 
-                // # email input field
-                InputField(
-                    title = "Email",
-                    value = email_input,
-                    onValueChange = {
-                        email_input = it
-                        if (has_email_error) has_email_error = false
-                    },
-                    placeholder = "Enter your email",
-                    has_error = has_email_error,
-                    error_message = email_error_message
-                )
+                    // # email input field
+                    InputField(
+                        title = "Email",
+                        value = email_input,
+                        onValueChange = {
+                            email_input = it
+                            if (has_email_error) has_email_error = false
+                        },
+                        placeholder = "Enter your email",
+                        has_error = has_email_error,
+                        error_message = email_error_message
+                    )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                // # password input field
-                PasswordInputField(
-                    title = "Password",
-                    value = password_input,
-                    onValueChange = {
-                        password_input = it
-                        if (has_password_error) has_password_error = false
-                    },
-                    placeholder = "Enter your password",
-                    has_error = has_password_error,
-                    error_message = password_error_message
-                )
+                    // # password input field
+                    PasswordInputField(
+                        title = "Password",
+                        value = password_input,
+                        onValueChange = {
+                            password_input = it
+                            if (has_password_error) has_password_error = false
+                        },
+                        placeholder = "Enter your password",
+                        has_error = has_password_error,
+                        error_message = password_error_message
+                    )
 
-                Spacer(modifier = Modifier.height(48.dp))
+                    Spacer(modifier = Modifier.height(48.dp))
 
-                // # login button
-                Button(
-                    text = if (is_loading) "Please wait" else "Login",
-                    isPrimary = true,
-                    onClick = {
-                        // # prevent multiple clicks while loading
-                        if (is_loading) return@Button
+                    // # login button
+                    Button(
+                        text = if (is_loading) "Please wait" else "Login",
+                        isPrimary = true,
+                        modifier = Modifier.fillMaxWidth(), // explicitly set to fill the available constrained width
+                        onClick = {
 
-                        var has_error = false
-
-                        if (email_input.isBlank()) {
-                            has_email_error = true
-                            email_error_message = "Please input your email."
-                            has_error = true
-                        }
-                        if (password_input.isBlank()) {
-                            has_password_error = true
-                            password_error_message = "Please input your password."
-                            has_error = true
-                        }
-
-                        if (!has_error) {
-                            // # trigger loading state
-                            is_loading = true
-
-                            Log.d("log_in_screen", "email: $email_input")
-                            Log.d("log_in_screen", "password: $password_input")
-
-                            authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
-
-                                override fun onSuccess() {
-                                    // # reset loading state and show success popup
-                                    user_state.loadUserViewedSites()
-                                    // firebaseManager.seedAllQuizzes()
-                                    is_loading = false
-                                    display_successs_popup = true
-                                }
-
-                                override fun onFailure(errorMessage: String?) {
-                                    // # reset loading state and trigger error popup on failure
-                                    is_loading = false
-                                    display_error_popup = true
-                                    Log.e("log_in_screen", "login error: $errorMessage")
-                                }
-                            })
-                        }
-                    },
-                    is_enabled = if (!is_loading) {
-                        true
-                    } else {
-                        false
-                    },
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // # register link
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Row {
-                        Text(
-                            text = "Don't have an account? ",
-                            color = strokes,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-
-                        Text(
-                            text = "Register",
-                            color = primary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
-                            modifier = Modifier.clickable {
-                                navController.navigate("register1")
+                            // # check network connection first
+                            if (!is_connected) {
+                                display_network_popup = true
+                                return@Button
                             }
-                        )
+
+                            // # prevent multiple clicks while loading
+                            if (is_loading) return@Button
+
+                            var has_error = false
+
+                            if (email_input.isBlank()) {
+                                has_email_error = true
+                                email_error_message = "Please input your email."
+                                has_error = true
+                            }
+                            if (password_input.isBlank()) {
+                                has_password_error = true
+                                password_error_message = "Please input your password."
+                                has_error = true
+                            }
+
+                            if (!has_error) {
+                                // # trigger loading state
+                                is_loading = true
+
+                                Log.d("log_in_screen", "email: $email_input")
+                                Log.d("log_in_screen", "password: $password_input")
+
+                                authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
+
+                                    override fun onSuccess() {
+                                        // # reset loading state and show success popup
+                                        user_state.loadUserViewedSites()
+                                        firebaseManager.seedAllQuizzes()
+                                        is_loading = false
+                                        display_successs_popup = true
+                                    }
+
+                                    override fun onFailure(errorMessage: String?) {
+                                        // # reset loading state and trigger error popup on failure
+                                        is_loading = false
+                                        display_error_popup = true
+                                        Log.e("log_in_screen", "login error: $errorMessage")
+                                    }
+                                })
+                            }
+                        },
+                        is_enabled = !is_loading,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // # register link
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Row {
+                            Text(
+                                text = "Don't have an account? ",
+                                color = strokes,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+                            )
+
+                            Text(
+                                text = "Register",
+                                color = primary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                modifier = Modifier.clickable {
+                                    navController.navigate("register1")
+                                }
+                            )
+                        }
                     }
                 }
             }

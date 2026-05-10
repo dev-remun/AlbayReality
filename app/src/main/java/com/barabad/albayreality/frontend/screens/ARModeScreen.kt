@@ -157,7 +157,7 @@ fun ModelDisplay(modelName: String?) {
                             val anchorNode = AnchorNode(engine = engine, anchor = anchor)
                             val modelNode = ModelNode(
                                 modelInstance = modelLoader.createInstance(loadedModel)!!,
-                                scaleToUnits = 4f
+                                scaleToUnits = 3f
                             ).apply { isEditable = true }
                             anchorNode.addChildNode(modelNode)
                             childNodes.add(anchorNode)

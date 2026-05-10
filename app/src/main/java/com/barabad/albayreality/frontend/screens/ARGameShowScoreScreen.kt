@@ -3,6 +3,7 @@ package com.barabad.albayreality.frontend.screens
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -34,6 +35,9 @@ import com.barabad.albayreality.ui.theme.red
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.yellow
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun ARGameShowScoreScreen(
@@ -70,49 +74,57 @@ fun ARGameShowScoreScreen(
             )
         }
     ) { inner_padding ->
-        Column(
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White)
-                .padding(inner_padding)
-                .padding(top = 24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(inner_padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Header(
-                nav_controller = navController,
-                title = "$site_title Scores",
-                onBackClick = {
-                    navController.popBackStack("games", inclusive = false)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(48.dp))
-
-            if (is_loading) {
-                Text(
-                    text = "Loading scores...",
-                    style = TextStyle(fontFamily = Inter, color = strokes)
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 700.dp)
+                    .fillMaxHeight()
+                    .padding(top = 24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Header(
+                    nav_controller = navController,
+                    title = "$site_title Scores",
+                    onBackClick = {
+                        navController.popBackStack("games", inclusive = false)
+                    }
                 )
-            } else if (attempt_list.isEmpty()) {
-                Text(
-                    text = "No attempts found.",
-                    style = TextStyle(fontFamily = Inter, color = strokes)
-                )
-            } else {
-                // # loop through each attempt and display it
-                attempt_list.forEachIndexed { index, attempt ->
-                    AttemptScoreCard(attempt_number = index + 1, attempt = attempt)
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                if (is_loading) {
+                    Text(
+                        text = "Loading scores...",
+                        style = TextStyle(fontFamily = Inter, color = strokes)
+                    )
+                } else if (attempt_list.isEmpty()) {
+                    Text(
+                        text = "No attempts found.",
+                        style = TextStyle(fontFamily = Inter, color = strokes)
+                    )
+                } else {
+                    // # loop through each attempt and display it
+                    attempt_list.forEach { attempt ->
+                        AttemptScoreCard(attempt = attempt)
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
 @Composable
-fun AttemptScoreCard(attempt_number: Int, attempt: QuizAttempt) {
+fun AttemptScoreCard(attempt: QuizAttempt) {
     // # calculate percentages for this specific attempt
     val total_items = attempt.correct_count + attempt.incorrect_count + attempt.missed_count
 
@@ -120,21 +132,71 @@ fun AttemptScoreCard(attempt_number: Int, attempt: QuizAttempt) {
     val incorrect_percentage = if (total_items > 0) (attempt.incorrect_count.toFloat() / total_items) * 100 else 0f
     val missed_percentage = if (total_items > 0) (attempt.missed_count.toFloat() / total_items) * 100 else 0f
 
+    // # format the date to a readable string (e.g., "May 10, 2026 at 04:22 PM")
+    val date_string = attempt.date_taken?.let { date ->
+        val formatter = SimpleDateFormat("MMMM dd, yyyy 'at' hh:mm a", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("Asia/Manila")
+        }
+        formatter.format(date)
+    } ?: "Unknown Date"
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp)
     ) {
-        Text(
-            text = "Attempt $attempt_number",
-            style = TextStyle(
-                fontFamily = Inter,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = strokes
-            ),
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        // # Row to hold Date on the left and Time on the right
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
+        ) {
+            Column(modifier = Modifier.weight(1f).padding(end = 8.dp)) {
+                Text(
+                    text = "Date Taken",
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = strokes
+                    )
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = date_string,
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        color = strokes.copy(alpha = 0.80f)
+                    )
+                )
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = "Total Time Taken",
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = strokes
+                    )
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "${attempt.total_time_taken} seconds",
+                    style = TextStyle(
+                        fontFamily = Inter,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        color = strokes.copy(alpha = 0.80f)
+                    )
+                )
+            }
+        }
 
         ScoreStatBox(label = "Correct Items: ${attempt.correct_count}", percentage = correct_percentage, bg_color = green)
         Spacer(modifier = Modifier.height(16.dp))
