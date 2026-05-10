@@ -165,7 +165,7 @@ fun HomeScreen(navController: NavController) {
                     // # interactive map button
                     ButtonImageB(
                         image_res = R.drawable.ar_map_btn_bgimage,
-                        title = "AR Map",
+                        title = "Map",
                         on_click = { navController.navigate("map") },
                         modifier = Modifier
                             .weight(1f)
