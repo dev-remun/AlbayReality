@@ -42,7 +42,6 @@ fun rememberNetworkStatus(): State<Boolean> {
         connectivity_manager.registerNetworkCallback(network_request, network_callback)
 
         onDispose {
-            // # clean up the listener when the composable leaves the screen
             connectivity_manager.unregisterNetworkCallback(network_callback)
         }
     }
