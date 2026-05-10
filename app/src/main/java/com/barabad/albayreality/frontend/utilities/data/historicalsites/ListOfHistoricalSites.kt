@@ -59,8 +59,8 @@ fun getListOfHistoricalSites(user_state: UserState): List<HistoricalSiteModel> {
                     "\nDuring the American colonial period beginning in 1898, the structure and function of municipal governments were reorganized. Spanish-era Presidencias were either modified or replaced to align with the new civil government system introduced through legislation such as the Municipal Code (Act No. 82, 1901). This transition marked a shift from appointed colonial officials to elected local leaders, reflecting broader administrative reforms implemented across the Philippines.\n" +
                     "\nOver time, as Legazpi developed into a more modern administrative center, eventually becoming a chartered city under Republic Act No. 2234 in 1959, the role of the old Presidencia diminished. Today, references to the Old Presidencia primarily highlight its historical significance as part of the evolution of local governance in Legazpi, representing the transition from Spanish colonial administration to modern municipal and city government systems.\n",
             images = listOf(R.drawable.old_presidencia_new, R.drawable.old_presidencia_prev),
-            latitude = 13.14402215,
-            longitude = 123.722812561326,
+            latitude = 13.14125,
+            longitude = 123.74073,
         ),
         /*HistoricalSiteModel(
             site_id = "site_five",
