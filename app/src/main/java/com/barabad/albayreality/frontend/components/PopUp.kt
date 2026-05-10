@@ -33,7 +33,7 @@ fun PopUp(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(
-                    width = 3.dp,
+                    width = 2.dp,
                     color = strokes,
                     shape = RoundedCornerShape(16.dp)
                 )
