@@ -167,7 +167,7 @@ fun ModelDisplay(modelName: String?) {
             },
             onScale = { detector,_ ,node ->
                 if (node is ModelNode) {
-                    node.scale = node.scale * detector.scaleFactor
+                    node.scale = node.scale * detector.scaleFactor * 0.3f
                 }
             }
         )
