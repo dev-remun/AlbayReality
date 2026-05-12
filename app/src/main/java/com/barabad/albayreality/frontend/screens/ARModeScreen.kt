@@ -167,8 +167,9 @@ fun ModelDisplay(modelName: String?) {
             },
             onScale = { detector,_ ,node ->
                 if (node is ModelNode) {
-                    node.scale = node.scale * detector.scaleFactor
+                    node.scale = node.scale * detector.scaleFactor * 0.3f
                 }
+                Toast.makeText(context, "If the model disappears, tap twice to place a new model", Toast.LENGTH_SHORT).show()
             }
         )
     )
