@@ -184,7 +184,7 @@ fun ModelDisplay(modelName: String?) {
             }
         ),
         onSessionFailed = {
-
+            Toast.makeText(context, "Camera Permission Denied or ARCore not available on Device!", Toast.LENGTH_LONG).show()
         }
     )
     trackingFailureReason?.let { reason ->
