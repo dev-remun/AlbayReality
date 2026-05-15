@@ -155,7 +155,7 @@ fun ModelDisplay(modelName: String?) {
             onSingleTapConfirmed = { motionEvent, node ->
                 if (node == null) {
                     model?.let { loadedModel ->
-                        frame.value?.hitTest(motionEvent.x, motionEvent.y)?.firstOrNull {
+                        frame.value?.hitTestInstantPlacement(motionEvent.x, motionEvent.y, 0.5f)?.firstOrNull {
                             it.isValid(depthPoint = true)
                         }?.createAnchor()?.let { anchor ->
                             planeRenderer.value = false
