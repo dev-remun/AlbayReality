@@ -97,7 +97,7 @@ fun ModelDisplay(modelName: String?) {
     val collisionSystem = rememberCollisionSystem(view = view)
     val planeRenderer = remember { mutableStateOf(true) }
 
-    val trackingFailureReason = remember { mutableStateOf<TrackingFailureReason?>(null) }
+    var trackingFailureReason by remember { mutableStateOf<TrackingFailureReason?>(null) }
     val frame = remember { mutableStateOf<Frame?>(null) }
 
     var model by remember { mutableStateOf<Model?>(null) }
@@ -127,6 +127,7 @@ fun ModelDisplay(modelName: String?) {
                     true -> Config.DepthMode.AUTOMATIC
                     else -> Config.DepthMode.DISABLED
                 }
+            config.planeFindingMode = Config.PlaneFindingMode.HORIZONTAL
             config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
             config.lightEstimationMode = Config.LightEstimationMode.ENVIRONMENTAL_HDR
         },
@@ -135,22 +136,26 @@ fun ModelDisplay(modelName: String?) {
         onSessionUpdated = { _, updatedFrame ->
             frame.value = updatedFrame
         },
-        onTrackingFailureChanged = {
-            trackingFailureReason.value = it
+        onTrackingFailureChanged = { reason ->
+            trackingFailureReason = reason
         },
         onSessionPaused = ({
             childNodes.clear()
             planeRenderer.value = true
         }),
-        onSessionCreated = {session ->
+        onSessionCreated = { session ->
             session.resume()
-            Toast.makeText(context, "Tap to place the model when the white dots appear", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "Tap to place the model when the white dots appear",
+                Toast.LENGTH_SHORT
+            ).show()
         },
         onGestureListener = rememberOnGestureListener(
             onSingleTapConfirmed = { motionEvent, node ->
                 if (node == null) {
                     model?.let { loadedModel ->
-                        frame.value?.hitTest(motionEvent.x, motionEvent.y)?.firstOrNull {
+                        frame.value?.hitTestInstantPlacement(motionEvent.x, motionEvent.y, 0.5f)?.firstOrNull {
                             it.isValid(depthPoint = true)
                         }?.createAnchor()?.let { anchor ->
                             planeRenderer.value = false
@@ -165,13 +170,63 @@ fun ModelDisplay(modelName: String?) {
                     }
                 }
             },
-            onScale = { detector,_ ,node ->
+            onScale = { detector, _, node ->
                 if (node is ModelNode) {
-                    node.scale = node.scale * detector.scaleFactor
+                    node.scale = node.scale * detector.scaleFactor * 0.3f
                 }
+                Toast.makeText(
+                    context,
+                    "If the model disappears, tap twice to place a new model",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }, onLongPress = { _, _ ->
+                childNodes.clear()
             }
-        )
+        ),
+        onSessionFailed = {
+            Toast.makeText(context, "Camera Permission Denied or ARCore not available on Device!", Toast.LENGTH_LONG).show()
+        }
     )
+    trackingFailureReason?.let { reason ->
+        when (reason) {
+            TrackingFailureReason.NONE -> Toast.makeText(
+                context,
+                "Point your camera at a surface",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            TrackingFailureReason.BAD_STATE -> Toast.makeText(
+                context,
+                "AR session error",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            TrackingFailureReason.INSUFFICIENT_LIGHT -> Toast.makeText(
+                context,
+                "Not enough light",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            TrackingFailureReason.EXCESSIVE_MOTION -> Toast.makeText(
+                context,
+                "Moving too fast",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            TrackingFailureReason.INSUFFICIENT_FEATURES ->
+                Toast.makeText(
+                    context,
+                    "Not enough detail — try a textured surface",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            TrackingFailureReason.CAMERA_UNAVAILABLE -> Toast.makeText(
+                context,
+                "Camera unavailable",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 }
 
 @Composable
