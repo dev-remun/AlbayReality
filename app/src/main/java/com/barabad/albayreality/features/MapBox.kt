@@ -1,5 +1,6 @@
 package com.barabad.albayreality.features
 
+import android.annotation.SuppressLint
 import android.preference.PreferenceManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.HistoricalSiteModel
 
+@SuppressLint("ClickableViewAccessibility")
 @Composable
 fun MapBox(
     modifier: Modifier = Modifier,
@@ -56,6 +58,11 @@ fun MapBox(
 
                     // # set center roughly around albay
                     controller.setCenter(GeoPoint(13.20000, 123.68500))
+
+                    setOnTouchListener { view, event ->
+                        view.parent.requestDisallowInterceptTouchEvent(true)
+                        false
+                    }
 
                     // # loop through the provided sites and plot them dynamically
                     sites.forEach { site ->
