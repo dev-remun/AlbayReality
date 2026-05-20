@@ -170,7 +170,11 @@ fun ProfileScreen(
                     title = "User Profile",
                     show_logout = true,
                     onBackClick = {
-                        nav_controller.popBackStack()
+                        nav_controller.navigate("home") {
+                            popUpTo("home") {
+                                inclusive = true
+                            }
+                        }
                     },
                     onLogoutClick = {
                         // # check network connection first before allowing the user to logout

@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -91,17 +92,20 @@ fun DropdownField(
         }
 
         // # Error Message Space
-        Spacer(modifier = Modifier.height(4.dp))
-        Box(modifier = Modifier.fillMaxWidth().height(error_text_height)) {
-            if (isError) {
-                Text(
-                    text = errorMessage,
-                    color = error_message_color,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                )
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp)
+        ) {
+            Text(
+                text = if (errorMessage.isNotBlank()) errorMessage else "Reserve Space",
+                color = error_message_color,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .alpha(if (isError) 1f else 0f)
+            )
         }
     }
 }

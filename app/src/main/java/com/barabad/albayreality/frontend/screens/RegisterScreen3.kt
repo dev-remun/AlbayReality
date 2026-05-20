@@ -26,6 +26,7 @@ import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
+import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
@@ -80,166 +81,154 @@ fun RegisterScreen3(navController: NavController, user_registration_info_object:
         )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .imePadding(),
+        contentAlignment = Alignment.TopCenter
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 80.dp, bottom = 40.dp),
-            contentAlignment = Alignment.Center
+                .widthIn(max = 700.dp)
+                .fillMaxHeight()
         ) {
-            // # Outline Text
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = strokes,
-                    drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                )
-            )
-            // # Fill Text
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = primary
-                )
-            )
-        }
+            Spacer(modifier = Modifier.height(40.dp))
 
-        // # Register Form
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.75f)
-                .drawBehind {
-                    val stroke_width = 4.dp.toPx()
-                    drawLine(
-                        color = strokes,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = stroke_width
-                    )
-                },
-            color = Color.White
-        ) {
+            Header(
+                nav_controller = navController,
+                title = "Albay Reality",
+                show_logout = false
+            )
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                Column(
-                    modifier = Modifier
-                        .widthIn(max = 500.dp)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        Text(
-                            text = "Register",
+            // # Register Form
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.75f)
+                    .drawBehind {
+                        val stroke_width = 4.dp.toPx()
+                        drawLine(
                             color = strokes,
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.ExtraBold
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = stroke_width
                         )
-                        Text(
-                            text = "Page 3 of 5",
-                            color = strokes.copy(alpha = 0.80f),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    }
-                    Text(
-                        text = "Please input your personal information",
-                        color = strokes.copy(alpha = 0.80f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    },
+                color = Color.White
+            ) {
 
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // # Sex Dropdown
-                    DropdownField(
-                        title = "Gender",
-                        value = sex,
-                        options = gender_options,
-                        placeholder = "Select Gender",
-                        isError = has_sex_error,
-                        errorMessage = sex_error_message,
-                        onValueChange = { selected_value ->
-                            sex = selected_value
-                            if (has_sex_error) has_sex_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(240.dp))
-
-                    // # Register Button
-                    Button(
-                        text = "Next",
-                        isPrimary = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-
-                            // # check network connection first
-                            if (!is_connected) {
-                                display_network_popup = true
-                                return@Button
-                            }
-
-                            var has_error = false
-
-                            if (sex.isBlank()) {
-                                has_sex_error = true
-                                sex_error_message = "Please input your gender."
-                                has_error = true
-                            }
-
-                            if (!has_error) {
-                                user_registration_info_object.updateUserRegistrationInformation("sex", sex)
-
-                                navController.navigate("register4")
-                            }
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // # Login Link
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Row {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .widthIn(max = 500.dp)
+                            .fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 24.dp, vertical = 32.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
                             Text(
-                                text = "Already have an account? ",
+                                text = "Register",
                                 color = strokes,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.ExtraBold
                             )
-
                             Text(
-                                text = "Login",
-                                color = primary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp,
-                                modifier = Modifier.clickable {
-                                    navController.navigate("login")
-                                }
+                                text = "Page 3 of 5",
+                                color = strokes.copy(alpha = 0.80f),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textDecoration = TextDecoration.Underline
                             )
+                        }
+                        Text(
+                            text = "Please input your personal information",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        // # Sex Dropdown
+                        DropdownField(
+                            title = "Gender",
+                            value = sex,
+                            options = gender_options,
+                            placeholder = "Select Gender",
+                            isError = has_sex_error,
+                            errorMessage = sex_error_message,
+                            onValueChange = { selected_value ->
+                                sex = selected_value
+                                if (has_sex_error) has_sex_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(240.dp))
+
+                        // # Register Button
+                        Button(
+                            text = "Next",
+                            isPrimary = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+
+                                // # check network connection first
+                                if (!is_connected) {
+                                    display_network_popup = true
+                                    return@Button
+                                }
+
+                                var has_error = false
+
+                                if (sex.isBlank()) {
+                                    has_sex_error = true
+                                    sex_error_message = "Please input your gender."
+                                    has_error = true
+                                }
+
+                                if (!has_error) {
+                                    user_registration_info_object.updateUserRegistrationInformation("sex", sex)
+
+                                    navController.navigate("register4")
+                                }
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // # Login Link
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Row {
+                                Text(
+                                    text = "Already have an account? ",
+                                    color = strokes,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+
+                                Text(
+                                    text = "Login",
+                                    color = primary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.clickable {
+                                        navController.navigate("login")
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+
 }
