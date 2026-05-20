@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -100,22 +101,20 @@ fun PasswordInputField(
             }
         )
 
-        // # Error message below the field (right-aligned, reserved space)
+        // # Error message
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(errorTextHeight)
                 .padding(top = 4.dp),
             contentAlignment = Alignment.CenterEnd
         ) {
-            if (has_error && error_message.isNotBlank()) {
-                Text(
-                    text = error_message,
-                    color = error_message_color,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                text = if (error_message.isNotBlank()) error_message else "Reserve Space",
+                color = error_message_color,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.alpha(if (has_error) 1f else 0f)
+            )
         }
     }
 }

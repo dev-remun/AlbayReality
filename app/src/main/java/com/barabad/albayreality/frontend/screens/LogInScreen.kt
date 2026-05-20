@@ -38,9 +38,9 @@ fun LogInScreen(
     user_state: UserState
 ) {
 
-    // # firebase variable
-    val authLogin = FirebaseAuthManager()
-    val firebaseManager = FirebaseAuthManager()
+    // # firebase variables
+    val auth_login = FirebaseAuthManager()
+    val firebase_manager = FirebaseAuthManager()
 
     // # state variables for inputs
     var email_input by remember { mutableStateOf("") }
@@ -50,7 +50,7 @@ fun LogInScreen(
     var has_email_error by remember { mutableStateOf(false) }
     var has_password_error by remember { mutableStateOf(false) }
 
-    // # state variable for error message
+    // # state variables for error messages
     var email_error_message by remember { mutableStateOf("") }
     var password_error_message by remember { mutableStateOf("") }
 
@@ -121,191 +121,199 @@ fun LogInScreen(
         )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .imePadding(),
+        contentAlignment = Alignment.TopCenter
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.25f),
-            contentAlignment = Alignment.Center
-        ) {
-            // # outline text for app title
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = strokes,
-                    drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                )
-            )
-            // # fill text for app title
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = primary
-                )
-            )
-        }
-
-        // # login form
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.75f)
-                .drawBehind {
-                    val stroke_width = 4.dp.toPx()
-                    drawLine(
-                        color = strokes,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = stroke_width
-                    )
-                },
-            color = Color.White
+                .widthIn(max = 700.dp)
+                .fillMaxHeight()
         ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 74.dp, bottom = 35.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Column(
-                    modifier = Modifier
-                        .widthIn(max = 500.dp)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Text(
-                        text = "Login",
-                        color = strokes,
+                // # outline text for app title
+                Text(
+                    text = "Albay Reality",
+                    style = TextStyle(
                         fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold
+                        fontFamily = TitanOne,
+                        fontWeight = FontWeight.Black,
+                        color = strokes,
+                        drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
                     )
-                    Text(
-                        text = "Please input your credentials",
-                        color = strokes.copy(alpha = 0.80f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
+                )
+                // # fill text for app title
+                Text(
+                    text = "Albay Reality",
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        fontFamily = TitanOne,
+                        fontWeight = FontWeight.Black,
+                        color = primary
                     )
+                )
+            }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+            // # login form
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.75f)
+                    .drawBehind {
+                        val stroke_width = 4.dp.toPx()
+                        drawLine(
+                            color = strokes,
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = stroke_width
+                        )
+                    },
+                color = Color.White
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .widthIn(max = 500.dp)
+                            .fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 24.dp, vertical = 32.dp)
+                    ) {
+                        Text(
+                            text = "Login",
+                            color = strokes,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Text(
+                            text = "Please input your credentials",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
 
-                    // # email input field
-                    InputField(
-                        title = "Email",
-                        value = email_input,
-                        onValueChange = {
-                            email_input = it
-                            if (has_email_error) has_email_error = false
-                        },
-                        placeholder = "Enter your email",
-                        has_error = has_email_error,
-                        error_message = email_error_message
-                    )
+                        Spacer(modifier = Modifier.height(32.dp))
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        // # email input field
+                        InputField(
+                            title = "Email",
+                            value = email_input,
+                            onValueChange = {
+                                email_input = it
+                                if (has_email_error) has_email_error = false
+                            },
+                            placeholder = "Enter your email",
+                            has_error = has_email_error,
+                            error_message = email_error_message
+                        )
 
-                    // # password input field
-                    PasswordInputField(
-                        title = "Password",
-                        value = password_input,
-                        onValueChange = {
-                            password_input = it
-                            if (has_password_error) has_password_error = false
-                        },
-                        placeholder = "Enter your password",
-                        has_error = has_password_error,
-                        error_message = password_error_message
-                    )
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                    Spacer(modifier = Modifier.height(48.dp))
+                        // # password input field
+                        PasswordInputField(
+                            title = "Password",
+                            value = password_input,
+                            onValueChange = {
+                                password_input = it
+                                if (has_password_error) has_password_error = false
+                            },
+                            placeholder = "Enter your password",
+                            has_error = has_password_error,
+                            error_message = password_error_message
+                        )
 
-                    // # login button
-                    Button(
-                        text = if (is_loading) "Please wait" else "Login",
-                        isPrimary = true,
-                        modifier = Modifier.fillMaxWidth(), // explicitly set to fill the available constrained width
-                        onClick = {
+                        Spacer(modifier = Modifier.height(48.dp))
 
-                            // # check network connection first
-                            if (!is_connected) {
-                                display_network_popup = true
-                                return@Button
-                            }
+                        // # login button
+                        Button(
+                            text = if (is_loading) "Please wait" else "Login",
+                            isPrimary = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
 
-                            // # prevent multiple clicks while loading
-                            if (is_loading) return@Button
-
-                            var has_error = false
-
-                            if (email_input.isBlank()) {
-                                has_email_error = true
-                                email_error_message = "Please input your email."
-                                has_error = true
-                            }
-                            if (password_input.isBlank()) {
-                                has_password_error = true
-                                password_error_message = "Please input your password."
-                                has_error = true
-                            }
-
-                            if (!has_error) {
-                                // # trigger loading state
-                                is_loading = true
-
-                                Log.d("log_in_screen", "email: $email_input")
-                                Log.d("log_in_screen", "password: $password_input")
-
-                                authLogin.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
-
-                                    override fun onSuccess() {
-                                        // # reset loading state and show success popup
-                                        user_state.loadUserViewedSites()
-                                        firebaseManager.seedAllQuizzes()
-                                        is_loading = false
-                                        display_successs_popup = true
-                                    }
-
-                                    override fun onFailure(errorMessage: String?) {
-                                        // # reset loading state and trigger error popup on failure
-                                        is_loading = false
-                                        display_error_popup = true
-                                        Log.e("log_in_screen", "login error: $errorMessage")
-                                    }
-                                })
-                            }
-                        },
-                        is_enabled = !is_loading,
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // # register link
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Row {
-                            Text(
-                                text = "Don't have an account? ",
-                                color = strokes,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
-
-                            Text(
-                                text = "Register",
-                                color = primary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp,
-                                modifier = Modifier.clickable {
-                                    navController.navigate("register1")
+                                // # check network connection first
+                                if (!is_connected) {
+                                    display_network_popup = true
+                                    return@Button
                                 }
-                            )
+
+                                // # prevent multiple clicks while loading
+                                if (is_loading) return@Button
+
+                                var has_error = false
+
+                                if (email_input.isBlank()) {
+                                    has_email_error = true
+                                    email_error_message = "Please input your email."
+                                    has_error = true
+                                }
+                                if (password_input.isBlank()) {
+                                    has_password_error = true
+                                    password_error_message = "Please input your password."
+                                    has_error = true
+                                }
+
+                                if (!has_error) {
+                                    // # trigger loading state
+                                    is_loading = true
+
+                                    Log.d("log_in_screen", "email: $email_input")
+                                    Log.d("log_in_screen", "password: $password_input")
+
+                                    auth_login.loginUser(email_input, password_input, object : FirebaseAuthManager.AuthCallback {
+
+                                        override fun onSuccess() {
+                                            // # reset loading state and show success popup
+                                            user_state.loadUserViewedSites()
+                                            firebase_manager.seedAllQuizzes()
+                                            is_loading = false
+                                            display_successs_popup = true
+                                        }
+
+                                        override fun onFailure(error_message: String?) {
+                                            // # reset loading state and trigger error popup on failure
+                                            is_loading = false
+                                            display_error_popup = true
+                                            Log.e("log_in_screen", "login error: $error_message")
+                                        }
+                                    })
+                                }
+                            },
+                            is_enabled = !is_loading,
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // # register link
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Row {
+                                Text(
+                                    text = "Don't have an account? ",
+                                    color = strokes,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+
+                                Text(
+                                    text = "Register",
+                                    color = primary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.clickable {
+                                        navController.navigate("register1")
+                                    }
+                                )
+                            }
                         }
                     }
                 }
