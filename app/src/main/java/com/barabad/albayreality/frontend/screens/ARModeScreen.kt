@@ -181,6 +181,7 @@ fun ModelDisplay(modelName: String?) {
                 ).show()
             }, onLongPress = { _, _ ->
                 childNodes.clear()
+                Toast.makeText(context, "Deleted Model", Toast.LENGTH_SHORT).show()
             }
         ),
         onSessionFailed = {
