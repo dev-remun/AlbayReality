@@ -28,6 +28,7 @@ import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.ui.theme.TitanOne
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
+import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.utils.loadJsonFile
@@ -109,223 +110,211 @@ fun RegisterScreen4(navController: NavController, user_registration_info_object:
         )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .imePadding(),
+        contentAlignment = Alignment.TopCenter
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 80.dp, bottom = 40.dp),
-            contentAlignment = Alignment.Center
+                .widthIn(max = 700.dp)
+                .fillMaxHeight()
         ) {
-            // # outline text
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = strokes,
-                    drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                )
-            )
-            // # fill text
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = primary
-                )
-            )
-        }
+            Spacer(modifier = Modifier.height(40.dp))
 
-        // # register form
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.75f)
-                .drawBehind {
-                    val stroke_width = 4.dp.toPx()
-                    drawLine(
-                        color = strokes,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = stroke_width
-                    )
-                },
-            color = Color.White
-        ) {
+            Header(
+                nav_controller = navController,
+                title = "Albay Reality",
+                show_logout = false
+            )
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                Column(
-                    modifier = Modifier
-                        .widthIn(max = 500.dp)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        Text(
-                            text = "Register",
+            // # register form
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.75f)
+                    .drawBehind {
+                        val stroke_width = 4.dp.toPx()
+                        drawLine(
                             color = strokes,
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.ExtraBold
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = stroke_width
                         )
-                        Text(
-                            text = "Page 4 of 5",
-                            color = strokes.copy(alpha = 0.80f),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    }
-                    Text(
-                        text = "Please select your location",
-                        color = strokes.copy(alpha = 0.80f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    },
+                color = Color.White
+            ) {
 
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // # region dropdown
-                    DropdownField(
-                        title = "Region",
-                        value = selected_region,
-                        options = region_options,
-                        placeholder = "Select Region",
-                        isError = has_region_error,
-                        errorMessage = region_error_message,
-                        onValueChange = { new_region ->
-                            selected_region = new_region
-                            selected_province = ""              // # reset province
-                            selected_city_municipality = ""     // # reset city
-                            if (has_region_error) has_region_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // # province dropdown
-                    DropdownField(
-                        title = "Province",
-                        value = selected_province,
-                        options = province_options,
-                        placeholder = "Select Province",
-                        isError = has_province_error,
-                        errorMessage = province_error_message,
-                        onValueChange = { new_province ->
-                            selected_province = new_province       // # update selected province
-                            selected_city_municipality = ""        // # reset city when province changes
-                            if (has_province_error) has_province_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    // # city / municipality dropdown
-                    DropdownField(
-                        title = "City / Municipality",
-                        value = selected_city_municipality,
-                        options = city_options,
-                        placeholder = "Select City / Municipality",
-                        isError = has_citymun_error,
-                        errorMessage = citymun_error_message,
-                        onValueChange = { new_city ->
-                            selected_city_municipality = new_city   // # update selected city / municipality
-                            if (has_citymun_error) has_citymun_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(40.dp))
-
-                    // # next button
-                    Button(
-                        text = "Next",
-                        isPrimary = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-
-                            // # check network connection first
-                            if (!is_connected) {
-                                display_network_popup = true
-                                return@Button
-                            }
-
-                            var has_error = false
-
-                            if (selected_region.isBlank()) {
-                                has_region_error = true
-                                region_error_message = "Please input your region."
-                                has_error = true
-                            }
-                            if (selected_province.isBlank()) {
-                                has_province_error = true
-                                province_error_message = "Please input your province."
-                                has_error = true
-                            }
-                            if (selected_city_municipality.isBlank()) {
-                                has_citymun_error = true
-                                citymun_error_message = "Please input your city / municipality."
-                                has_error = true
-                            }
-
-                            if (!has_error) {
-
-                                user_registration_info_object.updateUserRegistrationInformation(
-                                    "region",
-                                    selected_region
-                                )
-                                user_registration_info_object.updateUserRegistrationInformation(
-                                    "province",
-                                    selected_province
-                                )
-                                user_registration_info_object.updateUserRegistrationInformation(
-                                    "city_municipality",
-                                    selected_city_municipality
-                                )
-
-                                navController.navigate("register5")
-                            }
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // # Login Link
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Row {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .widthIn(max = 500.dp)
+                            .fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 24.dp, vertical = 32.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
                             Text(
-                                text = "Already have an account? ",
+                                text = "Register",
                                 color = strokes,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.ExtraBold
                             )
-
                             Text(
-                                text = "Login",
-                                color = primary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp,
-                                modifier = Modifier.clickable {
-                                    navController.navigate("login")
-                                }
+                                text = "Page 4 of 5",
+                                color = strokes.copy(alpha = 0.80f),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textDecoration = TextDecoration.Underline
                             )
+                        }
+                        Text(
+                            text = "Please select your location",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        // # region dropdown
+                        DropdownField(
+                            title = "Region",
+                            value = selected_region,
+                            options = region_options,
+                            placeholder = "Select Region",
+                            isError = has_region_error,
+                            errorMessage = region_error_message,
+                            onValueChange = { new_region ->
+                                selected_region = new_region
+                                selected_province = ""              // # reset province
+                                selected_city_municipality = ""     // # reset city
+                                if (has_region_error) has_region_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // # province dropdown
+                        DropdownField(
+                            title = "Province",
+                            value = selected_province,
+                            options = province_options,
+                            placeholder = "Select Province",
+                            isError = has_province_error,
+                            errorMessage = province_error_message,
+                            onValueChange = { new_province ->
+                                selected_province = new_province       // # update selected province
+                                selected_city_municipality = ""        // # reset city when province changes
+                                if (has_province_error) has_province_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // # city / municipality dropdown
+                        DropdownField(
+                            title = "City / Municipality",
+                            value = selected_city_municipality,
+                            options = city_options,
+                            placeholder = "Select City / Municipality",
+                            isError = has_citymun_error,
+                            errorMessage = citymun_error_message,
+                            onValueChange = { new_city ->
+                                selected_city_municipality = new_city   // # update selected city / municipality
+                                if (has_citymun_error) has_citymun_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(40.dp))
+
+                        // # next button
+                        Button(
+                            text = "Next",
+                            isPrimary = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+
+                                // # check network connection first
+                                if (!is_connected) {
+                                    display_network_popup = true
+                                    return@Button
+                                }
+
+                                var has_error = false
+
+                                if (selected_region.isBlank()) {
+                                    has_region_error = true
+                                    region_error_message = "Please input your region."
+                                    has_error = true
+                                }
+                                if (selected_province.isBlank()) {
+                                    has_province_error = true
+                                    province_error_message = "Please input your province."
+                                    has_error = true
+                                }
+                                if (selected_city_municipality.isBlank()) {
+                                    has_citymun_error = true
+                                    citymun_error_message = "Please input your city / municipality."
+                                    has_error = true
+                                }
+
+                                if (!has_error) {
+
+                                    user_registration_info_object.updateUserRegistrationInformation(
+                                        "region",
+                                        selected_region
+                                    )
+                                    user_registration_info_object.updateUserRegistrationInformation(
+                                        "province",
+                                        selected_province
+                                    )
+                                    user_registration_info_object.updateUserRegistrationInformation(
+                                        "city_municipality",
+                                        selected_city_municipality
+                                    )
+
+                                    navController.navigate("register5")
+                                }
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // # Login Link
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Row {
+                                Text(
+                                    text = "Already have an account? ",
+                                    color = strokes,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+
+                                Text(
+                                    text = "Login",
+                                    color = primary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.clickable {
+                                        navController.navigate("login")
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+
 }

@@ -54,6 +54,10 @@ fun EditProfileScreen(
     // # retrieve current user details
     val user = user_state.user_data
 
+    // # scroll control
+    val scroll_state = rememberScrollState()
+    var personal_info_y_position by remember { mutableFloatStateOf(0f) }
+
     // # form state variables for input fields (initialized empty so placeholders display)
     var input_firstname by remember { mutableStateOf("") }
     var input_middlename by remember { mutableStateOf("") }
@@ -103,6 +107,13 @@ fun EditProfileScreen(
     var password_error_message by remember { mutableStateOf("") }
     var passwords_match_error by remember { mutableStateOf(false) }
 
+    var has_firstname_error by remember { mutableStateOf(false) }
+    var firstname_error_message by remember { mutableStateOf("") }
+    var has_middlename_error by remember { mutableStateOf(false) }
+    var middlename_error_message by remember { mutableStateOf("") }
+    var has_lastname_error by remember { mutableStateOf(false) }
+    var lastname_error_message by remember { mutableStateOf("") }
+
     // # state variables to detect errors in the location dropdown fields
     var has_region_error by remember { mutableStateOf(false) }
     var has_province_error by remember { mutableStateOf(false) }
@@ -133,6 +144,8 @@ fun EditProfileScreen(
     // # network checking
     val is_connected by rememberNetworkStatus()
     var display_network_popup by remember { mutableStateOf(false) }
+    var show_error_input_popup by remember { mutableStateOf(false) }
+    var error_input_popup_message by remember { mutableStateOf("") }
 
     // # automatically show the popup whenever the connection is lost
     LaunchedEffect(is_connected) {
@@ -155,6 +168,20 @@ fun EditProfileScreen(
             },
             onDismiss = {
                 display_network_popup = true
+            }
+        )
+    }
+
+    if (show_error_input_popup) {
+        PopUp(
+            icon = R.drawable.xmark_icon,
+            message = error_input_popup_message,
+            button_text = "Try again",
+            onButtonClick = {
+                show_error_input_popup = false
+            },
+            onDismiss = {
+                show_error_input_popup = true
             }
         )
     }
@@ -182,7 +209,7 @@ fun EditProfileScreen(
                     .widthIn(max = 700.dp)
                     .fillMaxHeight()
                     .padding(top = 24.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(scroll_state),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -246,21 +273,27 @@ fun EditProfileScreen(
                         title = "First Name",
                         value = input_firstname,
                         placeholder = user.firstname.ifEmpty { "enter first name" },
-                        onValueChange = { input_firstname = it }
+                        onValueChange = { input_firstname = it },
+                        error_message = firstname_error_message,
+                        has_error = has_firstname_error
                     )
 
                     InputField(
                         title = "Middle Name",
                         value = input_middlename,
                         placeholder = user.middlename.ifEmpty { "enter middle name" },
-                        onValueChange = { input_middlename = it }
+                        onValueChange = { input_middlename = it },
+                        error_message = middlename_error_message,
+                        has_error = has_middlename_error
                     )
 
                     InputField(
                         title = "Last Name",
                         value = input_lastname,
                         placeholder = user.lastname.ifEmpty { "enter last name" },
-                        onValueChange = { input_lastname = it }
+                        onValueChange = { input_lastname = it },
+                        error_message = lastname_error_message,
+                        has_error = has_lastname_error
                     )
 
                     DropdownField(
@@ -387,10 +420,36 @@ fun EditProfileScreen(
 
                                 var has_validation_error = false
 
+                                if (input_firstname.isNotBlank() && !input_firstname.matches(Regex("^[A-Za-z]+$"))) {
+                                    has_firstname_error = true
+                                    firstname_error_message = "First name must contain letters only."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
+                                    has_validation_error = true
+                                }
+
+                                if (input_middlename.isNotBlank() && !input_middlename.matches(Regex("^[A-Za-z]+$"))) {
+                                    has_middlename_error = true
+                                    middlename_error_message = "Middle name must contain letters only."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
+                                    has_validation_error = true
+                                }
+
+                                if (input_lastname.isNotBlank() && !input_lastname.matches(Regex("^[A-Za-z]+$"))) {
+                                    has_lastname_error = true
+                                    lastname_error_message = "Last name must contain letters only."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
+                                    has_validation_error = true
+                                }
+
                                 // # basic email format validation if the user entered a new email
                                 if (input_email.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(input_email).matches()) {
                                     email_error = true
                                     email_error_message = "Invalid email format."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
                                     has_validation_error = true
                                 }
 
@@ -398,12 +457,16 @@ fun EditProfileScreen(
                                 if (input_password.isNotBlank() && input_password.length < 6) {
                                     password_error = true
                                     password_error_message = "Password should be at least 6 characters."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
                                     has_validation_error = true
                                 }
 
                                 // # password match validation
                                 if (input_password != input_confirm_password) {
                                     passwords_match_error = true
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
                                     has_validation_error = true
                                 }
 
@@ -411,6 +474,8 @@ fun EditProfileScreen(
                                 if (selected_region.isNotBlank() && selected_province.isBlank()) {
                                     has_province_error = true
                                     province_error_message = "Please update your province."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
                                     has_validation_error = true
                                 }
 
@@ -418,6 +483,8 @@ fun EditProfileScreen(
                                 if ((selected_region.isNotBlank() || selected_province.isNotBlank()) && selected_city_municipality.isBlank()) {
                                     has_citymun_error = true
                                     citymun_error_message = "Please update your city / municipality."
+                                    error_input_popup_message = "There is problem in your input.\nPlease try again."
+                                    show_error_input_popup = true
                                     has_validation_error = true
                                 }
 

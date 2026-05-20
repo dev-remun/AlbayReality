@@ -125,7 +125,7 @@ fun ARMapScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
-                            text = site.description,
+                            text = site.map_info,
                             fontSize = 14.sp,
                             lineHeight = 22.sp,
                             color = strokes,
