@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -79,22 +80,20 @@ fun InputField(
             singleLine = true
         )
 
-        // # error message below the field (right-side)
+        // # error message
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(errorTextHeight)
                 .padding(top = 4.dp),
             contentAlignment = Alignment.CenterEnd
         ) {
-            if (has_error && error_message.isNotBlank()) {
-                Text(
-                    text = error_message,
-                    color = error_message_color,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                text = if (has_error) error_message else "Reserve Space",
+                color = error_message_color,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.alpha(if (has_error) 1f else 0f)
+            )
         }
     }
 }

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.barabad.albayreality.R
+import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.utilities.data.quizzes.AnswerRecord
@@ -310,6 +311,23 @@ fun ARGamePlaygroundScreen(
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    text = "Quit Playing",
+                    isPrimary = false,
+                    is_enabled = true,
+                    onClick = {
+                        navController.navigate("games") {
+                            popUpTo("games") {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
+                )
+
             }
         }
     }

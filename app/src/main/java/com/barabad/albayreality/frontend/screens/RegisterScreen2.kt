@@ -16,6 +16,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -27,6 +28,7 @@ import com.barabad.albayreality.ui.theme.primary
 import com.barabad.albayreality.ui.theme.strokes
 import com.barabad.albayreality.frontend.components.Button
 import com.barabad.albayreality.frontend.components.DropdownField
+import com.barabad.albayreality.frontend.components.Header
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
@@ -85,232 +87,220 @@ fun RegisterScreen2(navController: NavController, user_registration_info_object:
         )
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .imePadding(),
+        contentAlignment = Alignment.TopCenter
     ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 80.dp, bottom = 40.dp),
-            contentAlignment = Alignment.Center
+                .widthIn(max = 700.dp)
+                .fillMaxHeight()
         ) {
-            // # Outline Text
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = strokes,
-                    drawStyle = Stroke(miter = 10f, width = 12f, join = StrokeJoin.Round)
-                )
-            )
-            // # Fill Text
-            Text(
-                text = "Albay Reality",
-                style = TextStyle(
-                    fontSize = 40.sp,
-                    fontFamily = TitanOne,
-                    fontWeight = FontWeight.Black,
-                    color = primary
-                )
-            )
-        }
 
-        // # Register Form
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.75f)
-                .drawBehind {
-                    val stroke_width = 4.dp.toPx()
-                    drawLine(
-                        color = strokes,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = stroke_width
-                    )
-                },
-            color = Color.White
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                Column(
-                    modifier = Modifier
-                        .widthIn(max = 500.dp)
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        Text(
-                            text = "Register",
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Header(
+                nav_controller = navController,
+                title = "Albay Reality",
+                show_logout = false
+            )
+
+            // # Register Form
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.75f)
+                    .drawBehind {
+                        val stroke_width = 4.dp.toPx()
+                        drawLine(
                             color = strokes,
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.ExtraBold
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = stroke_width
                         )
-                        Text(
-                            text = "Page 2 of 5",
-                            color = strokes.copy(alpha = 0.80f),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    }
-                    Text(
-                        text = "Please input your personal information",
-                        color = strokes.copy(alpha = 0.80f),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // # Birth Month Dropdown
-                    DropdownField(
-                        title = "Birthmonth",
-                        value = birth_month,
-                        options = months,
-                        placeholder = "Select Month",
-                        isError = has_birth_month_error,
-                        errorMessage = birth_month_error_message,
-                        onValueChange = {
-                                selected_value ->
-                            birth_month = selected_value
-                            if (has_birth_month_error) has_birth_month_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    // # Birthdate Dropdown
-                    DropdownField(
-                        title = "Birthdate",
-                        value = birthdate,
-                        options = dates,
-                        placeholder = "Select Date",
-                        isError = has_birthdate_error,
-                        errorMessage = birthdate_error_message,
-                        onValueChange = {
-                                selected_value ->
-                            birthdate = selected_value
-                            if (has_birthdate_error) has_birthdate_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    // # Birth Year Dropdown
-                    DropdownField(
-                        title = "Birthyear",
-                        value = birth_year,
-                        options = years,
-                        placeholder = "Select Year",
-                        isError = has_birth_year_error,
-                        errorMessage = birth_year_error_message,
-                        onValueChange = {
-                                selected_value ->
-                            birth_year = selected_value
-                            if (has_birth_year_error) has_birth_year_error = false
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    // # Register Button
-                    Button(
-                        text = "Next",
-                        isPrimary = true,
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = {
-
-                            // # check network connection first
-                            if (!is_connected) {
-                                display_network_popup = true
-                                return@Button
-                            }
-
-                            var has_error = false
-
-                            if (birth_month.isBlank()) {
-                                has_birth_month_error = true
-                                birth_month_error_message = "Please input your birth month."
-                                has_error = true
-                            }
-                            if (birthdate.isBlank()) {
-                                has_birthdate_error = true
-                                birthdate_error_message = "Please input your birth date."
-                                has_error = true
-                            }
-                            if (birth_year.isBlank()) {
-                                has_birth_year_error = true
-                                birth_year_error_message = "Please input your birth year."
-                                has_error = true
-                            }
-
-                            if (!has_error) {
-
-                                user_registration_info_object.updateUserRegistrationInformation(
-                                    "birth_month",
-                                    birth_month
-                                )
-                                user_registration_info_object.updateUserRegistrationInformation(
-                                    "birth_date",
-                                    birthdate
-                                )
-                                user_registration_info_object.updateUserRegistrationInformation(
-                                    "birth_year",
-                                    birth_year
-                                )
-
-                                Log.d(
-                                    "register_screen2",
-                                    "First Name: ${user_registration_info_object.user_registration_info.firstname}"
-                                )
-                                Log.d(
-                                    "register_screen2",
-                                    "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
-                                )
-                                Log.d(
-                                    "register_screen2",
-                                    "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
-                                )
-
-                                // # navigate to the next form
-                                navController.navigate("register3")
-                            }
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // # Login Link
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Row {
+                    },
+                color = Color.White
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .widthIn(max = 500.dp)
+                            .fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = 24.dp, vertical = 32.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
                             Text(
-                                text = "Already have an account? ",
+                                text = "Register",
                                 color = strokes,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.ExtraBold
                             )
-
                             Text(
-                                text = "Login",
-                                color = primary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp,
-                                modifier = Modifier.clickable {
-                                    navController.navigate("login")
-                                }
+                                text = "Page 2 of 5",
+                                color = strokes.copy(alpha = 0.80f),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                textDecoration = TextDecoration.Underline
                             )
+                        }
+                        Text(
+                            text = "Please input your personal information",
+                            color = strokes.copy(alpha = 0.80f),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        // # Birth Month Dropdown
+                        DropdownField(
+                            title = "Birthmonth",
+                            value = birth_month,
+                            options = months,
+                            placeholder = "Select Month",
+                            isError = has_birth_month_error,
+                            errorMessage = birth_month_error_message,
+                            onValueChange = {
+                                    selected_value ->
+                                birth_month = selected_value
+                                if (has_birth_month_error) has_birth_month_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        // # Birthdate Dropdown
+                        DropdownField(
+                            title = "Birthdate",
+                            value = birthdate,
+                            options = dates,
+                            placeholder = "Select Date",
+                            isError = has_birthdate_error,
+                            errorMessage = birthdate_error_message,
+                            onValueChange = {
+                                    selected_value ->
+                                birthdate = selected_value
+                                if (has_birthdate_error) has_birthdate_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        // # Birth Year Dropdown
+                        DropdownField(
+                            title = "Birthyear",
+                            value = birth_year,
+                            options = years,
+                            placeholder = "Select Year",
+                            isError = has_birth_year_error,
+                            errorMessage = birth_year_error_message,
+                            onValueChange = {
+                                    selected_value ->
+                                birth_year = selected_value
+                                if (has_birth_year_error) has_birth_year_error = false
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        // # Register Button
+                        Button(
+                            text = "Next",
+                            isPrimary = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = {
+
+                                // # check network connection first
+                                if (!is_connected) {
+                                    display_network_popup = true
+                                    return@Button
+                                }
+
+                                var has_error = false
+
+                                if (birth_month.isBlank()) {
+                                    has_birth_month_error = true
+                                    birth_month_error_message = "Please input your birth month."
+                                    has_error = true
+                                }
+                                if (birthdate.isBlank()) {
+                                    has_birthdate_error = true
+                                    birthdate_error_message = "Please input your birth date."
+                                    has_error = true
+                                }
+                                if (birth_year.isBlank()) {
+                                    has_birth_year_error = true
+                                    birth_year_error_message = "Please input your birth year."
+                                    has_error = true
+                                }
+
+                                if (!has_error) {
+
+                                    user_registration_info_object.updateUserRegistrationInformation(
+                                        "birth_month",
+                                        birth_month
+                                    )
+                                    user_registration_info_object.updateUserRegistrationInformation(
+                                        "birth_date",
+                                        birthdate
+                                    )
+                                    user_registration_info_object.updateUserRegistrationInformation(
+                                        "birth_year",
+                                        birth_year
+                                    )
+
+                                    Log.d(
+                                        "register_screen2",
+                                        "First Name: ${user_registration_info_object.user_registration_info.firstname}"
+                                    )
+                                    Log.d(
+                                        "register_screen2",
+                                        "Middle Name: ${user_registration_info_object.user_registration_info.middlename}"
+                                    )
+                                    Log.d(
+                                        "register_screen2",
+                                        "Last Name: ${user_registration_info_object.user_registration_info.lastname}"
+                                    )
+
+                                    // # navigate to the next form
+                                    navController.navigate("register3")
+                                }
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // # Login Link
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Row {
+                                Text(
+                                    text = "Already have an account? ",
+                                    color = strokes,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+
+                                Text(
+                                    text = "Login",
+                                    color = primary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.clickable {
+                                        navController.navigate("login")
+                                    }
+                                )
+                            }
                         }
                     }
                 }
