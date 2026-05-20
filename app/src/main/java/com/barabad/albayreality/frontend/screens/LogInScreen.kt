@@ -217,7 +217,7 @@ fun LogInScreen(
                         title = "Password",
                         value = password_input,
                         onValueChange = {
-                            password_input = it
+                            password_input = it.replace("\\s".toRegex(), "")
                             if (has_password_error) has_password_error = false
                         },
                         placeholder = "Enter your password",
@@ -225,20 +225,20 @@ fun LogInScreen(
                         error_message = password_error_message
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
                     // forgot password link
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(start = 12.dp).offset(y = (-18).dp), contentAlignment = Alignment.CenterStart) {
                         Text(
                             text = "Forgot password? ",
-                            color = strokes,
+                            color = primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
                             modifier = Modifier.clickable {
-                                navController.navigate("") //will make new screen
+                                navController.navigate("reset_password")
                             }
                         )
                     }
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     // # login button
                     Button(

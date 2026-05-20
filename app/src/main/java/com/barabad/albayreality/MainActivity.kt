@@ -37,6 +37,7 @@ import com.barabad.albayreality.frontend.screens.RegisterScreen2
 import com.barabad.albayreality.frontend.screens.RegisterScreen3
 import com.barabad.albayreality.frontend.screens.RegisterScreen4
 import com.barabad.albayreality.frontend.screens.RegisterScreen5
+import com.barabad.albayreality.frontend.screens.ResetPasswordScreen
 import com.barabad.albayreality.frontend.utilities.data.historicalsites.getListOfHistoricalSites
 import com.barabad.albayreality.frontend.utilities.data.user_registration.UserRegistrationInformations
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizState
@@ -83,6 +84,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = startDestination) {
                     composable("login") { LogInScreen(navController, user_info_state) }
+                    composable("reset_password") { ResetPasswordScreen(navController) }
                     composable("register1") { RegisterScreen1(navController, user_registration_info_object) }
                     composable("register2") { RegisterScreen2(navController, user_registration_info_object) }
                     composable("register3") { RegisterScreen3(navController, user_registration_info_object) }
