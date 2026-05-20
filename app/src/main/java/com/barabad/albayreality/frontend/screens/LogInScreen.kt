@@ -225,7 +225,20 @@ fun LogInScreen(
                         error_message = password_error_message
                     )
 
-                    Spacer(modifier = Modifier.height(48.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // forgot password link
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        Text(
+                            text = "Forgot password? ",
+                            color = strokes,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            modifier = Modifier.clickable {
+                                navController.navigate("") //will make new screen
+                            }
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     // # login button
                     Button(
