@@ -174,13 +174,16 @@ fun ModelDisplay(modelName: String?) {
                 if (node is ModelNode) {
                     node.scale = node.scale * detector.scaleFactor * 0.3f
                 }
-                Toast.makeText(
-                    context,
-                    "If the model disappears, tap twice to place a new model",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if(node == null){
+                    Toast.makeText(
+                        context,
+                        "If the model disappears, tap twice to place a new model",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }, onLongPress = { _, _ ->
                 childNodes.clear()
+                Toast.makeText(context, "Deleted Model", Toast.LENGTH_SHORT).show()
             }
         ),
         onSessionFailed = {
