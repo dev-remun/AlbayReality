@@ -129,6 +129,19 @@ public class FirebaseAuthManager {
     public void logoutUser() {
         mAuth.signOut();
     }
+
+    // # Password reset function
+    public void sendPasswordResetEmail(String email, AuthCallback callback) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFailure(task.getException() != null ? task.getException().getMessage() : "Failed to send reset email.");
+                    }
+                });
+    }
+
     // Callback interface
     public interface AuthCallback {
         void onSuccess();
