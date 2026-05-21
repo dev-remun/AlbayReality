@@ -67,7 +67,14 @@ fun AboutUsScreen(navController: NavController) {
 
                 Header(
                     nav_controller = navController,
-                    title = "About Us"
+                    title = "About Us",
+                    onBackClick = {
+                        navController.navigate("home") {
+                            popUpTo("home") {
+                                inclusive = true
+                            }
+                        }
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
