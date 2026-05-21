@@ -1,5 +1,6 @@
 package com.barabad.albayreality.frontend.screens
 
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,12 +26,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import com.barabad.albayreality.R
 import com.barabad.albayreality.features.ImageCarousel
 import com.barabad.albayreality.frontend.components.Button
@@ -39,6 +46,7 @@ import com.barabad.albayreality.frontend.components.NavBar
 import com.barabad.albayreality.frontend.components.PopUp
 import com.barabad.albayreality.frontend.utilities.data.quizzes.QuizRepository
 import com.barabad.albayreality.frontend.utilities.data.user_info.UserState
+import com.barabad.albayreality.frontend.utilities.utils.AppSession
 import com.barabad.albayreality.frontend.utilities.utils.rememberNetworkStatus
 import com.barabad.albayreality.ui.theme.Inter
 import com.barabad.albayreality.ui.theme.primary
@@ -59,6 +67,9 @@ fun ARViewCatalogContentScreen(
     // # network checking
     val is_connected by rememberNetworkStatus()
     var display_network_popup by remember { mutableStateOf(false) }
+
+    // # state to handle the ar gif overlay
+    var show_ar_tutorial by remember { mutableStateOf(false) }
 
     // # automatically show the popup whenever the connection is lost
     LaunchedEffect(is_connected) {
@@ -86,177 +97,244 @@ fun ARViewCatalogContentScreen(
         }
     }
 
-    // # display network popup
-    if (display_network_popup) {
-        PopUp(
-            icon = R.drawable.xmark_icon,
-            message = "Please connect to Wi-Fi or mobile data to enter Quiz Mode.",
-            button_text = "Okay",
-            onButtonClick = {
-                display_network_popup = false
-            },
-            onDismiss = {
-                display_network_popup = true
-            }
-        )
-    }
+    // # wrap everything in a box to manage layering explicitly
+    Box(modifier = Modifier.fillMaxSize()) {
 
-    Scaffold(
-        bottomBar = {
-            NavBar(
-                active_tab = active_tab,
-                on_tab_selected = { selected_index ->
-                    active_tab = selected_index
-                },
-                nav_controller = navController
-            )
-        }
-    ) { inner_padding ->
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(inner_padding),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Column(
-                modifier = Modifier
-                    .widthIn(max = 700.dp)
-                    .fillMaxHeight()
-                    .padding( top = 24.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Header(
-                    nav_controller = navController,
-                    title = site_title
+        // # 1. draw the main screen background first
+        Scaffold(
+            bottomBar = {
+                NavBar(
+                    active_tab = active_tab,
+                    on_tab_selected = { selected_index ->
+                        active_tab = selected_index
+                    },
+                    nav_controller = navController
                 )
+            }
+        ) { inner_padding ->
 
-                // # main content area
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(inner_padding),
+                contentAlignment = Alignment.TopCenter
+            ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
+                        .widthIn(max = 700.dp)
+                        .fillMaxHeight()
+                        .padding( top = 24.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
-
-                    ImageCarousel(images = site_images)
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = site_location,
-                        style = TextStyle(
-                            fontFamily = Inter,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 14.sp,
-                            color = strokes
-                        )
+                    Header(
+                        nav_controller = navController,
+                        title = site_title
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    // # main content area
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                    ) {
 
-                    Text(
-                        text = site_description,
-                        textAlign = TextAlign.Justify,
-                        style = TextStyle(
-                            fontFamily = Inter,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 13.sp,
-                            color = strokes,
-                            lineHeight = 20.sp
+                        ImageCarousel(images = site_images)
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = site_location,
+                            style = TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                                color = strokes
+                            )
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = site_description,
+                            textAlign = TextAlign.Justify,
+                            style = TextStyle(
+                                fontFamily = Inter,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 13.sp,
+                                color = strokes,
+                                lineHeight = 20.sp
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        Button(
+                            text = "AR Mode",
+                            isPrimary = true,
+                            onClick = {
+                                if (!AppSession.has_viewed_ar_tutorial) {
+                                    show_ar_tutorial = true
+                                } else {
+                                    navController.navigate("armode/${site_id}")
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            // # custom box button for quiz mode
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp) // # matched to standard button height
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.White)
+                                    .border(
+                                        BorderStroke(2.dp, strokes),
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                    .clickable(enabled = is_quiz_enabled) {
+                                        // # only trigger the popup if they click it while offline
+                                        if (!is_connected) {
+                                            display_network_popup = true
+                                        } else {
+                                            navController.navigate("argame_playground/${site_id}")
+                                        }
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (is_quiz_enabled) {
+                                    Text(
+                                        text = "Quiz Mode",
+                                        style = TextStyle(
+                                            fontFamily = Inter,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 16.sp,
+                                            color = strokes
+                                        )
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Default.Lock,
+                                        contentDescription = "Locked",
+                                        tint = primary,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
+
+                            // # show the orange warning text below the box if limit is reached
+                            if (!is_quiz_enabled && is_connected) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "You have reached the maximum 3 attempts",
+                                    style = TextStyle(
+                                        fontFamily = Inter,
+                                        fontSize = 12.sp,
+                                        color = primary
+                                    ),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            } else if (!is_connected) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Internet connection required to play",
+                                    style = TextStyle(
+                                        fontFamily = Inter,
+                                        fontSize = 12.sp,
+                                        color = primary
+                                    ),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(32.dp))
+                    }
+                }
+            }
+        }
+
+        // # 2. draw overlays AFTER the scaffold so they appear on top
+
+        // # display ar tutorial gif overlay
+        if (show_ar_tutorial) {
+            val context = LocalContext.current
+            val image_loader = ImageLoader.Builder(context)
+                .components {
+                    if (SDK_INT >= 28) {
+                        add(ImageDecoderDecoder.Factory())
+                    } else {
+                        add(GifDecoder.Factory())
+                    }
+                }
+                .build()
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.85f))
+                    .clickable(enabled = false) {}, // # intercepts clicks so background isn't clickable
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .widthIn(max = 700.dp) // # restricts max width to match tablet sizing
+                        .fillMaxWidth()
+                        // # increased bottom padding for generous space above the screen edge
+                        .padding(start = 24.dp, end = 24.dp, top = 24.dp, bottom = 80.dp)
+                ) {
+                    AsyncImage(
+                        model = R.drawable.ar_tutorial_gif,
+                        imageLoader = image_loader,
+                        contentDescription = "ar mode tutorial",
+                        contentScale = ContentScale.Fit, // # automatically scales properly
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = false) // # prevents the image from squashing the button
+                            .clip(RoundedCornerShape(12.dp))
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Button(
-                        text = "AR Mode",
+                        text = "Proceed to AR",
                         isPrimary = true,
                         onClick = {
+                            // # update the singleton so it doesn't show again this session
+                            AppSession.has_viewed_ar_tutorial = true
+                            show_ar_tutorial = false
                             navController.navigate("armode/${site_id}")
                         },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        // # custom box button for quiz mode
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp) // # matched to standard button height
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .border(
-                                    BorderStroke(2.dp, strokes),
-                                    RoundedCornerShape(8.dp)
-                                )
-                                .clickable(enabled = is_quiz_enabled) {
-                                    // # only trigger the popup if they click it while offline
-                                    if (!is_connected) {
-                                        display_network_popup = true
-                                    } else {
-                                        navController.navigate("argame_playground/${site_id}")
-                                    }
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (is_quiz_enabled) {
-                                Text(
-                                    text = "Quiz Mode",
-                                    style = TextStyle(
-                                        fontFamily = Inter,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 16.sp,
-                                        color = strokes
-                                    )
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Default.Lock,
-                                    contentDescription = "Locked",
-                                    tint = primary,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
-                        }
-
-                        // # show the orange warning text below the box if limit is reached
-                        if (!is_quiz_enabled && is_connected) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "You have reached the maximum 3 attempts",
-                                style = TextStyle(
-                                    fontFamily = Inter,
-                                    fontSize = 12.sp,
-                                    color = primary
-                                ),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        } else if (!is_connected) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Internet connection required to play",
-                                style = TextStyle(
-                                    fontFamily = Inter,
-                                    fontSize = 12.sp,
-                                    color = primary
-                                ),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
+        }
+
+        // # display network popup
+        if (display_network_popup) {
+            PopUp(
+                icon = R.drawable.xmark_icon,
+                message = "Please connect to Wi-Fi or mobile data to enter Quiz Mode.",
+                button_text = "Okay",
+                onButtonClick = {
+                    display_network_popup = false
+                },
+                onDismiss = {
+                    display_network_popup = true
+                }
+            )
         }
     }
 }
